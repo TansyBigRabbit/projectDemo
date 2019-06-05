@@ -20,7 +20,7 @@
  </el-row>
  <el-row>
   <el-col>
-    <el-button id="login" style="width:100%" type="primary">登录</el-button>
+    <el-button id="login" @click="login" style="width:100%" type="primary">登录</el-button>
   </el-col>
  </el-row> 
 </div>
@@ -35,6 +35,13 @@ export default {
     return {
       userName:'',
       password:''
+    }
+  },
+  methods:{
+    login:function(){
+      this.$router.push({
+        name:'home'
+      })
     }
   }
 }
