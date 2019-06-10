@@ -86,7 +86,19 @@
         isCollapse: false, 
       };
     },
+    created(){
+      this.testInterface();
+    },
     methods: { 
+      testInterface(){
+      this.axios.get('/api/threeCentreProject/depart/queryOne',{
+        params:{
+          departId:'111'
+        }
+      }).then((response) => {
+      console.log(response.data)
+      })
+      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath); 
         this.open=true

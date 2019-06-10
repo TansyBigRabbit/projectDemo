@@ -8,7 +8,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import {
 	routes
 } from './routes.js'
-Vue.config.productionTip = false
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios);
+Vue.config.productionTip = false;
 Vue.use(Router);
 Vue.use(ElementUI);
 /* eslint-disable no-new */
