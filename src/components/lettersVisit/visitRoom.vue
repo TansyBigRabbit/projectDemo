@@ -13,7 +13,7 @@
 							房间号：<span>12022152777</span>
 						</el-col>
 						<el-col :span="12">
-							接访时间：<span>1</span>
+							接访时间：<span id="mytime"></span>
 						</el-col> 
 					</el-row>
 					 <el-divider class="divider"></el-divider>
@@ -72,6 +72,26 @@
               isRole:true,
               textarea:'',
 			}
+		},
+		mounted(){
+            this.time_fun();
+		},
+		methods:{
+
+			two_char:function(n) {
+            return n >= 10 ? n : "0" + n;
+            },
+        	time_fun:function(){
+        	var _this = this;
+            var sec=0;
+            setInterval(function () {
+                sec++;
+                var date = new Date(0, 0)
+                date.setSeconds(sec);
+                var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
+                document.getElementById("mytime").innerText = _this.two_char(h) + ":" + _this.two_char(m) + ":" + _this.two_char(s);
+            }, 1000);
+        }
 		}
 	}
 </script>
