@@ -76,7 +76,7 @@
 	}
 </script>
 
-<style scoped> 
+<style> 
     .container{
     	padding-top:25px;
     }
