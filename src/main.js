@@ -8,11 +8,15 @@ import 'element-ui/lib/theme-chalk/index.css'
 import {
 	routes
 } from './routes.js'
-import axios from 'axios'
+import http from './api/http.js'
+import ports from './api/ports.js'
+/*import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-Vue.use(VueAxios, axios);
+Vue.use(VueAxios, axios);*/
 Vue.config.productionTip = false;
+Vue.prototype.$http = http;
+Vue.prototype.$ports = ports;
 Vue.use(Router);
 Vue.use(ElementUI);
 /* eslint-disable no-new */

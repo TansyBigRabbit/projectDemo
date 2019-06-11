@@ -1,6 +1,6 @@
 <template>
   <div>
-    <textarea style="display: none" name="cardinfo" cols="100" rows="10" id="cardinfo"></textarea>
+    <textarea style="display: none" userName="cardinfo" cols="100" rows="10" id="cardinfo"></textarea>
   <div class="breadcrumb">
   <el-breadcrumb separator="/">
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
@@ -9,56 +9,56 @@
   <el-breadcrumb-item>活动详情</el-breadcrumb-item>
   </el-breadcrumb>
 </div> 
-  <el-form :model="idCardForm"  ref="idCardForm" label-width="130px" class="demo-idCardForm">
+  <el-form :model="userinfoExtend"  ref="userinfoExtend" label-width="130px" class="demo-userinfoExtend">
     <!-- 基本信息 -->
     <el-row>
       <el-col :span="13">
   <el-form-item style="width: 100%" label="居民身份证号码">
-    <el-input v-model="idCardForm.idNum" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.idCard" :readonly="true"></el-input>
   </el-form-item>
 
   <el-row>
     <el-col :span="12">
      <el-form-item style="width: 100%" label="姓名" >
-    <el-input v-model="idCardForm.name" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.userName" :readonly="true"></el-input>
   </el-form-item> 
     </el-col>
     <el-col :span="12">
       <el-form-item style="width: 100%" label="姓名" >
-    <el-input v-model="idCardForm.sex" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.sex" :readonly="true"></el-input>
   </el-form-item> 
     </el-col>
   </el-row>
   <el-form-item style="width: 100%" label="出生日期" >
-    <el-input v-model="idCardForm.birthDay" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.birthDay" :readonly="true"></el-input>
   </el-form-item>
   <el-form-item style="width: 100%" label="民族" >
-    <el-input v-model="idCardForm.region" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.nation" :readonly="true"></el-input>
   </el-form-item>
   
   <el-form-item style="width: 100%" label="出生地址">
-    <el-input v-model="idCardForm.birthAddress" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.birthAddress" :readonly="true"></el-input>
   </el-form-item>
     <el-form-item style="width: 100%" label="签发单位" >
-    <el-input v-model="idCardForm.issuingUnit" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.issuingUnit" :readonly="true"></el-input>
   </el-form-item> 
   <el-row>
     <el-col :span="12">
     <el-form-item style="width: 100%" label="签发时间" >
-    <el-input v-model="idCardForm.issuingDate" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.timeFiled" :readonly="true"></el-input>
     </el-form-item>
     </el-col>
     <el-col :span="12">
      <el-form-item style="width: 100%" label="有效截止日期" >
-    <el-input v-model="idCardForm.expireDate" :readonly="true"></el-input>
+    <el-input v-model="userinfoExtend.expiratiopnDate" :readonly="true"></el-input>
   </el-form-item>
     </el-col>
   </el-row>
    <el-form-item class="submitBtn">
     <el-button type="primary" @click="readCard()">读卡</el-button>
-   <el-button type="cancel" :disabled="isShow?false:true" @click="submitForm('idCardForm')">下一步</el-button>
+   <el-button type="cancel" :disabled="isShow?false:true" @click="submitForm('userinfoExtend')">下一步</el-button>
 
-    <!-- <el-button @click="resetForm('idCardForm')">取消上访</el-button> -->
+    <!-- <el-button @click="resetForm('userinfoExtend')">取消上访</el-button> -->
   </el-form-item>
   </el-col>
 
@@ -77,7 +77,7 @@
 <el-dialog title="选择上访部门" :visible.sync="department.dialogDepartment" width=30% >
   <el-form > 
     <el-form-item label="选择上访部门" label-width=120px>
-      <el-select v-model="department.deparmentName"  placeholder="请选择上访部门">
+      <el-select v-model="department.deparmentuserName"  placeholder="请选择上访部门">
         <el-option label="部门一" value="shanghai"></el-option>
         <el-option label="部门二" value="beijing"></el-option>
       </el-select>
@@ -94,22 +94,22 @@
   export default {
     data() {
       return {
-        idCardForm: {
-          idNum:'',
-          name: '',//2
-          region: '',//4
+        userinfoExtend: {
+          idCard:'',
+          userName: '',
+          nation: '',
           issuingUnit: '',
-          issuingDate: '', 
-          expireDate:'',
-          sex: '',//3
+          timeFiled: '', 
+          expiratiopnDate:'',
+          sex: '',
           birthDay:'',
-          birthAddress: ''//7
+          birthAddress: ''
         }, 
         //表单禁用
         formDisable:true,
         department:{
         dialogDepartment: false, 
-        deparmentName:'', 
+        deparmentuserName:'', 
         },
         //true,读卡成功进入下一步骤
         isShow:false,
@@ -120,12 +120,18 @@
 
     },
     methods: {
-      submitForm(formName) {
+      submitForm(formuserName) {
         //提交表单数据成功
         //之后根据接口返回的状态判断
         //是否异常退出房间
         //是--回到之前房间
         //否--打开选择部门弹窗
+
+        //保存上访者身份信息
+        /*this.$http.post(this.$ports.userInfo+'/insert',
+        this.userinfoExtend).then(res=>{
+        console.log(res.data)
+        })*/
         this.department.dialogDepartment=true
         
       },
@@ -174,15 +180,15 @@
       arr[6]=this.dateFormat(arr[6]);
       arr[12]="data:image/jpeg;base64,"+arr[12].slice(0,arr[12].length-1)
       
-      this.idCardForm.idNum = arr[8];
-      this.idCardForm.name = arr[2];
-      this.idCardForm.region = arr[4];
-      this.idCardForm.issuingUnit = arr[9];
-      this.idCardForm.issuingDate = arr[10];
-      this.idCardForm.expireDate = arr[11];
-      this.idCardForm.sex = arr[3];
-      this.idCardForm.birthDay = arr[6];
-      this.idCardForm.birthAddress = arr[7];
+      this.userinfoExtend.idCard = arr[8];
+      this.userinfoExtend.userName = arr[2];
+      this.userinfoExtend.nation = arr[4];
+      this.userinfoExtend.issuingUnit = arr[9];
+      this.userinfoExtend.timeFiled = arr[10];
+      this.userinfoExtend.expiratiopnDate = arr[11];
+      this.userinfoExtend.sex = arr[3];
+      this.userinfoExtend.birthDay = arr[6];
+      this.userinfoExtend.birthAddress = arr[7];
       this.url=arr[12]
       },
       dateFormat(date){
@@ -193,8 +199,8 @@
       date = str;
       return date
       },
-      /*resetForm(formName) {
-        this.$refs[formName].resetFields();
+      /*resetForm(formuserName) {
+        this.$refs[formuserName].resetFields();
       },*/ 
 
     }

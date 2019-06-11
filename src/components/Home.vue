@@ -1,7 +1,7 @@
 <template>
 <el-container>
 
-  <el-header style="text-align: right; font-size: 12px"> 
+  <el-header class="main-header" style="text-align: right; font-size: 12px"> 
     <el-row>
       <el-col :span="12" style="text-align: left;">
       <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
@@ -37,11 +37,14 @@
     </template>
     <el-menu-item-group> 
           <router-link :to="'/home/lettersVisit'">
-          <el-menu-item index="1-1">
-            开启信访
-          </el-menu-item></router-link>
+          <el-menu-item index="1-1">开启信访</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/VisitRoom'">
           <el-menu-item index="1-2">信访接访</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/RoomList'">
           <el-menu-item index="1-3">信访处理</el-menu-item>
+          </router-link>
     </el-menu-item-group>  
   </el-submenu>
   <el-menu-item index="2">
@@ -91,13 +94,19 @@
     },
     methods: { 
       testInterface(){
-      this.axios.get('/api/threeCentreProject/depart/queryOne',{
+      this.$http.get(this.$ports.department+'/queryOne',
+       {
+          departId:'111'
+      }).then(res=>{
+        console.log(res.data)
+      })
+      /*this.axios.get('/queryOne',{
         params:{
           departId:'111'
         }
       }).then((response) => {
       console.log(response.data)
-      })
+      })*/
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath); 
@@ -126,7 +135,7 @@ a{
   .el-main{
     padding: 35px 35px 
   }
-    .el-header {
+    .main-header {
     background-color: #1890F5;
     color: #333;
     line-height: 60px;

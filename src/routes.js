@@ -1,6 +1,11 @@
 import Login from './components/login'
 import Home from './components/Home'
+
 import LettersVisit from './components/lettersVisit/lettersVisit'
+import VisitRoom from './components/lettersVisit/VisitRoom'
+import RoomList from './components/lettersVisit/roomList'
+
+
 export const routes = [{
 	path: '/',
 	name: 'login',
@@ -17,5 +22,13 @@ export const routes = [{
 		  bcrumd: ['首页'],
 		  activePath: "/menu/home"
 		}*/
-	}, ]
+	}, {
+		path: '/home/VisitRoom',
+		name: 'VisitRoom',
+		component: VisitRoom,
+	}, {
+		path: '/home/RoomList',
+		name: 'RoomList',
+		component: RoomList,
+	}]
 }];
