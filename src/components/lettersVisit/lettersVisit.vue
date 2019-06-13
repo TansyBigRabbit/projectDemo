@@ -139,6 +139,7 @@
       //创建信访房间
       createRoom(){
         this.department.dialogDepartment=false
+        this.$router.push('/home/VisitRoom');
       },
       
       //刷卡读卡

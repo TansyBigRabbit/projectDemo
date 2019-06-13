@@ -74,59 +74,17 @@
 			return{
               isRole:true,
               textarea:'',
-              myVar:'',
-              ////////////////////////////////////////////////
-              form: {
-		      msg: null,
-		      //username: store.get(PREFIX + "username") || null,
-		     // password: store.get(PREFIX + "password") || null
-		    },
-		    role: BomQuery('role'),
-		    onMic: 0,
-		    logined: false,
-		    //view: store.get(PREFIX + "roomview") || 0,
-		    roomList: [],
-		    userList: [],
-		    chatList: [],
-		//    roomUsers: [],
-		    roomnum: null,
-		    loginInfo: null,
-		    entryType: 'join',
-		    selToID: null,
-		    joinRoomModal: false,
-		    createRoomModal: false,
-		    modalForm: {
-		      roomname: null,
-		      roomnum: null
-		    },
-		    applying: false,
-		    //mode: store.get(PREFIX + "mode") || 'fixed',
-		    video_list: [],
-		    video_map: {},
-		    apply_list: [],
-		    //resolution: store.get(PREFIX + "resolution") || "auto",
-		    //frameRate: store.get(PREFIX + "frameRate") || "auto",
-		    //configRole: store.get(PREFIX + "configRole") || "ed640",
-		//    selectWatch:'',
-		    open: {
-		      audio: true,
-		      video: true
-		    }
-    ///////////////////////////////////////////////////////////////////////
+              myVar:'', 
 			}
 		},
-		created(){
-         this.initWebsocket();
-		},
 		mounted(){
-			
 			document.getElementById("mytime").innerText="";
-            this.time_fun();
-            this.createRoom();
+            this.time_fun(); 
+
 		},
 		beforeDestroy(){
             clearInterval(this.myVar);
-		}, 
+		},
 		methods:{
 
 			two_char:function(n) {
@@ -142,51 +100,7 @@
                 var h = date.getHours(), m = date.getMinutes(), s = date.getSeconds();
                 document.getElementById("mytime").innerText = _this.two_char(h) + ":" + _this.two_char(m) + ":" + _this.two_char(s);
             }, 1000);
-        },
-        /////////////////////////////////////////////////////////////////////
-        createRoom(){
-        	  var self = this;
-		      this.entryType = 'create';//进入类型 默认值是join
-		      this.role = 'LiveMaster';//主播
-		      //输入框中输入的值
-		      self.roomnum ="信访房间001";
-		      
-		      self.renderRoom();
-		      self.initWebRTC();
-
-        },
-       //初始化会议界面
-		    renderRoom: function() {
-		      this.view = 2;
-		      this.chatList = []; 
-
-		    },
-
-            initWebRTC: function() {
-     
-		      name='陈虹颖'; 
-		      var message = {
-		    			id : 'joinRoom',
-		    			name : name,//用户名
-		    			room : this.roomnum//房间号
-		    		}
-		      sendMessage(message);
-       },
-       initWebsocket(){
-       	    var _this = this;
-			initWebsocket();
-			ws.onclose = function() {
-		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-			alert("连接已中断，请刷新页面！")
-			_this.chatList.push({
-				who: '系统',
-				content: "连接已中断，请刷新页面",
-				isSelfSend: 0,
-				isSystem: 1
-			});
-		console.log(_this.chatList[0].who)
-	};
-       },
+        }, 
 		}
 	}
 </script>
@@ -205,9 +119,3 @@
 		margin: 20px 0 0 0;
 	}
 </style>
-
-
-
-
-
-

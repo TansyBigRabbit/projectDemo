@@ -10,6 +10,7 @@ import {
 } from './routes.js'
 import http from './api/http.js'
 import ports from './api/ports.js'
+import $ from 'jquery'
 /*import axios from 'axios'
 import VueAxios from 'vue-axios'
 

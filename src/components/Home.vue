@@ -1,7 +1,7 @@
 <template>
 <el-container>
 
-  <el-header class="main-header" style="text-align: right; font-size: 12px"> 
+  <el-header class="main-header" id="header001" style="text-align: right; font-size: 12px"> 
     <el-row>
       <el-col :span="12" style="text-align: left;">
       <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
@@ -90,7 +90,7 @@
       };
     },
     created(){
-      this.testInterface();
+      //this.testInterface();
     },
     methods: { 
       testInterface(){
@@ -100,6 +100,7 @@
       }).then(res=>{
         console.log(res.data)
       })
+
       /*this.axios.get('/queryOne',{
         params:{
           departId:'111'
@@ -110,7 +111,7 @@
       },
       handleOpen(key, keyPath) {
         console.log(key, keyPath); 
-        this.open=true
+        this.open=true 
       }, 
       handleClose(key, keyPath) {
         console.log(key, keyPath); 
