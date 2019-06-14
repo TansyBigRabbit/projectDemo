@@ -19,11 +19,11 @@ function Participant(name) {
 		videoId = 'local';
 	}
 
-	if (app.video_list.length == 0) {
+	if (video_list.length == 0) {
 		first = true;
 	}
 
-	app.video_list.push({
+	video_list.push({
 		videoId: videoId,
 		openId: videoId,
 		first: first

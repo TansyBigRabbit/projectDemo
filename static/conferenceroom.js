@@ -23,7 +23,7 @@ function initWebsocket() {
 
 	//var webSocketUrl = wsProtocol + "://" + url + projectName + "/groupcall?" + ILiveSDK.loginInfo.token;
 	//var webSocketUrl = 'ws://118.24.128.185:8080/webrtc-conference/groupcall?eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ5ZTExIiwiaWF0IjoxNTYwMzQ3MDk4LCJzdWIiOiJ4eHh4QDE2My5jb20iLCJpc3MiOiJ3d3cueHh4eC5jb20iLCJleHAiOjE1NjAzNDk3NzZ9.XJPD3_1AjHAsTOOo5ZLuonWV9drGTaiOH45J1sstEV8'
-	var webSocketUrl = wsProtocol + "://" + url + "/webrtc-conference/groupcall?eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjaGVuaG9uZ3lpbmciLCJpYXQiOjE1NjA0MzAzMzcsInN1YiI6Inh4eHhAMTYzLmNvbSIsImlzcyI6Ind3dy54eHh4LmNvbSIsImV4cCI6MTU2MDQzMzAxNX0.kYsVs2R2mMKsnlEXJiBt4fLhGyWGzoe-bia45QF-rYY"
+	var webSocketUrl = "ws://118.24.128.185:8080/webrtc-conference/groupcall?eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjaGVuaG9uZ3lpbmciLCJpYXQiOjE1NjA0OTk1NzgsInN1YiI6Inh4eHhAMTYzLmNvbSIsImlzcyI6Ind3dy54eHh4LmNvbSIsImV4cCI6MTU2MDUwMjI1Nn0.41--Px852va6phy0hyZVLFxmIip3vwPOyb3LycRWAlk"
 
 	console.log(webSocketUrl)
 	ws = new WebSocket(webSocketUrl);
