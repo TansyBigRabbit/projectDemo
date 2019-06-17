@@ -8,7 +8,7 @@
 		<el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button>
         <div>
 			<el-row>
-				<el-col v-for="item in roomList" :data-roomnum="item.info.roomnum" class="margin_r" :span="5">
+				<el-col v-for="item in roomList" :data-roomnum="item.info.roomnum" :key="item.uid" class="margin_r" :span="5">
 				 <el-card :body-style="{ padding: '0px' }">
 			      <img :src="imgUrl" class="image">
 			      <div style="padding: 14px;">

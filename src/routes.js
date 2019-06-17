@@ -3,7 +3,7 @@ import Home from './components/Home'
 
 import LettersVisit from './components/lettersVisit/lettersVisit'
 import VisitRoom from './components/lettersVisit/VisitRoom'
-import RoomList from './components/lettersVisit/roomList'
+import VisitRecord from './components/lettersVisit/visitRecord'
 
 
 export const routes = [{
@@ -27,8 +27,8 @@ export const routes = [{
 		name: 'VisitRoom',
 		component: VisitRoom,
 	}, {
-		path: '/home/RoomList',
-		name: 'RoomList',
-		component: RoomList,
+		path: '/home/VisitRecord',
+		name: 'visitRecord',
+		component: VisitRecord,
 	}]
 }];

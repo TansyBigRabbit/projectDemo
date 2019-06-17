@@ -53,6 +53,7 @@ export default {
               ILiveSDK.loginInfo.identifier = login.username;
               ILiveSDK.loginInfo.token = login.token;
               console.log('token:   '+ILiveSDK.loginInfo.token)
+              _this.$store.state.login=true;
               _this.$router.push({
                 name:'home'
               });

@@ -11,6 +11,7 @@ import {
 import http from './api/http.js'
 import ports from './api/ports.js'
 import $ from 'jquery'
+import store from './vuex/store.js'
 /*import axios from 'axios'
 import VueAxios from 'vue-axios'
 
@@ -24,9 +25,24 @@ Vue.use(ElementUI);
 const router = new Router({
 	routes,
 	mode: 'history'
-})
+});
+router.beforeEach((to, from, next) => {
+	if (to.path != '/') {
+		//判断登陆状态
+		console.log(router);
+		if (store.state.login) {
+			next();
+		} else {
+			alert("请先登录！");
+			next('/');
+		}
+	} else {
+		next();
+	}
+});
 new Vue({
 	router,
+	store,
 	el: '#app',
 	components: {
 		App

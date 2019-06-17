@@ -42,8 +42,8 @@
           <router-link :to="'/home/VisitRoom'">
           <el-menu-item index="1-2">信访接访</el-menu-item>
           </router-link>
-          <router-link :to="'/home/RoomList'">
-          <el-menu-item index="1-3">信访处理</el-menu-item>
+          <router-link :to="'/home/VisitRecord'">
+          <el-menu-item index="1-3">信访记录</el-menu-item>
           </router-link>
     </el-menu-item-group>  
   </el-submenu>
