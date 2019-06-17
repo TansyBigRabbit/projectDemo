@@ -1,12 +1,39 @@
 <template>
-	<div> 
+	<div >  
+	 <div v-if="roomListFlag">
+		<div>
+			<h3>房间列表</h3>
+		</div>
+		<el-divider class="divider"></el-divider>
+		<el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button>
+        <div>
+			<el-row>
+				<el-col v-for="item in roomList" :data-roomnum="item.info.roomnum" class="margin_r" :span="5">
+				 <el-card :body-style="{ padding: '0px' }">
+			      <img :src="imgUrl" class="image">
+			      <div style="padding: 14px;">
+			        <span>{{item.info.roomnum}}</span>
+			        <div class="bottom clearfix">
+			          <el-button v-if='item.info.memsize<2' type="text" @click="joinRoom">加入房间</el-button>
+			          <span v-else>房间满员，无法加入</span>
+			        </div>
+			      </div>
+			    </el-card>	
+				</el-col>    
+			</el-row>
+		</div>
+	</div>
+		<div v-else>
+		<el-button type="primary" style="width: 150px" @click="quitRoom">退出房间</el-button>
 		<el-row class="container">
 			<el-col :span="11">
 				<div class="box_1">
 					<!-- v-if="item.videoId == 'local'" muted :id="item.videoId"  -->
-					<video class=" " autoplay="autoplay" data-videotype="remote"></video> 
+					<video class="vedioBox" id="creator" autoplay="autoplay" data-videotype="remote"></video> 
 				</div>
-				<div class="box_1"></div>
+				<div class="box_1">
+					<video class="vedioBox" id="participant" autoplay="autoplay" data-videotype="remote"></video> 
+				</div>
 			</el-col>
 			<el-col :span="11">
 				<div>
@@ -65,14 +92,31 @@
 				</div>
 			</el-col>
         </el-row>
-        <el-button type="primary" style="width: 150px" @click="createRoom">创建房间</el-button>
+        
        </div>
+
+       <!-- 房间名称创建 -->
+<el-dialog title="创建房间" :visible.sync="createRoomModel" width=30% >
+  <el-form > 
+    <el-form-item label="请输入房间名称" label-width=120px>
+      <el-input v-model="roomnum"></el-input>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="createRoomModel = false">取 消</el-button>
+    <el-button type="primary" @click="createRoom()">确 定</el-button>
+  </div>
+</el-dialog>
+   </div>
 </template>
 
 <script>
 	export default{
 		data(){
-			return{
+			return{ 
+			//默认页面是房间列表
+			  roomListFlag:true,
+			  imgUrl:'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
               isRole:true,
               textarea:'',
               myVar:'',
@@ -103,7 +147,7 @@
 		    entryType: 'join',
 		    selToID: null,
 		    joinRoomModal: false,
-		    createRoomModal: false,
+		    createRoomModel: false,
 		    modalForm: {
 		      roomname: null,
 		      roomnum: null
@@ -121,23 +165,26 @@
 		    open: {
 		      audio: true,
 		      video: true
-		    }
-    ///////////////////////////////////////////////////////////////////////
+		    },
+    /////////////////////////////////////////////////////////////////////// 
 			}
 		},
 		created(){
-		this.initWebsocket();	
+		this.initWebsocket()
         },
-		mounted(){
-		/*	if (ws != null && ws.readyState == 1) {
-		this.createRoom(); 
-	}*/
-			document.getElementById("mytime").innerText="";
-			this.time_fun(); 
+		mounted(){ 
+		/*document.getElementById("mytime").innerText="";
+		this.time_fun(); */
             
 	    },
+	    watch:{ 
+	    },
 		beforeDestroy(){
-            clearInterval(this.myVar);
+            clearInterval(this.myVar); 
+        //if (ws.readyState == 1) 
+            console.log("关闭websocket...");
+			ws.close();
+		
 		}, 
 		methods:{
 
@@ -155,14 +202,29 @@
                 document.getElementById("mytime").innerText = app.two_char(h) + ":" + app.two_char(m) + ":" + app.two_char(s);
             }, 1000);
         },
-        /////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////// 
+    joinRoom: function(e) {
+      /*if (!this.role) {
+        // this.role = 'Guest';
+        this.role = 'LiveGuest';
+      }*/
+      this.createRoomModel=true;
+      this.role = 'LiveGuest';
+      this.entryType = 'join';
+      this.roomnum = String(e.currentTarget.getAttribute("data-roomnum"));
+      //this.roomnum ="信访房间001";
+      this.renderRoom();
+      this.initWebRTC();
+      
+    },
         createRoom(){
         	  var self = this;
+        	  this.createRoomModel = false
 		      this.entryType = 'create';//进入类型 默认值是join
 		      this.role = 'LiveMaster';//主播
 		      //输入框中输入的值
-		      self.roomnum ="信访房间001";
-		      
+		      //self.roomnum ="信访房间001";
+		      self.roomListFlag=false;
 		      self.renderRoom();
 		      self.initWebRTC();
 
@@ -173,10 +235,9 @@
 		      this.chatList = []; 
 
 		    },
-
-            initWebRTC: function() {
-     
-		      name='陈虹颖'; 
+       //初始化websocket
+       initWebRTC: function() {
+         name=ILiveSDK.loginInfo.identifier; 
 		      var message = {
 		    			id : 'joinRoom',
 		    			name : name,//用户名
@@ -203,32 +264,15 @@
 	//获取带"/"的项目名，如：/webrtc
 	var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
 
-	//var webSocketUrl = wsProtocol + "://" + url + projectName + "/groupcall?" + ILiveSDK.loginInfo.token;
-	//var webSocketUrl = 'ws://118.24.128.185:8080/webrtc-conference/groupcall?eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ5ZTExIiwiaWF0IjoxNTYwMzQ3MDk4LCJzdWIiOiJ4eHh4QDE2My5jb20iLCJpc3MiOiJ3d3cueHh4eC5jb20iLCJleHAiOjE1NjAzNDk3NzZ9.XJPD3_1AjHAsTOOo5ZLuonWV9drGTaiOH45J1sstEV8'
-	var webSocketUrl = "ws://118.24.128.185:8080/webrtc-conference/groupcall?eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJjaGVuaG9uZ3lpbmciLCJpYXQiOjE1NjA1MDMyMzUsInN1YiI6Inh4eHhAMTYzLmNvbSIsImlzcyI6Ind3dy54eHh4LmNvbSIsImV4cCI6MTU2MDUwNTkxNH0.Xfjd7meiO1R_mEYSwZ1GvQz4j6d_-e0GtjnBRzPXjpE"
+	//var webSocketUrl = wsProtocol + "://" + url + '/webrtc-conference/groupcall?' + ILiveSDK.loginInfo.token;
+
+	/*var webSocketUrl = 'wss://192.168.1.2:18000/threeCentreProject/groupcall?'+ILiveSDK.loginInfo.token*/
+	/*var webSocketUrl = "ws://118.24.128.185:8080/webrtc_conference_war/groupcall?"+ILiveSDK.loginInfo.token*/
+	var webSocketUrl = "ws://118.24.128.185:8080/webrtc-conference/groupcall?"+ILiveSDK.loginInfo.token
 
 	console.log(webSocketUrl)
-	ws = new WebSocket(webSocketUrl);
-
-
-	window.onbeforeunload = function() {
-		if (ws.readyState == 1) {
-			ws.close();
-		}
-	};
-
-	ws.onclose = function() {
-		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-		alert("连接已中断，请刷新页面！")
-		app.chatList.push({
-			who: '系统',
-			content: "连接已中断，请刷新页面",
-			isSelfSend: 0,
-			isSystem: 1
-		});
-	};
-
-	ws.onmessage = function(message) {
+	ws = new WebSocket(webSocketUrl); 
+    ws.onmessage = function(message) {
 		
 		var parsedMessage = JSON.parse(message.data);
 		console.info('Received message: ' + message.data);
@@ -285,7 +329,13 @@
 				console.error('Unrecognized message', parsedMessage);
 		}
 	}
-			ws.onclose = function() {
+	 	ws.onopen = function (ev) { 
+	 	console.log("WebSocket连接成功"); 
+	 	app.getRoomList();
+       } 
+
+			ws.onclose = function(e) {
+				console.log(e);
 		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
 			alert("连接已中断，请刷新页面！")
 			app.chatList.push({
@@ -296,8 +346,7 @@
 			});
 		console.log(app.chatList[0].who)
 	};
-
-	
+      
        },
        sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
@@ -312,7 +361,7 @@
 	var defaultSetting = {
 		maxWidth: 320,
 		maxHeight: 240,
-		maxFrameRate: 15,
+		maxFrameRate: 20,
 		minFrameRate: 15
 	};
 
@@ -343,7 +392,7 @@
 	};
 	//	console.log(name + " registered in room " + room);
 
-	var participant = new Participant(name);
+	var participant = new app.Participant(name);
 
 	participants[name] = participant;
 
@@ -375,7 +424,7 @@
 				this.generateOffer(participant.offerToReceiveVideo.bind(participant));
 			});
 
-		msg.data.forEach(receiveVideo);
+		msg.data.forEach(app.receiveVideo);
 
 
 	}, 5);
@@ -385,7 +434,7 @@ onNewParticipant(request) {
 },
 receiveVideo(sender) {
 	var app = this;
-	var participant = new Participant(sender);
+	var participant = new app.Participant(sender);
 	participants[sender] = participant;
 
 	setTimeout(function() {
@@ -451,10 +500,11 @@ tipRsp(data) {
 },
 getRoomListRsp(data) {
     var app=this;
-	app.roomList = _.filter(data.data.rooms || [], function(item) {
+	/*app.roomList = _.filter(data.data.rooms || [], function(item) {
 		// return item.info && item.info.title.indexOf("极速模式") != -1;
 		return item.info;
-	}) || [];
+	}) || [];*/
+	app.roomList = data.data.rooms;
 
 },
 getRoomUserRsp(data) {
@@ -492,11 +542,147 @@ viewerResponse(message) {
 		});
 	}
 },
+//获取房间列表数据
+getRoomList: function(opts, succ, err) {
+
+    this.sendMessage({
+      "type": 1,
+      "token": ILiveSDK.loginInfo.token,
+      "index": 0,
+      "size": 30,
+      id: 'getRoomList'
+    });
+
+  },
+  //退出房间
+  quitRoom:function(){
+	var self = this;
+	self.roomListFlag=true;
+    sendMessage({
+        id: 'leaveRoom'
+      });
+    for (var key in participants) {
+        participants[key].dispose();
+      }
+
+  },
+Participant(name) {
+	this.name = name; 
+	var rtcPeer;
+
+
+	var videoId = '';
+	var first = false;
+
+	if (name == ILiveSDK.loginInfo.identifier) {
+		videoId = 'creator';
+	}else{
+        videoId = 'participant';
+	}
+
+	if (video_list.length == 0) {
+		first = true;
+	}
+
+	video_list.push({
+		videoId: videoId,
+		openId: videoId,
+		first: first
+	});
+
+
+
+	this.getElement = function() {
+		//视频ID
+		return container; //vue.JS中写的 container=document.createElement('div')
+	}
+
+	this.getVideoElement = function() {
+		var videoObj = document.getElementById(videoId)
+		if (videoId == 'local') {
+			videoObj.muted = true //播放时静音
+		}
+
+		return videoObj;
+	}
+
+
+
+	this.offerToReceiveVideo = function(error, offerSdp, wp) {
+		if (error) return console.error("sdp offer error")
+		console.log('Invoking SDP offer callback function');
+		var msg = {
+			id: "receiveVideoFrom",
+			sender: name,
+			sdpOffer: offerSdp
+		};
+		this.sendMessage(msg);
+	}
+
+
+	this.onIceCandidate = function(candidate, wp) {
+		console.log("Local candidate" + JSON.stringify(candidate));
+
+		var message = {
+			id: 'onIceCandidateRoom',
+			candidate: candidate,
+			name: name
+		};
+		this.sendMessage(message);
+	}
+
+	Object.defineProperty(this, 'rtcPeer', {
+		writable: true
+	});
+    this.sendMessage=function(message) {
+	var jsonMessage = JSON.stringify(message);
+	if (ws == null || ws.readyState != 1) {
+		return;
+	}
+	console.log('Senging message: ' + jsonMessage);
+	ws.send(jsonMessage);
+
+    }
+	this.dispose = function() {
+		console.log('Disposing participant ' + this.name);
+		this.rtcPeer.dispose();
+		//		container.parentNode.removeChild(container);
+		//this.onRemoteStreamRemove(this.name);
+	};
+},
 		}
 	}
 </script>
 
 <style> 
+ .margin_r{
+    margin-right: 25px;
+    margin-bottom: 25px;
+   	}
+	 .bottom { 
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    padding: 0;
+    float: right;
+  }
+
+  .image {
+    width: 100%;
+    display: block;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+  
+  .clearfix:after {
+      clear: both
+  }
     .container{
     	padding-top:25px;
     }
@@ -508,6 +694,10 @@ viewerResponse(message) {
 	}
 	.divider{
 		margin: 20px 0 0 0;
+	}
+	.vedioBox{
+		width: 100%;
+		height: 100%;
 	}
 </style>
 

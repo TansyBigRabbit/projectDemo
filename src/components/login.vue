@@ -13,7 +13,7 @@
  </el-row>
  <el-row>
   <el-col>
-    <el-input id="password"type="password" placeholder="请输入密码" show-password>
+    <el-input id="password" type="password" v-model="password" placeholder="请输入密码" show-password>
       <template slot="prepend">密码</template>
     </el-input>
   </el-col>
@@ -39,9 +39,29 @@ export default {
   },
   methods:{
     login:function(){
-      this.$router.push({
-        name:'home'
-      })
+      var _this = this; 
+      /*this.$http.post(this.$ports.login,{
+        username:this.userName,
+        pwd:this.password
+      })*/
+      this.$http.post('http://118.24.128.185:8080/webrtc-conference/api/account/login',{
+        username:this.userName,
+        pwd:this.password
+      }).then(function(response) {
+          if (response.status == 200) {
+             var login = response.data.data
+              ILiveSDK.loginInfo.identifier = login.username;
+              ILiveSDK.loginInfo.token = login.token;
+              console.log('token:   '+ILiveSDK.loginInfo.token)
+              _this.$router.push({
+                name:'home'
+              });
+          } else { 
+          }
+        }).
+      catch (function(error) { 
+      });
+     
     }
   }
 }

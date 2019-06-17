@@ -5,7 +5,7 @@ import {
 //创建axios实例
 var service = axios.create({
 	baseURL: '',
-	timeout: 5000,
+	timeout: 500000,
 	headers: {
 		'content-type': 'application/json',
 		//"token":'14a1347f412b319b0fef270489f'
