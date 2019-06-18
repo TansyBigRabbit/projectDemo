@@ -26,7 +26,7 @@ const router = new Router({
 	routes,
 	mode: 'history'
 });
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
 	if (to.path != '/') {
 		//判断登陆状态
 		console.log(router);
@@ -39,7 +39,7 @@ router.beforeEach((to, from, next) => {
 	} else {
 		next();
 	}
-});
+});*/
 new Vue({
 	router,
 	store,

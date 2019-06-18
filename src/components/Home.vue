@@ -29,7 +29,7 @@
 
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside>
-<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+<el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-submenu index="1">
     <template slot="title">
       <i class="el-icon-location"></i>
@@ -47,22 +47,46 @@
           </router-link>
     </el-menu-item-group>  
   </el-submenu>
-  <el-menu-item index="2">
-    <i class="el-icon-menu"></i>
-    <span slot="title">党建中心系统</span>
-  </el-menu-item>
-  <el-menu-item index="3" >
+  <el-submenu index="2"> 
+    <template slot="title">
+      <i class="el-icon-location"></i>
+      <span slot="title">党建中心系统</span>
+    </template>
+    <el-menu-item-group> 
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-1">会议签到</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/ConList'">
+          <el-menu-item index="2-2">会议列表</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/ConRecord'">
+          <el-menu-item index="2-3">会议记录</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/MyCon'">
+          <el-menu-item index="2-3">我的会议</el-menu-item>
+          </router-link>
+    </el-menu-item-group>  
+    <!-- <i class="el-icon-menu"></i>
+    <span slot="title">党建中心系统</span> -->
+  </el-submenu>
+  <el-submenu index="3" >
+    <template slot="title">
     <i class="el-icon-document"></i>
     <span slot="title">综治中心系统</span>
-  </el-menu-item>
-  <el-menu-item index="4">
+  </template>
+  </el-submenu>
+  <el-submenu index="4">
+    <template slot="title">
     <i class="el-icon-setting"></i>
     <span slot="title">用户管理</span>
-  </el-menu-item>
-  <el-menu-item index="5">
+  </template>
+  </el-submenu>
+  <el-submenu index="5">
+    <template slot="title">
     <i class="el-icon-setting"></i>
     <span slot="title">系统管理</span>
-  </el-menu-item>
+  </template>
+  </el-submenu>
 </el-menu>
 </el-aside></el-col>
  <el-col id="main" :span="isCollapse?22:20">  
