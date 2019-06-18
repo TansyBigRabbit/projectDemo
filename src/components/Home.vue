@@ -28,7 +28,7 @@
 <el-row>
 
 
-<el-col id="menu" :span="isCollapse?2:4"><el-aside>
+<el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
 <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-submenu index="1">
     <template slot="title">
@@ -63,7 +63,7 @@
           <el-menu-item index="2-3">会议记录</el-menu-item>
           </router-link>
           <router-link :to="'/home/MyCon'">
-          <el-menu-item index="2-3">我的会议</el-menu-item>
+          <el-menu-item index="2-4">我的会议</el-menu-item>
           </router-link>
     </el-menu-item-group>  
     <!-- <i class="el-icon-menu"></i>
@@ -182,5 +182,8 @@ a{
     line-height: normal;
     font-size: 12px; 
 } 
+.overflow_y{
+  overflow-y: hidden;
+}
 </style>
  

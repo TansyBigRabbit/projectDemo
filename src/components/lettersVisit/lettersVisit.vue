@@ -24,7 +24,7 @@
   </el-form-item> 
     </el-col>
     <el-col :span="12">
-      <el-form-item style="width: 100%" label="姓名" >
+      <el-form-item style="width: 100%" label="性别" >
     <el-input v-model="userinfoExtend.sex" :readonly="true"></el-input>
   </el-form-item> 
     </el-col>

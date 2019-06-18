@@ -44,6 +44,7 @@ export default {
         username:this.userName,
         pwd:this.password
       })*/
+      /*https://171.223.100.47:8443/*/
       this.$http.post('http://118.24.128.185:8080/webrtc-conference/api/account/login',{
         username:this.userName,
         pwd:this.password

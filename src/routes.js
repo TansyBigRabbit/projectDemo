@@ -9,6 +9,7 @@ import ConList from './components/DJcenter/conList'
 import ConRecord from './components/DJcenter/conRecord'
 import ConRoom from './components/DJcenter/conRoom'
 import ConSignate from './components/DJcenter/conSignate'
+import ConSignate2 from './components/DJcenter/conSignate2'
 import MyCon from './components/DJcenter/myCon'
 
 export const routes = [{
@@ -54,6 +55,10 @@ export const routes = [{
 			path: '/home/ConSignate',
 			name: 'ConSignate',
 			component: ConSignate,
+		}, {
+			path: '/home/ConSignate2',
+			name: 'ConSignate2',
+			component: ConSignate2,
 		}, {
 			path: '/home/MyCon',
 			name: 'MyCon',
