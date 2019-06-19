@@ -29,7 +29,7 @@
   			</el-form-item> 	
     		</el-col>
     		<el-col :span="11">
-    		<el-container class="middle">
+    		<el-container style="height: 100px" class="middle">
           	<img
       		style="max-width: 100%"
       		:src="url"/>
@@ -70,16 +70,7 @@
 		</el-col>
 	</el-row>
 </div>
-  </el-col>
-
-  <!-- 照片部分 -->
-      <!-- <el-col :span="10" >
-        <el-container class="middle">
-          <img
-      style="width: 120px; height: 150px"
-      :src="url"/>
-        </el-container>
-      </el-col>   -->
+  </el-col> 
 	</el-row>
 </template>
 

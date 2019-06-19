@@ -25,7 +25,7 @@
     </el-header>
 
 
-<el-row>
+<el-row id="menuRow">
 
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
@@ -184,6 +184,19 @@ a{
 } 
 .overflow_y{
   overflow-y: hidden;
+}
+.el-divider{
+  margin: 0px
+}
+@media screen and (max-width: 1400px) {
+    #menuRow .el-col-4 {
+        width: 15%
+}
+}
+@media screen and (min-width: 1401px) {
+    #menuRow .el-col-4 {
+        width: 12.5%
+}
 }
 </style>
  
