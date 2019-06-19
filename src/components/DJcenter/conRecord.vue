@@ -178,7 +178,7 @@
       label="操作" 
       align="center">
       <template slot-scope="scope">
-       <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="signatureCon(scope.row)" type="primary" size="small">签到</el-button>
+       <el-button v-if="scope.row.status==0"   @click="signatureCon(scope.row)" type="primary" size="small">签到</el-button>
        <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button>
        <el-button v-if="scope.row.status==4" @click="enterRoom(scope.row)" type="primary" size="small">加入会议</el-button> 
       </template> 
@@ -349,7 +349,12 @@
         },
          //进入会议室
          enterRoom(row){
-
+            this.$router.push({
+            name:'ConRoom',
+            params: {
+                id: '123456'
+               }
+           })
          }
 		}
 	}

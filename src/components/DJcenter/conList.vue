@@ -32,25 +32,31 @@
       <div class="search_box">
   <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
      <el-row>
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="会议名称">
+      <el-col :span="6">
+        <el-form-item style="width: 90%" label="会议名称">
       <el-input v-model="searchForm.conName" ></el-input>
     </el-form-item>
       </el-col> 
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
+      <el-col :span="6">
+        <el-form-item style="width: 90%" label="开始时间">
+       <el-date-picker  style="width: 90%" size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item>
       </el-col> 
-      <el-col :span="8">
+      <el-col :span="6">
         <el-form-item style="width: 80%" label="创建人">
       <el-input v-model="searchForm.creator" ></el-input>
     </el-form-item>
       </el-col> 
+      <el-col :span="6">
+        <el-form-item style="width: 70%" label="状态">
+      <el-select v-model="searchForm.status" placeholder="请选择状态">
+      <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
+    </el-select>
+    </el-form-item>
+      </el-col> 
      </el-row> 
     
-  </el-form> 
- 
+  </el-form>  
 </div> 
   <div class="table_title">
     <span>会议列表</span>
@@ -116,13 +122,13 @@
   <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
      <el-row>
       <el-col :span="6">
-        <el-form-item style="width: 80%" label="会议名称">
+        <el-form-item style="width: 90%" label="会议名称">
       <el-input v-model="searchForm.conName" ></el-input>
     </el-form-item>
       </el-col> 
       <el-col :span="6">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
+        <el-form-item style="width: 90%" label="开始时间">
+       <el-date-picker  style="width: 90%" size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item>
       </el-col> 
       <el-col :span="6">
@@ -131,7 +137,7 @@
     </el-form-item>
       </el-col> 
       <el-col :span="6">
-        <el-form-item style="width: 50%" label="状态">
+        <el-form-item style="width: 70%" label="状态">
       <el-select v-model="searchForm.status" placeholder="请选择状态">
       <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
     </el-select>
@@ -201,17 +207,17 @@
 
     <!--待开展会议-->
 <el-tab-pane label="待开展会议" > 
-      <div class="search_box">
+     <div class="search_box">
   <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
      <el-row>
       <el-col :span="6">
-        <el-form-item style="width: 80%" label="会议名称">
+        <el-form-item style="width: 90%" label="会议名称">
       <el-input v-model="searchForm.conName" ></el-input>
     </el-form-item>
       </el-col> 
       <el-col :span="6">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
+        <el-form-item style="width: 90%" label="开始时间">
+       <el-date-picker  style="width: 90%" size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item>
       </el-col> 
       <el-col :span="6">
@@ -220,7 +226,7 @@
     </el-form-item>
       </el-col> 
       <el-col :span="6">
-        <el-form-item style="width: 50%" label="状态">
+        <el-form-item style="width: 70%" label="状态">
       <el-select v-model="searchForm.status" placeholder="请选择状态">
       <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
     </el-select>

@@ -20,6 +20,7 @@ export const routes = [{
 	path: '/home',
 	name: 'home',
 	component: Home,
+	redirect:'/home/lettersVisit',
 	children: [{
 			//信访部分
 			path: '/home/lettersVisit',
@@ -50,7 +51,7 @@ export const routes = [{
 		}, {
 			path: '/home/ConRoom',
 			name: 'ConRoom',
-			component: VisitRecord,
+			component: ConRoom,
 		}, {
 			path: '/home/ConSignate',
 			name: 'ConSignate',
