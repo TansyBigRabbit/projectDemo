@@ -771,14 +771,14 @@ li .item-status {
 }
 
 .typing-area span {
-	display: table-cell;
+/*	display: table-cell;
 	width: 80px;
 	font-size: 14px;
 	color: #fff;
 	background-color: #24b37a;
 	text-align: center;
 	vertical-align: middle;
-	cursor: pointer
+	cursor: pointer*/
 }
 
 .main-area .sub-panel.chatroom.fold {

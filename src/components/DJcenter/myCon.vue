@@ -97,8 +97,8 @@
       label="操作" 
       align="center">
       <template slot-scope="scope">
-       <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="signatureCon(scope.row)" type="primary" size="small">签到</el-button>
-       <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button>
+       <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="startMeeting(scope.row)" type="primary" size="small">开启会议</el-button>
+       <el-button @click="cancelMeeting(scope.row)" type="primary" size="small">取消会议</el-button>
         
       </template> 
     </el-table-column>
@@ -263,10 +263,8 @@
     <el-table-column 
       label="操作" 
       align="center">
-      <template slot-scope="scope">
-       <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="signatureCon(scope.row)" type="primary" size="small">签到</el-button>
+      <template slot-scope="scope"> 
        <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button>
-       <el-button v-if="scope.row.status==4" @click="enterRoom(scope.row)" type="primary" size="small">加入会议</el-button> 
       </template> 
     </el-table-column>
   </el-table>
@@ -435,6 +433,26 @@
         },
          //进入会议室
          enterRoom(row){
+         this.$router.push({
+            name:'ConRoom',
+            params:{
+              roonNum:row.conName,
+              role:'LiveGuest',//房间观众
+            }
+          })
+         },
+         //开启会议
+         startMeeting(row){ 
+          this.$router.push({
+            name:'ConRoom',
+            params:{
+              roonNum:row.conName,
+              role:'LiveMaster',//房间创建者--主播
+            }
+          })
+         },
+         //取消会议
+         cancelMeeting(row){
 
          }
 		}

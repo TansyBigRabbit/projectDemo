@@ -241,7 +241,8 @@
 		      var message = {
 		    			id : 'joinRoom',
 		    			name : name,//用户名
-		    			room : this.roomnum//房间号
+		    			room : this.roomnum,//房间号
+		    			
 		    		}
 		      this.sendMessage(message);
        },

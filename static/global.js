@@ -17,7 +17,7 @@ var ILiveSDK = {
 		'token': null
 	}
 };
-
+var webUrlMain = "ws://118.24.128.185:8080/webrtc-conference/groupcall?"
 var video_list = [];
 var userList = [];
 
