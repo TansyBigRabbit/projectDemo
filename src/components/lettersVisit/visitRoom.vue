@@ -5,16 +5,16 @@
 			<h3>房间列表</h3>
 		</div>
 		<el-divider class="divider"></el-divider>
-		<el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button>
+		<!-- <el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button> -->
         <div>
 			<el-row>
-				<el-col v-for="item in roomList" :data-roomnum="item.info.roomnum" :key="item.uid" class="margin_r" :span="5">
+				<el-col v-for="(item,index) in roomList" :data-roomnum="item.info.roomnum" :key="index" class="margin_r" :span="5">
 				 <el-card :body-style="{ padding: '0px' }">
 			      <img :src="imgUrl" class="image">
 			      <div style="padding: 14px;">
 			        <span>{{item.info.roomnum}}</span>
 			        <div class="bottom clearfix">
-			          <el-button v-if='item.info.memsize<2' type="text" @click="joinRoom">加入房间</el-button>
+			          <el-button v-if='item.info.memsize<2' type="text" @click="joinRoom(item.info.roomnum)">加入房间</el-button>
 			          <span v-else>房间满员，无法加入</span>
 			        </div>
 			      </div>
@@ -24,7 +24,7 @@
 		</div>
 	</div>
 		<div v-else>
-		<el-button type="primary" style="width: 150px" @click="quitRoom">退出房间</el-button>
+		<!-- <el-button type="primary" style="width: 150px" @click="quitRoom">退出房间</el-button> -->
 		<el-row class="container">
 			<el-col :span="11">
 				<div class="box_1">
@@ -74,39 +74,26 @@
 					</el-row>
 				</div>
 				<div v-if="isRole">
-					<el-input
+					<el-input 
 					  type="textarea"
 					  :rows="12"
 					  placeholder="请记录上访内容内容"
-					  v-model="textarea"
+					  v-model="submitConInfo.content"
 					  style="margin:30px 0" >
 					</el-input>
 					<div style="width: 20%;margin: 0 auto">
-					 <el-button type="primary" style="width: 150px">提交</el-button>
+					 <el-button type="primary" @click="submitContent(1)" style="width: 150px">提交</el-button>
 				    </div>
 				</div>
-				<div v-if="!isRole"> 
+				<div v-if="isRole"> 
 					<div style="width: 20%;margin: 40px auto">
-					 <el-button type="primary" style="width: 150px">结束上访</el-button>
+					 <el-button type="primary" @click="quitRoom" style="width: 150px">结束上访</el-button>
 				    </div>
 				</div>
 			</el-col>
         </el-row>
         
-       </div>
-
-       <!-- 房间名称创建 -->
-<el-dialog title="创建房间" :visible.sync="createRoomModel" width=30% >
-  <el-form > 
-    <el-form-item label="请输入房间名称" label-width=120px>
-      <el-input v-model="roomnum"></el-input>
-    </el-form-item>
-  </el-form>
-  <div slot="footer" class="dialog-footer">
-    <el-button @click="createRoomModel = false">取 消</el-button>
-    <el-button type="primary" @click="createRoom()">确 定</el-button>
-  </div>
-</el-dialog>
+       </div> 
    </div>
 </template>
 
@@ -118,8 +105,16 @@
 			  roomListFlag:true,
 			  imgUrl:'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
               isRole:true,
-              textarea:'',
-              myVar:'',
+              //接访者记录的信息
+              submitConInfo:{
+              content:'',
+              idCard:'',
+              roomId:'',
+              petitionDuration:0,
+              type:1,
+              },
+               myTime:'',
+               myContent:'',
               ////////////////////////////////////////////////
               form: {
 		      msg: null,
@@ -134,7 +129,7 @@
 		    userList: [],
 		    chatList: [],
 		//    roomUsers: [],
-		    roomnum: null,
+		    roomnum: '',
 		    loginInfo: {
 		    'sdkAppId': null,
 		    'openid': null,
@@ -165,22 +160,44 @@
 		    open: {
 		      audio: true,
 		      video: true
+		    }, 
+		    //从上访页面传来的数据 角色类型、部门ID
+		    pageToData:{
+		    	pageToRole:this.$route.params.roleType,
+		    	pageToDepart:this.$route.params.departId,
+		    	pageToRoom:this.$route.params.roomNum,
+		    	departId:this.$route.params.departId,
 		    },
-    /////////////////////////////////////////////////////////////////////// 
+    ///////////////////////////////////////////////////////////////////////  
 			}
 		},
-		created(){
-		this.initWebsocket()
+		created(){   
+			//接访者
+	 	if(this.pageToData.pageToRole!='petitionJoin'&&this.pageToData.pageToRole!='petitionCreate'){
+			this.roomListFlag=true;
+			this.isRole=true;
+			//获取自身token 
+			var _this = this;
+			this.pageToData.pageToRole="petition";
+			console.log("获取接访者的token并且初始化websocket......");
+            this.getToken(loginInfoMain.idCard); 
+
+        //上访者异常退出加入房间
+        /*}else if(this.pageToData.pageToRole=='petitionJoin'){
+            this.isRole=false;
+        	this.roomListFlag=false;
+        */
+        }else{
+        	this.isRole=false;
+        	this.roomListFlag=false;
+        	this.initWebsocket();  
+        }
+		
         },
-		mounted(){ 
-		/*document.getElementById("mytime").innerText="";
-		this.time_fun(); */
-            
-	    },
-	    watch:{ 
-	    },
+		mounted(){  
+	    }, 
 		beforeDestroy(){
-            clearInterval(this.myVar); 
+           // clearInterval(this.myTime); 
         //if (ws.readyState == 1) 
             console.log("关闭websocket...");
 			ws.close();
@@ -194,7 +211,7 @@
         	time_fun:function(){
         	var app = this;
             var sec=0;
-             app.myVar = window.setInterval(function () {
+             app.myTime = window.setInterval(function () {
                 sec++;
                 var date = new Date(0, 0)
                 date.setSeconds(sec);
@@ -202,31 +219,59 @@
                 document.getElementById("mytime").innerText = app.two_char(h) + ":" + app.two_char(m) + ":" + app.two_char(s);
             }, 1000);
         },
-        ///////////////////////////////////////////////////////////////////// 
-    joinRoom: function(e) {
-      /*if (!this.role) {
-        // this.role = 'Guest';
-        this.role = 'LiveGuest';
-      }*/
-      this.createRoomModel=true;
+        //提交记录内容
+        submitContent(p){
+        var _this = this;
+        //_this.submitConInfo.timePeriod = $("#mytime").text();
+        this.$http.post(this.$ports.submitContent,
+         _this.submitConInfo
+        ).then(res=>{
+          console.log("提交接访的上访记录......");
+          console.log(res.data);
+          if(res.data.errorCode==0){   
+            if(p==1){
+            	alert("保存成功");
+            } 
+        }else{
+          alert(res.data.msg);
+        }
+        });
+          
+        }, 
+    joinRoom: function(roomNum) { 
+      var app = this;
       this.role = 'LiveGuest';
       this.entryType = 'join';
-      this.roomnum = String(e.currentTarget.getAttribute("data-roomnum"));
-      //this.roomnum ="信访房间001";
+      this.roomnum = roomNum;
+      //
+      this.submitConInfo.roomId = roomNum;
+      this.submitConInfo.idCard = loginInfoMain.idCard;
+      //
+      this.roomListFlag=false;
       this.renderRoom();
-      this.initWebRTC();
-      
+      this.initWebRTC(loginInfoMain.depart.departId,"interviewJoin"); 
+      //开启计时器，开始定时任务
+      //this.time_fun();
+      app.myContent = window.setInterval(function () {
+                app.submitContent();
+            }, 60000);
     },
-        createRoom(){
-        	  var self = this;
-        	  this.createRoomModel = false
-		      this.entryType = 'create';//进入类型 默认值是join
-		      this.role = 'LiveMaster';//主播
-		      //输入框中输入的值
-		      //self.roomnum ="信访房间001";
-		      self.roomListFlag=false;
-		      self.renderRoom();
-		      self.initWebRTC();
+    petitionJoinRoom(){
+      this.roomnum = this.pageToData.pageToRoom; 
+      this.roomListFlag=false;
+      this.renderRoom();
+      this.initWebRTC(this.pageToData.departId,"petitionJoin"); 
+    },
+    createRoom(){
+      var self = this;
+      this.createRoomModel = false
+	  this.entryType = 'create';//进入类型 默认值是join
+	  this.role = 'LiveMaster';//主播
+		 //输入框中输入的值
+		 //self.roomnum ="信访房间001";
+	  self.roomListFlag=false;
+	  self.renderRoom();
+	  self.initWebRTC(this.pageToData.departId,"petitionCreate");
 
         },
        //初始化会议界面
@@ -236,19 +281,20 @@
 
 		    },
        //初始化websocket
-       initWebRTC: function() {
-         name=ILiveSDK.loginInfo.identifier; 
+       initWebRTC: function(did,roleType) {
+         //name=ILiveSDK.loginInfo.identifier; 
 		      var message = {
 		    			id : 'joinRoom',
 		    			name : name,//用户名
 		    			room : this.roomnum,//房间号
-		    			
+		    			type : roleType,
+		    			departId : did,
 		    		}
 		      this.sendMessage(message);
        },
 
        initWebsocket(){
-       	    var app = this;
+    var app = this;
             
 	if (ws != null && ws.readyState == 1) {
 		return;
@@ -265,12 +311,10 @@
 	//获取带"/"的项目名，如：/webrtc
 	var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
 
-	//var webSocketUrl = wsProtocol + "://" + url + '/webrtc-conference/groupcall?' + ILiveSDK.loginInfo.token;
-
-	/*var webSocketUrl = 'wss://192.168.1.2:18000/threeCentreProject/groupcall?'+ILiveSDK.loginInfo.token*/
+	//var webSocketUrl = wsProtocol + "://" + url + '/webrtc-conference/groupcall?' + ILiveSDK.loginInfo.token; 
 	/*var webSocketUrl = "ws://118.24.128.185:8080/webrtc_conference_war/groupcall?"+ILiveSDK.loginInfo.token*/
-	var webSocketUrl = "ws://118.24.128.185:8080/webrtc-conference/groupcall?"+ILiveSDK.loginInfo.token
-
+	var webSocketUrl = "ws:192.168.1.153:8080/threeCentreProject/groupcall?"+ILiveSDK.loginInfo.token
+  /*  var webSocketUrl = "ws:192.168.1.149:8080/webrtc_conference_war/groupcall?"+ILiveSDK.loginInfo.token*/
 	console.log(webSocketUrl)
 	ws = new WebSocket(webSocketUrl); 
     ws.onmessage = function(message) {
@@ -331,8 +375,18 @@
 		}
 	}
 	 	ws.onopen = function (ev) { 
-	 	console.log("WebSocket连接成功"); 
-	 	app.getRoomList();
+	 	console.log("WebSocket连接成功......"); 
+
+	   //如果是上访者->创建房间
+	 	if(app.pageToData.pageToRole=='petitionCreate'){ 
+			app.createRoom();
+			//上访者异常退出加入房间
+         }else if(app.pageToData.pageToRole=='petitionJoin'){
+            app.petitionJoinRoom();
+         }else{//如果是接访者->获取房间列表 
+         	 app.getRoomList();	
+         }
+	 	
        } 
 
 			ws.onclose = function(e) {
@@ -547,7 +601,8 @@ viewerResponse(message) {
 getRoomList: function(opts, succ, err) {
 
     this.sendMessage({
-      "type": 1,
+      "type": 'petition',
+      "departId":loginInfoMain.depart.departId,
       "token": ILiveSDK.loginInfo.token,
       "index": 0,
       "size": 30,
@@ -557,17 +612,37 @@ getRoomList: function(opts, succ, err) {
   },
   //退出房间
   quitRoom:function(){
-	var self = this;
+    var self = this;
+    clearInterval(this.myContent); 
 	self.roomListFlag=true;
     sendMessage({
-        id: 'leaveRoom'
+        id: 'leaveRoom',
+        type:'petition',
       });
     for (var key in participants) {
         participants[key].dispose();
       }
 
   },
-Participant(name) {
+  //获取对应token并且初始化websocket
+  getToken(idNum){
+  	var _this = this;
+  	 this.$http.get(this.$ports.getToken,{
+           idCard:idNum
+        }).then(res=>{ 
+          console.log(res.data);
+          if(res.data.errorCode==0){   
+           //全局变量存储token
+           ILiveSDK.loginInfo.token = res.data.data.token; 
+           name = res.data.data.userName;
+           _this.initWebsocket(); 
+           return;
+        }else{
+          alert(res.data.msg);
+        }
+        });
+  },
+Participant(senderName) {
 	this.name = name; 
 	var rtcPeer;
 
@@ -575,7 +650,7 @@ Participant(name) {
 	var videoId = '';
 	var first = false;
 
-	if (name == ILiveSDK.loginInfo.identifier) {
+	if (senderName == name) {
 		videoId = 'creator';
 	}else{
         videoId = 'participant';
@@ -614,7 +689,7 @@ Participant(name) {
 		console.log('Invoking SDP offer callback function');
 		var msg = {
 			id: "receiveVideoFrom",
-			sender: name,
+			sender: senderName,
 			sdpOffer: offerSdp
 		};
 		this.sendMessage(msg);
@@ -627,7 +702,7 @@ Participant(name) {
 		var message = {
 			id: 'onIceCandidateRoom',
 			candidate: candidate,
-			name: name
+			name: senderName
 		};
 		this.sendMessage(message);
 	}

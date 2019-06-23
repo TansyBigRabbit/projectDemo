@@ -40,7 +40,7 @@
           <el-menu-item index="1-1">开启信访</el-menu-item>
           </router-link>
           <router-link :to="'/home/VisitRoom'">
-          <el-menu-item index="1-2">信访接访</el-menu-item>
+          <el-menu-item index="1-2">信访房间列表</el-menu-item>
           </router-link>
           <router-link :to="'/home/VisitRecord'">
           <el-menu-item index="1-3">信访记录</el-menu-item>

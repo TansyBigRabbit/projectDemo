@@ -40,12 +40,24 @@ export default {
   methods:{
     login:function(){
       var _this = this; 
-      /*this.$http.post(this.$ports.login,{
-        username:this.userName,
-        pwd:this.password
-      })*/
+      this.$http.post(this.$ports.login,{
+        userId:this.userName,
+        password:this.password
+      }).then(function(res){
+        console.log("登录者信息.....");
+        console.log(res.data);
+        if(res.data.code==0){
+          loginInfoMain = res.data.data;
+          _this.$store.state.login=true;
+              _this.$router.push({
+                name:'home'
+              });
+        }else{
+          alert(res.data.msg);
+        }
+      })
       /*https://171.223.100.47:8443/*/
-      this.$http.post('http://118.24.128.185:8080/webrtc-conference/api/account/login',{
+      /*this.$http.post('http://118.24.128.185:8080/webrtc-conference/api/account/login',{
         username:this.userName,
         pwd:this.password
       }).then(function(response) {
@@ -62,7 +74,7 @@ export default {
           }
         }).
       catch (function(error) { 
-      });
+      });*/
      
     }
   }

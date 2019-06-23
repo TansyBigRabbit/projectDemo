@@ -2,19 +2,27 @@ var PREFIX = "webrtc_conference"
 var SVRDOMAIN = "";
 
 var watchWebRtcPeer;
-
+//系统登录者的信息
+var loginInfoMain={};
+//创建者\加入者type 
+//petitionCreate\meetCreate\petitionJoin\meetJoin
+var roleType='';
+var deparId='';
+//webRtc登陆者的信息
 var ILiveSDK = {
 	RoomNumber: null,
 	Role: null,
 	selSess: null,
 	loginInfo: {
-		'sdkAppId': null,
-		'openid': null,
-		'identifier': null,
-		'userSig': null,
-		'identifierNick': null,
-		'headurl': null,
-		'token': null
+		'sdkAppId': '',
+		'openid': '',
+		'identifier': '',
+		'userSig': '',
+		'identifierNick': '',
+		'headurl': '',
+		'token': '',
+		'roleType':'',
+		'departId':'',
 	}
 };
 var webUrlMain = "ws://118.24.128.185:8080/webrtc-conference/groupcall?"

@@ -49,7 +49,7 @@ export default {
 			service({
 				method: 'post',
 				url,
-				params: param,
+				data: param,
 			}).then(res => {
 				//axios返回的是一个promise对象 
 				var res_code = res.status.toString();
