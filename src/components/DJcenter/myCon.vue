@@ -27,7 +27,7 @@
   </el-row> 
 </el-card>
 <div>
-	<el-button @click="" type="primary" size="small">创建会议</el-button>
+	<el-button @click="" type="primary" size="small" @click="showModel('add')">创建会议</el-button>
 </div>
 <el-tabs class="tab_box" type="border-card" @tab-click="">
     <el-tab-pane label="我创建的会议">
@@ -98,6 +98,7 @@
       align="center">
       <template slot-scope="scope">
        <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="startMeeting(scope.row)" type="primary" size="small">开启会议</el-button>
+       <el-button v-if="scope.row.status==0" :id="'btn'+scope.row.id" @click="showModel('edit',scope.row)" type="primary" size="small">编辑</el-button>
        <el-button @click="cancelMeeting(scope.row)" type="primary" size="small">取消会议</el-button>
         
       </template> 
@@ -281,28 +282,33 @@
 </el-tabs>
   
   <!-- 详情弹窗 -->
-  <el-dialog  title="会议详情" :visible.sync="conDetail">
-  <el-form :model="meetingDetail" class="meeting_form">
-    <el-form-item label="会议名称">
-      <el-input v-model="meetingDetail.name" :readonly="true"></el-input>
+  <el-dialog  :title="dialogTitle"  :visible.sync="conDetail">
+  <el-form :model="meetingDetail" :rules="rules" ref="meetingDetail" class="meeting_form">
+    <el-form-item label="会议名称" prop="meeting_name">
+      <el-input class="notEdit" v-model="meetingDetail.name"></el-input>
     </el-form-item>
-    <el-form-item label="会议主题">
-      <el-input v-model="meetingDetail.theme" :readonly="true"></el-input>
-    </el-form-item>
-    <el-form-item label="会议创建人">
-      <el-input v-model="meetingDetail.creator" :readonly="true"></el-input>
+    <el-form-item label="会议主题" prop="meeting_theme">
+      <el-input class="notEdit" v-model="meetingDetail.theme"></el-input>
     </el-form-item> 
-    <el-form-item label="参会人员">
-      <el-input v-model="meetingDetail.participates" :readonly="true"></el-input>
+    <el-form-item label="参会人员" prop="meeting_join">
+     <el-select multiple v-model="meetingDetail.participates" filterable placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
     </el-form-item>  
-    <el-form-item label="会议开始时间">
-      <el-input v-model="meetingDetail.startTime" :readonly="true"></el-input>
+    <el-form-item label="会议开始时间" prop="meeting_startTime">
+      <el-date-picker size="large" v-model="meetingDetail.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item> 
-    <el-form-item label="会议结束时间">
-      <el-input v-model="meetingDetail.endTime" :readonly="true"></el-input>
+    <el-form-item label="会议结束时间" prop="meeting_endTime">
+      <el-date-picker size="large" v-model="meetingDetail.endTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item> 
   </el-form>
   <div slot="footer" class="dialog-footer">
+     <el-button @click="submitForm('meetingDetail')">提交</el-button> 
     <el-button @click="conDetail = false">关闭</el-button> 
   </div>
 </el-dialog>
@@ -315,6 +321,7 @@
 		data(){
 			return{
     conDetail:false,//弹窗
+    dialogTitle:'',//弹窗标题
 		total: 5,
     currentPage: 1,
 　　　 pageSize: 10,	
@@ -388,12 +395,49 @@
         }],
         //会议详情
         meetingDetail:{
+          creator:'',
           name:'XXX会议',
           participates:[],
           theme:'fsjfskljfsklfjsklfjskj',
           creator:'Tansy',
           startTime:'2019-06-19 20:00:00',
           endTime:'2019-06-19 20:30:00'
+        },
+        //用户下拉框
+        options: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        rules: {
+          meeting_name: [
+            { required: true, message: '请输入会议名称', trigger: 'blur' },
+            { min: 1, max: 60, message: '会议名称请控制在30字以内', trigger: 'blur' }
+          ],
+          meeting_join: [
+            { required: true, message: '请选择参会人员', trigger: 'change' }
+          ],
+          meeting_startTime: [
+            { type: 'date', required: true, message: '请选择会议开始时间', trigger: 'change' }
+          ],
+          meeting_endTime: [
+            { type: 'date', required: true, message: '请选择会议结束时间', trigger: 'change' }
+          ],
+          meeting_theme: [
+            { required: true, message: '请输入会议主题', trigger: 'blur' },
+            { min: 1, max: 200, message: '会议主题请控制在100字以内', trigger: 'blur' }
+          ] 
         }
 			}
 		},
@@ -431,6 +475,25 @@
             this.conDetail=true;
 
         },
+        //展示会议详情框
+        showModel(type,obj){ //type:add,edit
+         var _this = this;
+         this.conDetail=true;
+         setTimeout(function(){
+         _this.$refs["meetingDetail"].resetFields();
+         if(type=='add'){
+            _this.dialogTitle="创建会议";
+            $(".notEdit input").removeAttr('disabled');
+            _this.meetingDetail={};
+         }else{
+            _this.dialogTitle="编辑会议信息";
+            $(".notEdit input").attr('disabled',true);
+            _this.meetingDetail=obj;
+         }
+         
+         },500);
+         
+        },
          //进入会议室
          enterRoom(row){
          this.$router.push({
@@ -454,6 +517,17 @@
          //取消会议
          cancelMeeting(row){
 
+         },
+         //新增、修改提交会议信息
+         submitForm(form){
+           this.$refs[form].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
          }
 		}
 	}
@@ -501,5 +575,17 @@
   .data_card p {
     cursor: pointer;
 
+  }
+  .el-form-item__error{
+    left: 20%!important
+  }
+  .meeting_form .el-select{
+    width: 60%;
+  }
+  .el-select .el-input--suffix{
+    width: 100%
+  }
+  .el-select-dropdown.el-popper.is-multiple{
+    top:41%!important;
   }
 </style>

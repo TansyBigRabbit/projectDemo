@@ -52,22 +52,46 @@
       <i class="el-icon-location"></i>
       <span slot="title">党建中心系统</span>
     </template>
-    <el-menu-item-group> 
+    <el-submenu index="2-1">
+          <template slot="title">会议</template>
           <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-1">会议签到</el-menu-item>
+          <el-menu-item index="2-1-1">会议签到</el-menu-item>
           </router-link>
           <router-link :to="'/home/ConList'">
-          <el-menu-item index="2-2">会议列表</el-menu-item>
+          <el-menu-item index="2-1-2">会议列表</el-menu-item>
           </router-link>
           <router-link :to="'/home/ConRecord'">
-          <el-menu-item index="2-3">会议记录</el-menu-item>
+          <el-menu-item index="2-1-3">会议记录</el-menu-item>
           </router-link>
           <router-link :to="'/home/MyCon'">
-          <el-menu-item index="2-4">我的会议</el-menu-item>
+          <el-menu-item index="2-1-4">我的会议</el-menu-item>
           </router-link>
-    </el-menu-item-group>  
-    <!-- <i class="el-icon-menu"></i>
-    <span slot="title">党建中心系统</span> -->
+        </el-submenu>
+      <el-submenu index="2-2">
+          <template slot="title">党建活动</template>
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-2-1">会议签到</el-menu-item>
+          </router-link> 
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-2-2">会议签到</el-menu-item>
+          </router-link> 
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-2-3">会议签到</el-menu-item>
+          </router-link> 
+        </el-submenu>
+        <el-submenu index="2-3">
+          <template slot="title">面谈</template>
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-3-1">会议签到</el-menu-item>
+          </router-link> 
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-3-2">会议签到</el-menu-item>
+          </router-link> 
+          <router-link :to="'/home/ConSignate'">
+          <el-menu-item index="2-3-3">会议签到</el-menu-item>
+          </router-link> 
+        </el-submenu>
+      </el-submenu> 
   </el-submenu>
   <el-submenu index="3" >
     <template slot="title">
@@ -187,6 +211,10 @@ a{
 }
 .el-divider{
   margin: 0px
+}
+.overflow_y>ul{
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 @media screen and (max-width: 1400px) {
     #menuRow .el-col-4 {

@@ -313,8 +313,8 @@
 
 	//var webSocketUrl = wsProtocol + "://" + url + '/webrtc-conference/groupcall?' + ILiveSDK.loginInfo.token; 
 	/*var webSocketUrl = "ws://118.24.128.185:8080/webrtc_conference_war/groupcall?"+ILiveSDK.loginInfo.token*/
-	var webSocketUrl = "ws:192.168.1.153:8080/threeCentreProject/groupcall?"+ILiveSDK.loginInfo.token
-  /*  var webSocketUrl = "ws:192.168.1.149:8080/webrtc_conference_war/groupcall?"+ILiveSDK.loginInfo.token*/
+	//"ws:192.168.1.153:8080/threeCentreProject/groupcall?"
+	var webSocketUrl = webUrlMain+ILiveSDK.loginInfo.token 
 	console.log(webSocketUrl)
 	ws = new WebSocket(webSocketUrl); 
     ws.onmessage = function(message) {

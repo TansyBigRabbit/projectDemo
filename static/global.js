@@ -3,11 +3,11 @@ var SVRDOMAIN = "";
 
 var watchWebRtcPeer;
 //系统登录者的信息
-var loginInfoMain={};
+var loginInfoMain = {};
 //创建者\加入者type 
 //petitionCreate\meetCreate\petitionJoin\meetJoin
-var roleType='';
-var deparId='';
+var roleType = '';
+var deparId = '';
 //webRtc登陆者的信息
 var ILiveSDK = {
 	RoomNumber: null,
@@ -21,11 +21,11 @@ var ILiveSDK = {
 		'identifierNick': '',
 		'headurl': '',
 		'token': '',
-		'roleType':'',
-		'departId':'',
+		'roleType': '',
+		'departId': '',
 	}
 };
-var webUrlMain = "ws://118.24.128.185:8080/webrtc-conference/groupcall?"
+var webUrlMain = "ws:47.102.139.17:9090/threeCentreProject/groupcall?";
 var video_list = [];
 var userList = [];
 

@@ -360,7 +360,7 @@
 	}
 </script>
 
-<style scope>
+<style scoped>
 	.table_title{
 		margin:25px 0;
 	}

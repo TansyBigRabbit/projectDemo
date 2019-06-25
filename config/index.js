@@ -10,18 +10,18 @@ module.exports = {
         // Paths
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
-        /*proxyTable: {
+        proxyTable: {
             '/api': {
                 //target: "http://47.102.139.17:18001/",
                 //target: "https://192.168.1.2:18000/",
-                target: "http://192.168.1.153:8080/",
+                target: "http://47.102.139.17:9090/threeCentreProject",
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
                     '^/api': ''
                 }
             }
-        },*/
+        },
 
         // Various Dev Server settings
         host: '0.0.0.0', // can be overwritten by process.env.HOST
