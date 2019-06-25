@@ -69,15 +69,12 @@
         </el-submenu>
       <el-submenu index="2-2">
           <template slot="title">党建活动</template>
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-2-1">会议签到</el-menu-item>
-          </router-link> 
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-2-2">会议签到</el-menu-item>
-          </router-link> 
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-2-3">会议签到</el-menu-item>
-          </router-link> 
+          <router-link :to="'/home/ActivityList'">
+          <el-menu-item index="2-2-1">活动列表</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/ActivityManage'">
+          <el-menu-item index="2-2-2">活动管理</el-menu-item>
+          </router-link>    
         </el-submenu>
         <el-submenu index="2-3">
           <template slot="title">面谈</template>

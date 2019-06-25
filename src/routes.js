@@ -5,13 +5,16 @@ import LettersVisit from './components/lettersVisit/lettersVisit'
 import VisitRoom from './components/lettersVisit/VisitRoom'
 import VisitRecord from './components/lettersVisit/visitRecord'
 //会议
-import ConList from './components/DJcenter/conList'
-import ConRecord from './components/DJcenter/conRecord'
-import ConRoom from './components/DJcenter/conRoom'
-import ConSignate from './components/DJcenter/conSignate'
-import ConSignate2 from './components/DJcenter/conSignate2'
-import MyCon from './components/DJcenter/myCon'
-
+import ConList from './components/DJcenter/conference/conList'
+import ConRecord from './components/DJcenter/conference/conRecord'
+import ConRoom from './components/DJcenter/conference/conRoom'
+import ConSignate from './components/DJcenter/conference/conSignate'
+import ConSignate2 from './components/DJcenter/conference/conSignate2'
+import MyCon from './components/DJcenter/conference/myCon'
+//党建活动
+import ActivityList from './components/DJcenter/activity/activityList'
+import ActivityManage from './components/DJcenter/activity/activityManage'
+//面谈
 export const routes = [{
 	path: '/',
 	name: 'login',
@@ -64,6 +67,17 @@ export const routes = [{
 			path: '/home/MyCon',
 			name: 'MyCon',
 			component: MyCon,
-		}
+		},
+        //党建活动
+		{
+           path: '/home/ActivityList',
+		   name: 'ActivityList',
+		   component: ActivityList,
+		},
+		{
+           path: '/home/ActivityManage',
+		   name: 'ActivityManage',
+		   component: ActivityManage,
+		},
 	]
 }];

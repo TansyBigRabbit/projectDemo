@@ -12,6 +12,13 @@ import http from './api/http.js'
 import ports from './api/ports.js'
 import $ from 'jquery'
 import store from './vuex/store.js'
+//富文本编辑器
+/*import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+  
+Vue.use(VueQuillEditor);*/
 /*import axios from 'axios'
 import VueAxios from 'vue-axios'
 
