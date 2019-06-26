@@ -66,7 +66,7 @@
     style="width: 100%">
     <el-table-column
       fixed
-      prop="conName"
+      prop="meetName"
       align="center"
       label="会议名称" >
     </el-table-column>
