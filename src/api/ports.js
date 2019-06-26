@@ -4,11 +4,16 @@
 const hosturl = '/api';
 export default {
 	department: hosturl + '/depart',
-	userInfo: hosturl + '/userinfoextend',
+	userInfo: hosturl + '/userinfo',
 	login: hosturl + '/userinfo/login',
 	getToken: hosturl + '/api/account/getTonkenByIdCard',
 	checkRoom: hosturl + '/petitionroominfo/queryListWithNoPage',
 	submitContent: hosturl + '/appealrecord/insert',
+	conference: {
+		insert: hosturl + '/conferenceroom/insert',
+		update: hosturl + '/conferenceroom/update',
+		list: hosturl + 'conferenceroom/queryListWithPage',
+	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

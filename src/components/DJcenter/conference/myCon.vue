@@ -61,7 +61,7 @@
   </div>
   <el-table
   class="table_body"
-    :data="signMeetingList"
+    :data="createMeetingList"
     border
     style="width: 100%">
     <el-table-column
@@ -108,10 +108,10 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[10, 50, 100, 200]"
+            :page-sizes="[5, 10, 20, 40]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
+            :total="createMeetingList.length">
         </el-pagination>
     </el-tab-pane>
 
@@ -189,11 +189,11 @@
     </el-table-column>
   </el-table>
   <el-pagination class="page" background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            @size-change="handleSizeChange01"
+            @current-change="handleCurrentChange01"
+            :current-page="currentPage01"
             :page-sizes="[10, 50, 100, 200]"
-            :page-size="pageSize"
+            :page-size="pageSize01"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
         </el-pagination>
@@ -284,33 +284,33 @@
   <!-- 详情弹窗 -->
   <el-dialog  :title="dialogTitle"  :visible.sync="conDetail">
   <el-form :model="meetingDetail" :rules="rules" ref="meetingDetail" class="meeting_form">
-    <el-form-item label="会议名称" prop="meeting_name">
-      <el-input class="notEdit" v-model="meetingDetail.name"></el-input>
+    <el-form-item label="会议名称" prop="meetName">
+      <el-input class="notEdit" v-model="meetingDetail.meetName"></el-input>
     </el-form-item>
-    <el-form-item label="会议主题" prop="meeting_theme">
-      <el-input class="notEdit" v-model="meetingDetail.theme"></el-input>
+    <el-form-item label="会议主题" prop="meetTheme">
+      <el-input class="notEdit" v-model="meetingDetail.meetTheme"></el-input>
     </el-form-item> 
-    <el-form-item label="参会人员" prop="meeting_join">
-     <el-select multiple v-model="meetingDetail.participates" filterable placeholder="请选择">
+    <el-form-item label="参会人员" prop="joinUserName">
+     <el-select multiple v-model="meetingDetail.joinUserName" filterable placeholder="请选择">
     <el-option
       v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
+      :key="item.userId"
+      :label="item.userName"
+      :value="item.userId">
     </el-option>
   </el-select>
     </el-form-item>  
-    <el-form-item label="会议开始时间" prop="meeting_startTime">
-      <el-date-picker size="large" v-model="meetingDetail.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
+    <el-form-item label="会议开始时间" prop="startTime">
+      <el-date-picker size="large" v-model="meetingDetail.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
     </el-form-item> 
-    <el-form-item label="会议结束时间" prop="meeting_endTime">
-      <el-date-picker size="large" v-model="meetingDetail.endTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
+    <el-form-item label="会议结束时间" prop="endTime">
+      <el-date-picker size="large" v-model="meetingDetail.endTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
     </el-form-item> 
   </el-form>
   <div slot="footer" class="dialog-footer">
      <el-button @click="submitForm('meetingDetail')">提交</el-button> 
-    <el-button @click="conDetail = false">关闭</el-button> 
-  </div>
+    <el-button @click="closeForm('meetingDetail')">关闭</el-button> 
+  </div> 
 </el-dialog>
 
 	</div>
@@ -321,10 +321,11 @@
 		data(){
 			return{
     conDetail:false,//弹窗
-    dialogTitle:'',//弹窗标题
-		total: 5,
+    dialogTitle:'',//弹窗标题 
+    //我创建的会议列表分页
     currentPage: 1,
-　　　 pageSize: 10,	
+　　　 pageSize: 5,	
+    //查询对象
     searchForm:{
     conName:'',
     startTime:'',
@@ -337,31 +338,7 @@
       {text:'已完成',value:'3'},
       {text:'正在进行',value:'4'},
     ],
-    signMeetingList: [{
-          id:'1',
-          conName: 'XX会议1',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' ,
-          status:'0'
-        }, {
-          id:'2',
-          conName: 'XX会议2',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc',
-          status:'0'  
-        }, {
-          id:'3',
-          conName: 'XX会议3',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' ,
-          status:'0'
-        }, {
-          id:'4',
-          conName: 'XX会议4',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' ,
-          status:'0'
-        }],
+    createMeetingList: [],
  		meetingList: [{
           id:'1',
           conName: 'XX会议1',
@@ -394,47 +371,24 @@
           status:'4'
         }],
         //会议详情
-        meetingDetail:{
-          creator:'',
-          name:'XXX会议',
-          participates:[],
-          theme:'fsjfskljfsklfjsklfjskj',
-          creator:'Tansy',
-          startTime:'2019-06-19 20:00:00',
-          endTime:'2019-06-19 20:30:00'
-        },
+        meetingDetail:{},
         //用户下拉框
-        options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
+        options: [],
         rules: {
-          meeting_name: [
+          meetName: [
             { required: true, message: '请输入会议名称', trigger: 'blur' },
             { min: 1, max: 60, message: '会议名称请控制在30字以内', trigger: 'blur' }
           ],
-          meeting_join: [
+          joinUserName: [
             { required: true, message: '请选择参会人员', trigger: 'change' }
           ],
-          meeting_startTime: [
-            { type: 'date', required: true, message: '请选择会议开始时间', trigger: 'change' }
+          startTime: [
+            { required: true, message: '请选择会议开始时间', trigger: 'change' }
           ],
-          meeting_endTime: [
-            { type: 'date', required: true, message: '请选择会议结束时间', trigger: 'change' }
+          endTime: [
+            {  required: true, message: '请选择会议结束时间', trigger: 'change' }
           ],
-          meeting_theme: [
+          meetTheme: [
             { required: true, message: '请输入会议主题', trigger: 'blur' },
             { min: 1, max: 200, message: '会议主题请控制在100字以内', trigger: 'blur' }
           ] 
@@ -442,9 +396,21 @@
 			}
 		},
 		created(){
-
+     this.getMycreateList();
 		},
 		methods:{
+      //获取我创建的会议列表数据
+          getMycreateList(){
+          var _this = this;
+           this.$http.get(this.$ports.conference.list,{
+           'page':1,
+           'creator':loginInfoMain.userId 
+           }).then(res=>{
+          console.log("获取我创建的会议数据......");
+          console.log(res.data); 
+          _this.createMeetingList = res.data.data;
+          });
+          },
          //tab跳转
           tabTo(num){
             $(".is-active").removeClass("is-active");
@@ -460,10 +426,12 @@
                }
        		 })
       		},
-      		handleSizeChange(){
-
+      		handleSizeChange(size){
+            this.pagesize = size;
+            console.log(this.pagesize);
       		},
-      		handleCurrentChange(){
+      		handleCurrentChange(currentPage){
+            this.currentPage = currentPage;
 
       		},
           //日期格式化
@@ -478,6 +446,8 @@
         //展示会议详情框
         showModel(type,obj){ //type:add,edit
          var _this = this;
+         //参会人员下拉数据填充
+         _this.getParticipants();
          this.conDetail=true;
          setTimeout(function(){
          _this.$refs["meetingDetail"].resetFields();
@@ -518,17 +488,61 @@
          cancelMeeting(row){
 
          },
+         closeForm(form){
+          this.$refs[form].clearValidate();
+          this.conDetail=false; 
+         },
          //新增、修改提交会议信息
          submitForm(form){
+           var _this = this;
            this.$refs[form].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            if(typeof(this.meetingDetail.id)=='undefined'){
+             //新增
+             _this.meetingDetail.status=0;
+             _this.meetingDetail.creator=loginInfoMain.userId;
+             _this.operateData('add');
+             }else{
+              //修改
+             _this.operateData('edit');
+            } 
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
+         },
+         operateData(type){
+          var url ;
+          var _this = this;
+         if(type=='add'){
+          url = this.$ports.conference.insert;
+          console.log("新增会议......");
+         }else{
+          url = this.$ports.conference.update;
+          console.log("修改会议......");
          }
+          this.$http.post(url,_this.meetingDetail).then(res=>{
+            console.log(res.data); 
+             alert(res.data.msg);
+             if(res.data.code==0){
+              //操作成功刷新页面退出弹窗
+              _this.conDetail=false;
+             } 
+            });
+         },
+         getParticipants(){
+          var _this = this;
+           this.$http.get(this.$ports.userInfo+'/queryListWithNoPage',{ 
+           }).then(res=>{
+          console.log("获取用户列表下拉框数据......");
+          console.log(res.data);
+          if(res.data.code==0){ 
+             this.options = res.data.data;
+          }else{
+          alert(res.data.msg);
+            }
+          });
+        }
 		}
 	}
 </script>

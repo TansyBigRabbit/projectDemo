@@ -130,6 +130,7 @@
 </template>
 
 <script>
+
 	export default{
 		data(){
 			return{
@@ -656,8 +657,9 @@ getRoomList: function(opts, succ, err) {
 		}
 	
 </script>
-
-<style scope>
+<!-- <style src="../../../assets/css/common.css"></style> -->
+<style scoped> 
+@import '../../../assets/css/common.css'; 
 .room{
   position: relative;
   bottom: 20px;
