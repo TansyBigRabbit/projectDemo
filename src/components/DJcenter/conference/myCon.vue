@@ -44,12 +44,15 @@
        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
     </el-form-item>
       </el-col>  
-      <el-col :span="8">
+      <el-col :span="6">
         <el-form-item style="width: 50%" label="状态">
       <el-select v-model="searchForm.status" placeholder="请选择状态">
       <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
     </el-select>
     </el-form-item>
+      </el-col> 
+      <el-col :span="2">
+         <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button>
       </el-col> 
      </el-row>  
     
@@ -111,7 +114,7 @@
             :page-sizes="[5, 10, 20, 40]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="createMeetingList.length">
+            :total="pageTotal">
         </el-pagination>
     </el-tab-pane>
 
@@ -188,7 +191,7 @@
       </template> 
     </el-table-column>
   </el-table>
-  <el-pagination class="page" background
+  <!-- <el-pagination class="page" background
             @size-change="handleSizeChange01"
             @current-change="handleCurrentChange01"
             :current-page="currentPage01"
@@ -196,7 +199,7 @@
             :page-size="pageSize01"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
-        </el-pagination>
+        </el-pagination> -->
     </el-tab-pane> 
 
     <el-tab-pane label="我缺席的会议" > 
@@ -269,7 +272,7 @@
       </template> 
     </el-table-column>
   </el-table>
-  <el-pagination class="page" background
+  <!-- <el-pagination class="page" background
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
@@ -277,7 +280,7 @@
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
-        </el-pagination>
+        </el-pagination> -->
     </el-tab-pane> 
 </el-tabs>
   
@@ -324,7 +327,8 @@
     dialogTitle:'',//弹窗标题 
     //我创建的会议列表分页
     currentPage: 1,
-　　　 pageSize: 5,	
+　　　 pageSize: 5,
+       pageTotal:0,
     //查询对象
     searchForm:{
     conName:'',
@@ -396,19 +400,21 @@
 			}
 		},
 		created(){
-     this.getMycreateList();
+     this.getMycreateList(1,5);
 		},
 		methods:{
       //获取我创建的会议列表数据
-          getMycreateList(){
+          getMycreateList(num,size){
           var _this = this;
            this.$http.get(this.$ports.conference.list,{
-           'page':1,
-           'creator':loginInfoMain.userId 
+           'pageNum':num,
+           'size':size,
+           'creator':window.localStorage.getItem('userId')
            }).then(res=>{
           console.log("获取我创建的会议数据......");
           console.log(res.data); 
           _this.createMeetingList = res.data.data;
+          _this.pageTotal = res.data.page.total;
           });
           },
          //tab跳转
@@ -428,10 +434,12 @@
       		},
       		handleSizeChange(size){
             this.pagesize = size;
+            this.getMycreateList(1,size);
             console.log(this.pagesize);
       		},
       		handleCurrentChange(currentPage){
             this.currentPage = currentPage;
+            this.getMycreateList(this.currentPage,5);
 
       		},
           //日期格式化
@@ -542,7 +550,23 @@
           alert(res.data.msg);
             }
           });
-        }
+        },
+        //查询我创建的会议列表
+        searchCreateMeeting(){
+            var _this = this;
+           this.$http.get(this.$ports.conference.list,{
+           'pageNum':1,
+           'size':_this.pagesize,
+           'creator':window.localStorage.getItem('userId'),
+           'meetName':_this.searchForm.conName,
+           'status':_this.searchForm.status,
+           'startTime':_this.searchForm.startTime
+           }).then(res=>{
+          console.log("获取我创建的会议数据......");
+          console.log(res.data); 
+          _this.createMeetingList = res.data.data;
+          });
+        },
 		}
 	}
 </script>
