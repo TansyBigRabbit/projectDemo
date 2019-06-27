@@ -15,6 +15,10 @@ export default {
 		list: hosturl + 'conferenceroom/queryListWithPage',
 		findById: hosturl + 'conferenceroom/queryOne',
 	},
+	meetsign:{
+		sgin: hosturl +'/meetsign/insert',
+		list: hosturl +'/meetsign/queryListWithNoPage',
+	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

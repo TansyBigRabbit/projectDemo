@@ -32,18 +32,23 @@
 <el-tabs class="tab_box" type="border-card" @tab-click="handleClick">
     <el-tab-pane label="我创建的会议" >
       <div class="search_box">
-      <el-form :model="myCreateMeeting.searchForm"  ref="myCreateMeeting.searchForm" label-width="30%" class="demo-myCreateMeeting.searchForm ">
+      <el-form :model="myCreateMeeting.searchForm"  ref="myCreateMeeting.searchForm" label-width="20%" class="demo-myCreateMeeting.searchForm ">
       <el-row>
-      <el-col :span="8">
+      <el-col :span="7">
         <el-form-item style="width: 80%" label="会议名称">
       <el-input v-model="myCreateMeeting.searchForm.conName" ></el-input>
     </el-form-item>
       </el-col> 
-      <el-col :span="8">
+      <el-col :span="7">
         <el-form-item style="width: 80%" label="开始时间">
        <el-date-picker size="large" v-model="myCreateMeeting.searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
     </el-form-item>
-      </el-col>  
+      </el-col> 
+      <el-col :span="7">
+        <el-form-item style="width: 80%" label="结束时间">
+       <el-date-picker size="large" v-model="myCreateMeeting.searchForm.endTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+    </el-form-item>
+      </el-col>   
       <el-col :span="6">
         <el-form-item style="width: 50%" label="状态">
       <el-select v-model="myCreateMeeting.searchForm.status" placeholder="请选择状态">
@@ -87,10 +92,10 @@
       align="center"
       label="会议状态" >
       <template slot-scope="scope">
-    <span v-if="scope.row.status==1">已取消</span>
-    <span v-if="scope.row.status==2">已过期</span>
-    <span v-if="scope.row.status==3">已完成</span>
-    <span v-if="scope.row.status==4">正在进行</span>
+    <span v-if="scope.row.status==4">已取消</span>
+    <span v-if="scope.row.status==3">已过期</span>
+    <span v-if="scope.row.status==2">已完成</span>
+    <span v-if="scope.row.status==1">正在进行</span>
     <span v-if="scope.row.status==0">未开始</span>
     </template>
     </el-table-column>
@@ -179,10 +184,10 @@
       align="center"
       label="会议状态" >
       <template slot-scope="scope">
-    <span v-if="scope.row.status==1">已取消</span>
-    <span v-if="scope.row.status==2">已过期</span>
-    <span v-if="scope.row.status==3">已完成</span>
-    <span v-if="scope.row.status==4">正在进行</span>
+    <span v-if="scope.row.status==4">已取消</span>
+    <span v-if="scope.row.status==3">已过期</span>
+    <span v-if="scope.row.status==2">已完成</span>
+    <span v-if="scope.row.status==1">正在进行</span>
     <span v-if="scope.row.status==0">未开始</span>
     </template>
     </el-table-column>
@@ -197,7 +202,7 @@
       <template slot-scope="scope">
        <el-button v-if="scope.row.status==0" @click="signatureCon(scope.row)" type="primary" size="small">签到</el-button>
        <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button>
-       <el-button v-if="scope.row.status==4" @click="enterRoom(scope.row)" type="primary" size="small">加入会议</el-button> 
+       <el-button v-if="scope.row.status==1" @click="enterRoom(scope.row)" type="primary" size="small">加入会议</el-button> 
       </template> 
     </el-table-column>
   </el-table>
@@ -368,11 +373,11 @@
     //用户下拉框
     options: [],
     status:[
-      {text:'已取消',value:'0'},
-      {text:'未开始',value:'1'},
-      {text:'已过期',value:'2'},
-      {text:'已完成',value:'3'},
-      {text:'正在进行',value:'4'},
+      {text:'已取消',value:'4'},
+      {text:'未开始',value:'0'},
+      {text:'已过期',value:'3'},
+      {text:'已完成',value:'2'},
+      {text:'正在进行',value:'1'},
     ], 
     //表单验证规则
     rules: {
@@ -497,16 +502,19 @@
         showModel(type,obj){ //type:add,edit
           this.conDetail=true;
           var _this = this;
-          //this.$refs["meetingDetail"].resetFields();
+          $("input").removeAttr('disabled'); 
          if(type=='add'){
             this.showBtn=true;
             _this.dialogTitle="创建会议";
-            $(".notEdit input").removeAttr('disabled');
             _this.meetingDetail={};
          }else{
             if (type=='edit') {
+              _this.showBtn=true;
+              $(".notEdit input").attr('disabled',true);
             _this.dialogTitle="编辑会议信息";
             }else{
+               _this.showBtn=false;
+               $("input").attr('disabled',true);
             _this.dialogTitle="会议详情";
             }
             //查询单条数据
@@ -515,7 +523,8 @@
             'id':obj.id
            }).then(res=>{
           console.log("findbyId......");
-          console.log(res.data);  
+          console.log(res.data); 
+          _this.meetingDetail = res.data.data; 
           }); 
          }
          //else if(type=='edit'){
@@ -557,12 +566,16 @@
          //取消会议
          cancelMeeting(row){
          var _this = this;
-           this.$http.post(this.$ports.userInfo+'/queryListWithNoPage',{ 
+           this.$http.post(this.$ports.conference.update,{ 
            'id':row.id,
            'status':4
            }).then(res=>{
           console.log("取消会议......");
           console.log(res.data); 
+          alert(res.data.msg)
+          if(res.data.code==0){
+          this.refreshTable();
+          }
           });
          },
          closeForm(form){
@@ -577,7 +590,7 @@
             if(typeof(this.meetingDetail.id)=='undefined'){
              //新增
              _this.meetingDetail.status=0;
-             _this.meetingDetail.creator=loginInfoMain.userId;
+             _this.meetingDetail.creator=window.localStorage.getItem('userId');
              _this.operateData('add');
              }else{
               //修改
@@ -601,8 +614,7 @@
           this.$http.post(url,_this.meetingDetail).then(res=>{
             console.log(res.data);
              if(res.data.code==0){
-              _this.getMycreateList(1,5);
-              _this.getMyJoinList(1,5);
+              _this.refreshTable()
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
              } 
@@ -632,11 +644,13 @@
            'creator':window.localStorage.getItem('userId'),
            'meetName':_this.myCreateMeeting.searchForm.conName,
            'status':_this.myCreateMeeting.searchForm.status,
-           'startTime':_this.myCreateMeeting.searchForm.startTime
+           'startTime':_this.myCreateMeeting.searchForm.startTime,
+           'endTime':_this.myCreateMeeting.searchForm.endTime
            }).then(res=>{
           console.log("查询我创建的会议数据......");
           console.log(res.data); 
           _this.myCreateMeeting.createMeetingList = res.data.data;
+          _this.myCreateMeeting.pageTotal = res.data.page.total;
           });
         },
         //查询我参与的会议列表
@@ -654,6 +668,12 @@
           console.log(res.data); 
           _this.myJoinMeeting.myJoinMeetingList = res.data.data;
           });
+        },
+        refreshTable(){
+              this.myCreateMeeting.pageNum=1;
+              this.myJoinMeeting.pageNum=1;
+              this.getMycreateList(1,5);
+              this.getMyJoinList(1,5);
         }
 		}
 	}

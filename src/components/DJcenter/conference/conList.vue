@@ -427,7 +427,7 @@
        		 this.$router.push({
        		 	name:'ConSignate2',
        		 	params: {
-                id: '123456'
+                id: '1'
                }
        		 })
       		},
