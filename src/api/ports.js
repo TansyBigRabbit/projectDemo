@@ -13,6 +13,7 @@ export default {
 		insert: hosturl + '/conferenceroom/insert',
 		update: hosturl + '/conferenceroom/update',
 		list: hosturl + 'conferenceroom/queryListWithPage',
+		findById: hosturl + 'conferenceroom/queryOne',
 	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',

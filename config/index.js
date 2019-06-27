@@ -13,8 +13,9 @@ module.exports = {
         proxyTable: {
             '/api': {
                 //target: "http://47.102.139.17:18001/",
-                target: "http://r2v5359193.zicp.vip/threeCentreProject",
+                //target: "http://r2v5359193.zicp.vip/threeCentreProject",
                 //target: "http://47.102.139.17:9090/threeCentreProject",
+                target: "http://weipan.51vip.biz/threeCentreProject",
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {

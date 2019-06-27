@@ -660,6 +660,7 @@ getRoomList: function(opts, succ, err) {
 <!-- <style src="../../../assets/css/common.css"></style> -->
 <style scoped> 
 @import '../../../assets/css/common.css'; 
+
 .room{
   position: relative;
   bottom: 20px;

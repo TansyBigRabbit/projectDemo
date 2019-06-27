@@ -107,7 +107,7 @@
 </script>
 
 <style>
-	.table_title{
+	/*.table_title{
 		margin:25px 0;
 	}
 	.table_title>span{
@@ -119,5 +119,5 @@
 	}
 	.page{
 		text-align: center;
-	}
+	}*/
 </style>

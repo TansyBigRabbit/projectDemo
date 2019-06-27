@@ -361,7 +361,7 @@
 </script>
 
 <style scoped>
-	.table_title{
+	/*.table_title{
 		margin:25px 0;
 	}
 	.table_title>span{
@@ -402,5 +402,5 @@
   .data_card p {
     cursor: pointer;
 
-  }
+  }*/
 </style>
