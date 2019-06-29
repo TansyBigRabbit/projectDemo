@@ -82,8 +82,8 @@
          </div> 
          <div :id="+'_extinfo'" class="extinfo"> 
           <span class="box"></span> 
-          <br>{{ item.videoId | getSrcTinyId }} 
-          <br>{{ item.videoId | getOpenId }} 
+          <br>{{ item.videoId }} 
+          <br>{{ item.videoId }} 
          </div> 
         </div> 
         <div v-for="item in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50]" v-if="item >= video_list.length" class="flex-item"> 
@@ -126,9 +126,10 @@
 				</div>
 			</el-col>
 		</el-row>
+    <el-button v-if="showClose" type="primary" size="small" @click="quitRoom('meetCreate')">结束会议</el-button>
+    <el-button type="primary" size="small" @click="quitRoom('meetLeave')">退出会议</el-button>
 	</div>
 </template>
-
 <script>
 
 	export default{
@@ -139,6 +140,8 @@
       //username: store.get(PREFIX + "username") || null,
       //password: store.get(PREFIX + "password") || null
     },
+    //显示关闭按钮
+    showClose:false,
     role: this.$route.params.role,
     onMic: 0,
     logined: false,
@@ -147,7 +150,7 @@
     userList: [],
     chatList: [],
 //    roomUsers: [],
-    roomnum: this.$route.params.roonNum,
+    roomName: this.$route.params.roomName,
     loginInfo: null,
     entryType: 'join',
     selToID: null,
@@ -155,7 +158,7 @@
     createRoomModal: false,
     modalForm: {
       roomname: null,
-      roomnum: null
+      roomName: null
     },
     applying: false,
     mode: 'fixed',
@@ -169,21 +172,59 @@
     open: {
       audio: true,
       video: true
+    },
+    //页面传来的数据
+    pageData:{
+      role:this.$route.params.role,
+      meetName:this.$route.params.meetName,
+      conferenceId:this.$route.params.conferenceId,
+      type:this.$route.params.type,
+      roomName:''
     } 
 			}
-		},
+		}, 
+   /*filters: {
+    getSrcTinyId: function(val) {
+      return val.split("-")[0]
+    },
+    getOpenId: function(val) {
+      var srctinyid = val.split("-")[0]
+      //      return WebRTCAPI.getOpenId(srctinyid);
+      //      return srctinyid;
+    }
+  },*/
     mounted(){ 
      
     },
     created(){
-      //建立websocket链接
-    this.initWebsocket()
+      //获取访问者的token
+      this.getUserToken(); 
     },
     beforeDestroy(){ 
       console.log("关闭websocket...");
       ws.close();
      },
 		methods:{
+    getUserToken(){
+    console.log("获取访问者的token......");
+    var _this = this;
+     this.$http.get(this.$ports.getToken,{
+           idCard:window.localStorage.getItem('idCard')
+        }).then(res=>{ 
+          console.log(res.data);
+          if(res.data.errorCode==0){   
+           //全局变量存储token
+           ILiveSDK.loginInfo.token = res.data.data.token; 
+           name = res.data.data.userName;
+           ILiveSDK.loginInfo.identifier=res.data.data.userName;
+           console.log("初始化websocket......");
+           _this.initWebsocket(); 
+           return;
+        }else{
+          alert(res.data.msg);
+        }
+        });
+    },
    //建立websocket链接   
 initWebsocket(){
    var app = this;
@@ -247,21 +288,31 @@ initWebsocket(){
       case 'stopCommunication':
         dispose();
         break;
+      case 'refreshPage':
+        app.refreshPage();
+        break;
 
       default:
         console.error('Unrecognized message', parsedMessage);
     }
   }
     ws.onopen = function (ev) { 
-    console.log("WebSocket连接成功");
-    //创建者开启会议
+    console.log("WebSocket连接成功.......");
+    if(app.pageData.type=='meetCreate'){
+      app.showClose=true;
+      app.createRoom();
+    }else if(app.pageData.type=="meetJoin"){
+      app.showClose=false;
+      app.joinRoom();
+    }
+    /*//创建者开启会议
     if(app.role=='LiveMaster'){
       app.createRoom();
     }
     //参与者加入会议
     if(app.role=='LiveGuest'){
       app.joinRoom();
-    } 
+    } */
     } 
 
     ws.onclose = function(e) {
@@ -279,21 +330,20 @@ initWebsocket(){
       
        },
     createRoom(){
-          var self = this;
-          this.createRoomModel = false
+          var self = this; 
           this.entryType = 'create';//进入类型 默认值是join  
           self.roomListFlag=false;
           self.renderRoom();
-          self.initWebRTC();
+          self.initWebRTC('');
       },
     joinRoom(){
          this.createRoomModel=true;
          this.role = 'LiveGuest';
          this.entryType = 'join';
-         this.roomnum = String(e.currentTarget.getAttribute("data-roomnum"));
-         //this.roomnum ="信访房间001";
+         //this.roomName = String(e.currentTarget.getAttribute("data-roomName"));
+         //this.roomName ="信访房间001";
          this.renderRoom();
-         this.initWebRTC();
+         this.initWebRTC(this.$route.params.roomName);
       },
     
     //对话列表清空
@@ -301,14 +351,14 @@ initWebsocket(){
     this.chatList = []; 
     },
     //初始化webRtc websocket发送消息
-    initWebRTC(){
-    name=ILiveSDK.loginInfo.identifier; 
+    initWebRTC(room){ 
           var message = {
               id : 'joinRoom',
               name : name,//用户名
-              room : this.roomnum,//房间号
-              
-            }
+              room : room,//房间号
+              type : this.pageData.type,
+              conferenceId : this.pageData.conferenceId
+             }
     this.sendMessage(message);
     },
     //发消息
@@ -451,7 +501,7 @@ getRoomListRsp(data) {
 },
 getRoomUserRsp(data) {
   var app = this;
-  userList = data.data.idlist;
+  app.userList = data.data.idlist;
 },
 chatRsp(data) {
   var app = this;
@@ -485,7 +535,7 @@ chatRsp(data) {
       self.sendMessage({
         id : 'chat',
         type : 'groupChat',
-        roomnum: this.roomnum,
+        roomName: this.roomName,
         fromUser : ILiveSDK.loginInfo.identifier,
         content : msgContent
       });
@@ -516,22 +566,29 @@ getRoomList: function(opts, succ, err) {
 
   },
   //退出房间
-  quitRoom:function(){
-  var self = this;
-  self.roomListFlag=true;
+  quitRoom:function(quitType){
+  var self = this; 
     sendMessage({
-        id: 'leaveRoom'
+        id: 'leaveRoom',
+        type: quitType,
+        conferenceId:self.$route.params.conferenceId,
       });
     for (var key in participants) {
         participants[key].dispose();
-      }
-
-  }, 
+    }
+      
+   }, 
+  refreshPage(){
+    this.$router.push({
+            name:'MyCon' 
+          });
+  },
     toggleCamera: function(videoId) {
 
       var video = document.getElementById(videoId);
       
       if (this.open.video) {
+  
 //        video.srcObject.getTracks().forEach(t => t.enabled = !t.enabled);
         video.srcObject.getVideoTracks().forEach(t => t.enabled = !t.enabled);
       } else {
@@ -560,16 +617,16 @@ getRoomList: function(opts, succ, err) {
           
       }
     },
-  Participant(name,obj) {
-  this.name = name; 
+  Participant(senderName,obj) {
+  this.name = name;  
   var rtcPeer;
-  var videoId=name+'-video';
+  var videoId=senderName+'-video';
   var first=false;
 
-  if (name == ILiveSDK.loginInfo.identifier) {
+  if (name == senderName) {
     videoId='local';
   } 
-  if (video_list.length == 0) {
+  if (obj.video_list.length == 0) {
     first = true;
   }
 
@@ -602,7 +659,7 @@ getRoomList: function(opts, succ, err) {
     console.log('Invoking SDP offer callback function');
     var msg = {
       id: "receiveVideoFrom",
-      sender: name,
+      sender: senderName,
       sdpOffer: offerSdp
     };
     this.sendMessage(msg);
@@ -615,7 +672,7 @@ getRoomList: function(opts, succ, err) {
     var message = {
       id: 'onIceCandidateRoom',
       candidate: candidate,
-      name: name
+      name: senderName
     };
     this.sendMessage(message);
   }
@@ -636,14 +693,77 @@ getRoomList: function(opts, succ, err) {
     console.log('Disposing participant ' + this.name);
     this.rtcPeer.dispose();
     //    container.parentNode.removeChild(container);
-    //this.onRemoteStreamRemove(this.name);
+    obj.onRemoteStreamRemove(this.name);
   };
 }, 
+onRemoteStreamRemove: function(videoId) {
+      // _.remove(this.video_list, function(o) {
+      //   return o.videoId == videoId
+      // })
+       // _.remove(this.video_list, function(o) {
+      //   return o.videoId == videoId
+      // })
+      videoId = videoId + '-video';
+      console.debug('onRemoteStreamRemove', videoId)
 
+      //重置视频列表
+      var newArr = [];
+      var needResetFirst = false;
+      $.each(this.video_list, function(o) {
+        if (o.videoId != videoId) {
+          newArr.push(o);
+        } else if (o.first) {
+          needResetFirst = true;
+        }
+      });
+      console.debug(needResetFirst);
+      if (needResetFirst && newArr[0]) {
+        newArr[0].first = true;
+      }
+      console.debug('newArr', newArr);
+      this.video_list = newArr;
+      //      this.restoreVideo(videoId);
+
+      var openid = videoId.split('-')[0];
+
+      /*for (var i = 0; i < this.userList.length; i++) {
+        if (this.userList[i].id == openid) {
+          this.userList.splice(i, 1);
+          break;
+        }
+      }*/
+
+      //插入聊天信息
+      //      this.chatList.push({
+      //        who: openid,
+      //        content: openid + "断开了视频连接",
+      //        isSelfSend: 0,
+      //        isSystem: 1
+      //      });
+
+
+
+    },
+    toggleMic: function(videoId) {
+
+      console.log(this.videoId);
+
+      var video = document.getElementById(videoId);
+
+      if (this.open.audio) {
+        //        document.getElementById(videoId).muted = true;
+        video.srcObject.getAudioTracks().forEach(t => t.enabled = !t.enabled);
+      } else {
+        //        document.getElementById(videoId).muted = false;
+        video.srcObject.getAudioTracks().forEach(t => t.enabled = !t.enabled);
+      }
+
+      this.open.audio = !this.open.audio
+    },
     unshiftThis: function(event) {
       var videoId = $(event.currentTarget).data("id");
       var video_list = this.video_list;
-      _.each(video_list, function(item) {
+      $.each(video_list, function(item) {
         if (item.first) {
           item.first = false;
         }

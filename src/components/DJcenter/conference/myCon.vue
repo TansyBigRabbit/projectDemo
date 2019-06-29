@@ -31,37 +31,14 @@
 </div>
 <el-tabs class="tab_box" type="border-card" @tab-click="handleClick">
     <el-tab-pane label="我创建的会议" >
-      <div class="search_box">
-      <el-form :model="myCreateMeeting.searchForm"  ref="myCreateMeeting.searchForm" label-width="20%" class="demo-myCreateMeeting.searchForm ">
-      <el-row>
-      <el-col :span="7">
-        <el-form-item style="width: 80%" label="会议名称">
-      <el-input v-model="myCreateMeeting.searchForm.conName" ></el-input>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="7">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="myCreateMeeting.searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-    </el-form-item>
-      </el-col> 
-      <el-col :span="7">
-        <el-form-item style="width: 80%" label="结束时间">
-       <el-date-picker size="large" v-model="myCreateMeeting.searchForm.endTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-    </el-form-item>
-      </el-col>   
-      <el-col :span="6">
-        <el-form-item style="width: 50%" label="状态">
-      <el-select v-model="myCreateMeeting.searchForm.status" placeholder="请选择状态">
-      <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
-    </el-select>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="2">
-         <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button>
-      </el-col> 
-     </el-row>  
-    
-  </el-form> 
+      <div class="search_box"> 
+        <el-input style="width: 20%" v-model="myCreateMeeting.searchForm.conName" placeholder="请输入会议名称"></el-input>
+        <el-date-picker size="large" v-model="myCreateMeeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker size="large" v-model="myCreateMeeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-select v-model="myCreateMeeting.searchForm.status" placeholder="请选择状态">
+        <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
+        </el-select>
+        <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button> 
  
 </div> 
   <div class="table_title">
@@ -130,31 +107,14 @@
  
 <el-tab-pane label="我参与的会议" > 
       <div class="search_box">
-  <el-form :model="myJoinMeeting.searchForm"  ref="myCreateMeeting.searchForm" label-width="30%" class="demo-myCreateMeeting.searchForm ">
-     <el-row>
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="会议名称">
-      <el-input v-model="myJoinMeeting.searchForm.conName" ></el-input>
-    </el-form-item>
-      </el-col>  
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="myJoinMeeting.searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-    </el-form-item>
-      </el-col> 
-      <el-col :span="6">
-        <el-form-item style="width: 50%" label="状态">
-      <el-select v-model="myJoinMeeting.searchForm.status" placeholder="请选择状态">
-      <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
-    </el-select>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="2">
-         <el-button @click="searchJoinMeeting()" type="primary" size="small">查询</el-button>
-      </el-col>  
-     </el-row> 
-    
-  </el-form>  
+        <el-input style="width: 20%" v-model="myJoinMeeting.searchForm.conName" placeholder="请输入会议名称"></el-input>
+        <el-date-picker size="large" v-model="myJoinMeeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker size="large" v-model="myJoinMeeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-select v-model="myJoinMeeting.searchForm.status" placeholder="请选择状态">
+        <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
+        </el-select>
+        <el-button @click="searchJoinMeeting()" type="primary" size="small">查询</el-button> 
+ 
 </div> 
   <div class="table_title">
     <span>会议列表</span>
@@ -210,7 +170,7 @@
             @size-change="handleSizeChange01"
             @current-change="handleCurrentChange01"
             :current-page="myJoinMeeting.currentPage"
-            :page-sizes="[10, 50, 100, 200]"
+            :page-sizes="[5, 10, 20, 40]"
             :page-size="myJoinMeeting.pagesize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="myJoinMeeting.pageTotal">
@@ -545,23 +505,31 @@
         },
          //进入会议室
          enterRoom(row){
-         this.$router.push({
-            name:'ConRoom',
-            params:{
-              roonNum:row.conName,
-              role:'LiveGuest',//房间观众
-            }
-          })
-         },
-         //开启会议
-         startMeeting(row){ 
+          console.log("加入会议房间......");
           this.$router.push({
             name:'ConRoom',
             params:{
-              roonNum:row.conName,
-              role:'LiveMaster',//房间创建者--主播
+              meetName:row.meetName,
+              role:'LiveGuest',//房间创建者--主播
+              type:'meetJoin',
+              conferenceId:row.id,
+              roomName:row.roomName//会议房间名称
             }
-          })
+          }); 
+         },
+         //开启会议
+         startMeeting(row){ 
+          console.log("创建会议房间......");
+          this.$router.push({
+            name:'ConRoom',
+            params:{
+              meetName:row.meetName,
+              role:'LiveMaster',//房间创建者--主播
+              type:'meetCreate',
+              conferenceId:row.id,
+              roomName:row.roomName//会议房间名称
+            }
+          });
          },
          //取消会议
          cancelMeeting(row){
@@ -680,5 +648,16 @@
 </script>
 
 <style>
-
+/* .search_box .el-input{
+width:150px;
+}
+.search_box .el-date-editor.el-input{
+width:150px;
+}
+.search_box .el-select>.el-input{
+  width: 100px
+} */
+.search_box div{
+  margin-right: 10px;
+}
 </style>

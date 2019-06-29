@@ -26,7 +26,12 @@
 <el-tabs class="tab_box" type="border-card" @tab-click="">
     <el-tab-pane label="已完成的会议">
       <div class="search_box">
-  <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入会议名称"></el-input>
+        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="请选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker size="large" v-model="searchForm.endTime" type="datetime" placeholder="请选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入创建人姓名"></el-input>
+        <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button> 
+  <!-- <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
      <el-row>
       <el-col :span="8">
         <el-form-item style="width: 80%" label="会议名称">
@@ -45,7 +50,7 @@
       </el-col> 
      </el-row> 
     
-  </el-form> 
+  </el-form>  -->
  
 </div> 
   <div class="table_title">
@@ -110,30 +115,11 @@
 <el-tab-pane label="本月已完成的会议" > 
       <div class="search_box">
   <el-form :model="searchForm"  ref="searchForm" label-width="30%" class="demo-searchForm ">
-     <el-row>
-      <el-col :span="6">
-        <el-form-item style="width: 80%" label="会议名称">
-      <el-input v-model="searchForm.conName" ></el-input>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="6">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
-    </el-form-item>
-      </el-col> 
-      <el-col :span="6">
-        <el-form-item style="width: 80%" label="创建人">
-      <el-input v-model="searchForm.creator" ></el-input>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="6">
-        <el-form-item style="width: 50%" label="状态">
-      <el-select v-model="searchForm.status" placeholder="请选择状态">
-      <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
-    </el-select>
-    </el-form-item>
-      </el-col> 
-     </el-row> 
+     <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入会议名称"></el-input>
+        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="请选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker size="large" v-model="searchForm.endTime" type="datetime" placeholder="请选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入创建人姓名"></el-input>
+        <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button> 
     
   </el-form>  
 </div> 

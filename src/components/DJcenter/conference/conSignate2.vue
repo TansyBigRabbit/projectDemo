@@ -7,8 +7,8 @@
 				<div>
 					<ul class="sigList" v-for="record in records">
 						<li>
-							<span style="width:20%;text-align:left;">{{record.name}}</span>
-			    	        <span style="width:70%;text-align:right;">签到时间：{{record.signatureTime}}</span>
+							<span style="width:20%;text-align:left;">{{record.signName}}</span>
+			    	        <span style="width:70%;text-align:right;">签到时间：{{record.signTime}}</span>
 						</li>
 					</ul>
 				</div> 
@@ -100,22 +100,7 @@
             idNum:''
             },*/
             url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', 
-            records:[{
-            	name:'Tansy',
-            	signatureTime:'2019-06-18 20:00:00'
-            },
-            {
-            	name:'Tansy',
-            	signatureTime:'2019-06-18 20:01:01'
-            },
-            {
-            	name:'Tansy',
-            	signatureTime:'2019-06-18 20:02:02'
-            },
-            {
-            	name:'Tansy',
-            	signatureTime:'2019-06-18 20:02:02'
-            } ]
+            records:[ ]
 			}
 		},
     created(){
@@ -130,6 +115,7 @@
           console.log("findbyId......");
           console.log(res.data);  
           _this.meetName = res.data.data.meetName;
+          _this.refreshSignList();
           }); 
       },
       //刷卡读卡
@@ -143,8 +129,8 @@
            
       },
         signMeeting(){
-           var _this = this;
-           this.$http.post(this.$ports.meetsign.sign,{ 
+         /*  var _this = this;
+           this.$http.post(this.$ports.conference.update,{ 
            'id':'123456',
            'status':4
            }).then(res=>{
@@ -155,9 +141,9 @@
           this.refreshTable();
           }
           });
-},
+},*/
 
-          /*var _this = this;
+          var _this = this;
           _this.$http.post(this.$ports.meetsign.sign,{ 
             'conferenceRoomId':_this.meetingId,
             'signName':_this.signInfo.userName,
@@ -165,9 +151,33 @@
             'signTime':_this.signInfo.signTime,
            }).then(res=>{  
              console.log(res.data)
+             if(res.data.code==0){
+              alert('签到成功！');
+              console.log("刷新签到列表....")
+              _this.refreshSignList();
+             }else{
+              alert(res.data.msg);
+             }
            }); 
-        },*/
+        },
+        refreshSignList(){
+          var _this = this;
+          _this.$http.get(this.$ports.meetsign.list,{ 
+            'conferenceRoomId':_this.meetingId 
+           }).then(res=>{  
+             console.log(res.data)
+             if(res.data.code==0){ 
+               var num = res.data.data.length;
+               for(let i=0;i<num;i++){
+                res.data.data[i].signTime=res.data.data[i].signTime.slice(0,num-3);
+               }
 
+               _this.records = res.data.data;
+             }else{
+              alert(res.msg);
+             }
+           }); 
+        },
        /*if(!window.WebSocket){ 
         alert("该版本浏览器不支持WebSocket");
         return

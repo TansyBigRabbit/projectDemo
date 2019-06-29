@@ -25,7 +25,7 @@ var ILiveSDK = {
 		'departId': '',
 	}
 };
-var webUrlMain = "ws:47.102.139.17:9090/threeCentreProject/groupcall?";
+var webUrlMain = "ws:192.168.1.153:8080//threeCentreProject/groupcall?";
 var video_list = [];
 var userList = [];
 

@@ -49,6 +49,7 @@ export default {
         if(res.data.code==0){
           loginInfoMain = res.data.data;
           window.localStorage.setItem('userId',res.data.data.userId);
+          window.localStorage.setItem('idCard',res.data.data.idCard);
           _this.$store.state.login=true;
               _this.$router.push({
                 name:'home'

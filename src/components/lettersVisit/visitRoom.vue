@@ -369,6 +369,9 @@
 			case 'stopCommunication':
 				dispose();
 				break;
+			case 'refreshPage':
+	        	app.refreshPage();
+	        	break;
 
 			default:
 				console.error('Unrecognized message', parsedMessage);
@@ -623,6 +626,11 @@ getRoomList: function(opts, succ, err) {
         participants[key].dispose();
       }
 
+  },
+  refreshPage(){
+  this.$router.push({
+      name:'home' 
+    });
   },
   //获取对应token并且初始化websocket
   getToken(idNum){

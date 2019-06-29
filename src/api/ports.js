@@ -16,7 +16,7 @@ export default {
 		findById: hosturl + 'conferenceroom/queryOne',
 	},
 	meetsign:{
-		sgin: hosturl +'/meetsign/insert',
+		sign: hosturl +'/meetsign/insert',
 		list: hosturl +'/meetsign/queryListWithNoPage',
 	},
 	//userInfo:"/threeCentreProject/userinfoextend",
