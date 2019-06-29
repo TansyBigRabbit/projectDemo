@@ -304,6 +304,9 @@ initWebsocket(){
     }else if(app.pageData.type=="meetJoin"){
       app.showClose=false;
       app.joinRoom();
+    }else{
+    	app.showClose=true;
+    	app.joinRoom();
     }
     /*//创建者开启会议
     if(app.role=='LiveMaster'){
@@ -690,10 +693,10 @@ getRoomList: function(opts, succ, err) {
 
     }
   this.dispose = function() {
-    console.log('Disposing participant ' + this.name);
+    console.log('Disposing participant ' + senderName);
     this.rtcPeer.dispose();
     //    container.parentNode.removeChild(container);
-    obj.onRemoteStreamRemove(this.name);
+    obj.onRemoteStreamRemove(senderName);
   };
 }, 
 onRemoteStreamRemove: function(videoId) {
@@ -709,10 +712,10 @@ onRemoteStreamRemove: function(videoId) {
       //重置视频列表
       var newArr = [];
       var needResetFirst = false;
-      $.each(this.video_list, function(o) {
-        if (o.videoId != videoId) {
-          newArr.push(o);
-        } else if (o.first) {
+      $.each(this.video_list, function(i,val) {
+        if (val.videoId != videoId) {
+          newArr.push(val);
+        } else if (val.first) {
           needResetFirst = true;
         }
       });

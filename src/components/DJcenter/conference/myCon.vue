@@ -506,16 +506,32 @@
          //进入会议室
          enterRoom(row){
           console.log("加入会议房间......");
-          this.$router.push({
+          if(row.creator== window.localStorage.getItem('userId')){
+          	 this.$router.push({
+            name:'ConRoom',
+            params:{
+            	//会议创建者再次加入房间
+              meetName:row.meetName,
+              role:'LiveMaster',//房间创建者--主播
+              type:'createJoin',
+              conferenceId:row.id,
+              roomName:row.roomName//会议房间名称
+            }
+          });
+          }else{
+          	this.$router.push({
             name:'ConRoom',
             params:{
               meetName:row.meetName,
-              role:'LiveGuest',//房间创建者--主播
+              role:'LiveGuest', 
               type:'meetJoin',
               conferenceId:row.id,
               roomName:row.roomName//会议房间名称
             }
           }); 
+          }
+         
+          
          },
          //开启会议
          startMeeting(row){ 
