@@ -14,11 +14,11 @@
  <el-row>
     <el-col style="text-align: center;" :span="12">
       <p>我创建的会议</p>
-      <p @click="tabTo(0)">{{myCreateMeeting.pageTotal}}&nbsp;场</p>
+      <p @click="tabTo(0)">{{myCreateMeeting.pageTotalNum}}&nbsp;场</p>
     </el-col>
     <el-col style="text-align: center;" :span="12">
       <p>我参与的会议</p>
-      <p @click="tabTo(1)">{{myJoinMeeting.pageTotal}}&nbsp;场</p>
+      <p @click="tabTo(1)">{{myJoinMeeting.pageTotalNum}}&nbsp;场</p>
     </el-col> 
     <!-- <el-col style="text-align: center;" :span="8">
       <p>我缺席的会议</p>
@@ -45,7 +45,8 @@
     <span>会议列表</span>
   </div>
   <el-table
-  class="table_body"
+    v-loading="joinLoading"
+    class="table_body"
     :data="myCreateMeeting.createMeetingList"
     border
     style="width: 100%">
@@ -120,7 +121,8 @@
     <span>会议列表</span>
   </div>
   <el-table
-  class="table_body"
+    v-loading="createlLoading"
+    class="table_body"
     :data="myJoinMeeting.myJoinMeetingList"
     border
     style="width: 100%">
@@ -167,8 +169,8 @@
     </el-table-column>
   </el-table>
    <el-pagination class="page" background
-            @size-change="handleSizeChange01"
-            @current-change="handleCurrentChange01"
+            @size-change="handleSizeChange01($event)"
+            @current-change="handleCurrentChange01($event)"
             :current-page="myJoinMeeting.currentPage"
             :page-sizes="[5, 10, 20, 40]"
             :page-size="myJoinMeeting.pagesize"
@@ -176,88 +178,7 @@
             :total="myJoinMeeting.pageTotal">
         </el-pagination> 
     </el-tab-pane> 
-    </el-tabs>
-<!-- 
-    <el-tab-pane label="我缺席的会议" > 
-      <div class="search_box">
-  <el-form :model="myCreateMeeting.searchForm"  ref="myCreateMeeting.searchForm" label-width="30%" class="demo-myCreateMeeting.searchForm ">
-     <el-row>
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="会议名称">
-      <el-input v-model="myCreateMeeting.searchForm.conName" ></el-input>
-    </el-form-item>
-      </el-col> 
-      <el-col :span="8">
-        <el-form-item style="width: 80%" label="开始时间">
-       <el-date-picker size="large" v-model="myCreateMeeting.searchForm.startTime" type="datetime" placeholder="选择日期时间" value-format=" yyyy-MM-dd HH:mm" format="yyyy-MM-dd HH:mm"> </el-date-picker> 
-    </el-form-item>
-      </el-col>  
-      <el-col :span="8">
-        <el-form-item style="width: 50%" label="状态">
-      <el-select v-model="myCreateMeeting.searchForm.status" placeholder="请选择状态">
-      <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
-    </el-select>
-    </el-form-item>
-      </el-col> 
-     </el-row> 
-    
-  </el-form>  
-</div> 
-  <div class="table_title">
-    <span>会议列表</span>
-  </div>
-  <el-table
-  class="table_body"
-    :data="myCreateMeeting.meetingList"
-    border
-    style="width: 100%">
-    <el-table-column
-      fixed
-      prop="conName"
-      align="center"
-      label="会议名称" >
-    </el-table-column>
-    <el-table-column
-      :formatter="dateFormate"
-      prop="startTime"
-      align="center"
-      label="会议开始时间" >
-    </el-table-column>
-    <el-table-column 
-      prop="status"
-      align="center"
-      label="会议状态" >
-      <template slot-scope="scope">
-    <span v-if="scope.row.status==1">已取消</span>
-    <span v-if="scope.row.status==2">已过期</span>
-    <span v-if="scope.row.status==3">已完成</span>
-    <span v-if="scope.row.status==4">正在进行</span>
-    <span v-if="scope.row.status==0">未开始</span>
-    </template>
-    </el-table-column>
-    <el-table-column
-      prop="creator"
-      align="center"
-      label="会议创建人" >
-    </el-table-column>  
-    <el-table-column 
-      label="操作" 
-      align="center">
-      <template slot-scope="scope"> 
-       <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button>
-      </template> 
-    </el-table-column>
-  </el-table>
-  <el-pagination class="page" background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="myCreateMeeting.currentPage"
-            :page-sizes="[10, 50, 100, 200]"
-            :page-size="myCreateMeeting.pagesize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="total">
-        </el-pagination>  
-    </el-tab-pane>  -->
+    </el-tabs> 
 
   
   <!-- 详情弹窗 -->
@@ -299,11 +220,14 @@
 	export default{
 		data(){
 			return{
+        createlLoading:true,
+        joinLoading:true,
     //我创建的会议部分参数
-    myCreateMeeting:{
+      myCreateMeeting:{
       currentPage: 1,
 　　　   pagesize: 5,
       pageTotal:0,
+      pageTotalNum:0,
       //查询对象
       searchForm:{
       conName:'',
@@ -318,6 +242,7 @@
       currentPage: 1,
 　　　   pagesize: 5,
        pageTotal:0,
+       pageTotalNum:0,
       myJoinMeetingList:[],
       searchForm:{
       conName:'',
@@ -338,6 +263,7 @@
       {text:'已过期',value:'3'},
       {text:'已完成',value:'2'},
       {text:'正在进行',value:'1'},
+      {text:'全部',value:''},
     ], 
     //表单验证规则
     rules: {
@@ -370,21 +296,30 @@
 		methods:{
       //获取我创建的会议列表数据
           getMycreateList(num,size){
+          this.createlLoading=true;
           var _this = this;
+          _this.myCreateMeeting.createMeetingList = {};
            this.$http.get(this.$ports.conference.list,{
            'pageNum':num,
            'size':size,
            'creator':window.localStorage.getItem('userId')
            }).then(res=>{
+          this.createlLoading=false
           console.log("获取我创建的会议数据......");
           console.log(res.data); 
+          
           _this.myCreateMeeting.createMeetingList = res.data.data;
           _this.myCreateMeeting.pageTotal = res.data.page.total;
+          _this.myCreateMeeting.pageTotalNum = res.data.page.total;
+          _this.myCreateMeeting.pagesize = size;
+          _this.myCreateMeeting.currentPage = num;
           });
           },
           //获取我参与的会议列表
           getMyJoinList(num,size){
           var _this = this;
+          _this.myJoinMeeting.myJoinMeetingList ={};
+          this.joinLoading=true;
            this.$http.get(this.$ports.conference.list,{
            'pageNum':num,
            'size':size,
@@ -392,8 +327,13 @@
            }).then(res=>{
           console.log("获取我参与的会议数据......");
           console.log(res.data); 
+          this.joinLoading=false;
+
           _this.myJoinMeeting.myJoinMeetingList = res.data.data;
           _this.myJoinMeeting.pageTotal = res.data.page.total;
+          _this.myJoinMeeting.pageTotalNum = res.data.page.total;
+          _this.myJoinMeeting.pagesize = size;
+          _this.myJoinMeeting.currentPage = num;
           });
          },
          //tab跳转
@@ -477,8 +417,7 @@
                $("input").attr('disabled',true);
             _this.dialogTitle="会议详情";
             }
-            //查询单条数据
-            var _this = this;
+            //查询单条数据v
            this.$http.get(this.$ports.conference.findById,{ 
             'id':obj.id
            }).then(res=>{
@@ -621,6 +560,14 @@
         },
         //查询我创建的会议列表
         searchCreateMeeting(){
+          if(typeof this.myCreateMeeting.searchForm.endTime=='undefined'&&typeof this.myCreateMeeting.searchForm.startTime=='string'){
+            alert("请输入会议结束时间");
+            return
+          }
+          if(typeof this.myCreateMeeting.searchForm.startTime=='undefined'&&typeof this.myCreateMeeting.searchForm.endTime=='string'){
+            alert("请输入会议开始时间");
+            return
+          }
             var _this = this;
            this.$http.get(this.$ports.conference.list,{
            'pageNum':1,
@@ -639,6 +586,14 @@
         },
         //查询我参与的会议列表
         searchJoinMeeting(){
+          if(typeof this.myJoinMeeting.searchForm.endTime=='undefined'&&typeof this.myJoinMeeting.searchForm.startTime=='string'){
+            alert("请输入会议结束时间");
+            return
+          }
+          if(typeof this.myJoinMeeting.searchForm.startTime=='undefined'&&typeof this.myJoinMeeting.searchForm.endTime=='string'){
+            alert("请输入会议开始时间");
+            return
+          }
          var _this = this;
            this.$http.get(this.$ports.conference.list,{
            'pageNum':1,
@@ -653,9 +608,7 @@
           _this.myJoinMeeting.myJoinMeetingList = res.data.data;
           });
         },
-        refreshTable(){
-              this.myCreateMeeting.pageNum=1;
-              this.myJoinMeeting.pageNum=1;
+        refreshTable(){ 
               this.getMycreateList(1,5);
               this.getMyJoinList(1,5);
         }
