@@ -3,12 +3,12 @@
     <textarea style="display: none" userName="cardinfo" cols="100" rows="10" id="cardinfo"></textarea>
   <div class="breadcrumb">
   <el-breadcrumb separator="/">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-  <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-  <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>开启信访</el-breadcrumb-item> 
   </el-breadcrumb>
-</div>  
+</div> 
+<el-card class="box-card idCard"> 
   <el-form :model="userinfoExtend"  ref="userinfoExtend" label-width="130px" class="demo-userinfoExtend">
     <!-- 基本信息 -->
     <el-row>
@@ -72,7 +72,7 @@
       </el-col>
  </el-row>
 </el-form>
-  
+ </el-card> 
 <!-- 选择部门弹窗 -->
 <el-dialog title="选择上访类型" :visible.sync="dialogDepartment" width=30% >
   <div v-if="!checkDepart">
@@ -337,4 +337,10 @@
   .container { 
     background-color: #fff;
   }
+  .el-form-item > label {
+    text-align: right;
+}
+.idCard{
+  padding-top: 30px;
+}
 </style>

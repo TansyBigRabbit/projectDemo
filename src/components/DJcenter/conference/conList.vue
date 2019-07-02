@@ -3,10 +3,10 @@
 	<div>
 		<div class="breadcrumb">
   <el-breadcrumb separator="/">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-  <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-  <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>党建中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>会议</el-breadcrumb-item> 
+  <el-breadcrumb-item>会议列表</el-breadcrumb-item> 
   </el-breadcrumb>
 </div> 
 
@@ -328,12 +328,18 @@
          //tab跳转
           tabTo(num){
             if(num==0){
-              this.getMeetingList(1,5); 
-            }else{
-               this.getMonthMeetingList(1,5);
-            }
+              this.getMeetingList(1,5);
               $(".is-active").removeClass("is-active");
               $("#tab-"+num).addClass("is-active");
+              $("#pane-0").css('display','block');
+              $("#pane-1").css('display','none'); 
+            }else{
+              this.getMonthMeetingList(1,5);
+              $(".is-active").removeClass("is-active");
+              $("#tab-"+num).addClass("is-active");
+              $("#pane-0").css('display','none');
+              $("#pane-1").css('display','block');
+            } 
           },
           //会议签到
 			    signatureCon(row) {

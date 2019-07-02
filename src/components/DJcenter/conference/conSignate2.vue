@@ -1,23 +1,47 @@
 <!-- 会议签到刷卡页面 -->
-<template>
-	<el-row>
-		<el-col :span="10">
-			<div class="sign_box">
-				<p style="text-align: center">{{meetName}}签到记录</p>
+<template> 
+  <div>
+         <div class="breadcrumb">
+  <el-breadcrumb separator="/">
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>党建中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>会议</el-breadcrumb-item> 
+  <el-breadcrumb-item>会议签到</el-breadcrumb-item> 
+  </el-breadcrumb>
+</div>
+	<el-row style="margin-top:35px">
+  	<el-col :span="12">
+			 <el-card>
+				<p style="text-align: center">{{meetName}}签到记录表</p>
 				<div>
-					<ul class="sigList" v-for="record in records">
-						<li>
-							<span style="width:20%;text-align:left;">{{record.signName}}</span>
-			    	        <span style="width:70%;text-align:right;">签到时间：{{record.signTime}}</span>
-						</li>
-					</ul>
+           <el-table
+    v-loading="signLoading"
+    class="table_body"
+    :data="records"
+    height='400'
+    border
+    style="width: 100%">
+    <el-table-column
+      fixed
+      prop="signName"
+      align="center"
+      label="签到人" > 
+    </el-table-column>
+    <el-table-column
+      :formatter="dateFormate01"
+      prop="signTime"
+      align="center"
+      label="签到时间" >
+    </el-table-column>   
+  </el-table> 
 				</div> 
-			</div>
+			 </el-card>
 		</el-col>
 
 	<!-- --> 
 
-		<el-col :span="12" style="margin-left: 30px">
+		<el-col :span="10" style="margin-left: 30px">
+      <el-card class="infoCard">
         <el-form :model="signInfo"  ref="signInfo" label-width="130px" class="demo-signInfo">
     	<el-row>
     		<el-col :span="13">
@@ -42,13 +66,14 @@
   </el-form-item>  
   <el-form-item style="width: 60%" label="签到时间">
     <el-input v-model="signInfo.signTime" :readonly="true"></el-input>
-  </el-form-item>
-   <el-form-item class="submitBtn">
-    <el-button type="primary" @click="readCard()">读卡</el-button> 
-  </el-form-item>
+  </el-form-item> 
+  <div class="btn_box">
+   <el-button style="width: 20%" type="primary" @click="readCard()">读卡</el-button>
+   </div> 
 </el-form>
+</el-card>
 
-<div class="data_box">
+<!-- <div class="data_box">
 	<el-row>
 		<el-col class="data_col" :span="8" >
 			<p >总人数</p>
@@ -69,15 +94,17 @@
 			</div>
 		</el-col>
 	</el-row>
-</div>
+</div> -->
   </el-col> 
 	</el-row>
+</div>
 </template>
 
 <script>
 	export default{
 		data(){
 			return{
+            signLoading:true,
             meetName:'',
             meetingId:this.$route.params.id,
             id:this.$route.params.id,
@@ -92,13 +119,7 @@
               sex: '',
               birthDay:'',
               birthAddress: '',
-            },
-            /*signInfo:{
-            name:'',
-            sex:'',
-            signTime:'',
-            idNum:''
-            },*/
+            }, 
             url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', 
             records:[ ]
 			}
@@ -113,7 +134,8 @@
             'id':id
            }).then(res=>{
           console.log("findbyId......");
-          console.log(res.data);  
+          console.log(res.data); 
+          _this.signLoading=false; 
           _this.meetName = res.data.data.meetName;
           _this.refreshSignList();
           }); 
@@ -264,6 +286,10 @@
         }
         var newStr = year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second
         return newStr;
+      },
+      dateFormate01(row){
+        var num = row.signTime.length;
+        return row.signTime.slice(0,num-3);
       }
     }
 	}
@@ -271,5 +297,14 @@
 </script>
 
 <style>
-    
+  .infoCard{
+    height: 536px;
+  }  
+  .el-form-item>label{
+   text-align: right;
+  }
+  .btn_box{
+    width: 100%;
+    text-align: center;
+  }
 </style>

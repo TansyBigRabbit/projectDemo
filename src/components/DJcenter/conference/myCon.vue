@@ -3,10 +3,10 @@
 	<div>
 		<div class="breadcrumb">
   <el-breadcrumb separator="/">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-  <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-  <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>党建中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>会议</el-breadcrumb-item> 
+  <el-breadcrumb-item>我的会议</el-breadcrumb-item> 
   </el-breadcrumb>
 </div> 
 
@@ -89,7 +89,7 @@
        <el-button v-if="scope.row.status==0" @click="startMeeting(scope.row)" type="primary" size="small">开启会议</el-button>
        <el-button v-if="scope.row.status==0" @click="showModel('edit',scope.row)" type="primary" size="small">编辑</el-button>
        <el-button v-if="scope.row.status!=0" @click="showModel('check',scope.row)" type="primary" size="small">查看</el-button>
-       <el-button v-if="scope.row.status==0" @click="cancelMeeting(scope.row)" type="primary" size="small">取消会议</el-button>
+       <el-button style="margin-top: 5px" v-if="scope.row.status==0" @click="cancelMeeting(scope.row)" type="primary" size="small">取消会议</el-button>
         
       </template> 
     </el-table-column>
@@ -298,13 +298,13 @@
           getMycreateList(num,size){
           this.createlLoading=true;
           var _this = this;
-          _this.myCreateMeeting.createMeetingList = {};
+          //_this.myCreateMeeting.createMeetingList = {};
            this.$http.get(this.$ports.conference.list,{
            'pageNum':num,
            'size':size,
            'creator':window.localStorage.getItem('userId')
            }).then(res=>{
-          this.createlLoading=false
+          
           console.log("获取我创建的会议数据......");
           console.log(res.data); 
           
@@ -313,12 +313,13 @@
           _this.myCreateMeeting.pageTotalNum = res.data.page.total;
           _this.myCreateMeeting.pagesize = size;
           _this.myCreateMeeting.currentPage = num;
+          this.createlLoading=false
           });
           },
           //获取我参与的会议列表
           getMyJoinList(num,size){
           var _this = this;
-          _this.myJoinMeeting.myJoinMeetingList ={};
+          //_this.myJoinMeeting.myJoinMeetingList ={};
           this.joinLoading=true;
            this.$http.get(this.$ports.conference.list,{
            'pageNum':num,
@@ -327,24 +328,32 @@
            }).then(res=>{
           console.log("获取我参与的会议数据......");
           console.log(res.data); 
-          this.joinLoading=false;
+          
 
           _this.myJoinMeeting.myJoinMeetingList = res.data.data;
           _this.myJoinMeeting.pageTotal = res.data.page.total;
           _this.myJoinMeeting.pageTotalNum = res.data.page.total;
           _this.myJoinMeeting.pagesize = size;
           _this.myJoinMeeting.currentPage = num;
+          this.joinLoading=false;
           });
          },
          //tab跳转
           tabTo(num){
             if(num==0){
             this.getMycreateList(1,5);
-            }else{
-            this.getMyJoinList(1,5);
-            }
             $(".is-active").removeClass("is-active");
             $("#tab-"+num).addClass("is-active");
+            $("#pane-0").css('display','block');
+            $("#pane-1").css('display','none');
+            }else{
+            this.getMyJoinList(1,5);
+            $(".is-active").removeClass("is-active");
+            $("#tab-"+num).addClass("is-active");
+            $("#pane-0").css('display','none');
+            $("#pane-1").css('display','block');
+            }
+            
           },
           handleClick(tab,event){
             if(tab.index==0){

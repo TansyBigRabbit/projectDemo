@@ -217,10 +217,16 @@ a{
     #menuRow .el-col-4 {
         width: 15%
 }
+  #menuRow .el-col-20 {
+        width: 85%
+}
 }
 @media screen and (min-width: 1401px) {
     #menuRow .el-col-4 {
         width: 12.5%
+}
+  #menuRow .el-col-20 {
+        width: 87.5%
 }
 }
 </style>
