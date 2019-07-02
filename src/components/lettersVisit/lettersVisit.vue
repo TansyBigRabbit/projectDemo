@@ -159,7 +159,7 @@
         }
           });
         }else{
-          alert("数据保存失败，请联系管理员！");
+          this.$message.error("数据保存失败，请联系管理员！");
         }
         })*/ 
         
@@ -188,7 +188,7 @@
               }
            });
         }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
         }
         });
         
@@ -203,7 +203,7 @@
           this.department_country = res.data.data;
           this.checkDepart=true;
         }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
         }
           });  
       },
@@ -218,7 +218,7 @@
 
 
        /*if(!window.WebSocket){ 
-        alert("该版本浏览器不支持WebSocket");
+        this.$message.error("该版本浏览器不支持WebSocket");
         return
         } 
         var websocket = new WebSocket("ws://127.0.0.1:9000/");
@@ -308,12 +308,12 @@
                 departId:_this.roomInfo.interviewDepartId,}});
 
                 }else{
-                alert(json.data.msg);
+                this.$message.error(json.data.msg);
                 }
             }); 
       } 
         }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
         }
           });  
       } 

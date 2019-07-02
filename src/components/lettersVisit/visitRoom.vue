@@ -241,12 +241,17 @@
         ).then(res=>{
           console.log("提交接访的上访记录......");
           console.log(res.data);
-          if(res.data.errorCode==0){   
+          if(res.data.code==0){   
             if(p==1){
-            	alert("保存成功");
-            } 
+            	this.$message({
+		          message: "保存成功!",
+		          type: 'success'
+		        }); 
+            } else{
+            	console.log("定时任务，保存上访记录......");
+            }
         }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
         }
         });
           
@@ -408,7 +413,7 @@
 			ws.onclose = function(e) {
 				console.log(e);
 		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-			alert("连接已中断，请刷新页面！")
+			this.$message("视频连接已中断...");
 			app.chatList.push({
 				who: '系统',
 				content: "连接已中断，请刷新页面",
@@ -659,7 +664,7 @@ getRoomList: function(opts, succ, err) {
            _this.initWebsocket(); 
            return;
         }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
         }
         });
   },

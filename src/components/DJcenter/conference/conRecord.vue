@@ -352,11 +352,11 @@
           var params={}
           if(type=='all'){
           if(typeof this.meeting.searchForm.endTime=='undefined'&&typeof this.meeting.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
+            this.$message.error("请输入会议结束时间");
             return
           }
           if(typeof this.meeting.searchForm.startTime=='undefined'&&typeof this.meeting.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
+            this.$message.error("请输入会议开始时间");
             return
           }
           params={
@@ -369,11 +369,11 @@
            }
           }else{
           if(typeof this.monthMeeting.searchForm.endTime=='undefined'&&typeof this.monthMeeting.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
+            this.$message.error("请输入会议结束时间");
             return
           }
           if(typeof this.monthMeeting.searchForm.startTime=='undefined'&&typeof this.monthMeeting.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
+            this.$message.error("请输入会议开始时间");
             return
           }
           params={

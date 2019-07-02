@@ -504,9 +504,15 @@
            }).then(res=>{
           console.log("取消会议......");
           console.log(res.data); 
-          alert(res.data.msg)
+          
           if(res.data.code==0){
+          this.$message({
+          message: '操作成功！',
+          type: 'success'
+          });
           this.refreshTable();
+          }else{
+            this.$message.error(res.data.msg)
           }
           });
          },
@@ -546,11 +552,15 @@
           this.$http.post(url,_this.meetingDetail).then(res=>{
             console.log(res.data);
              if(res.data.code==0){
+              this.$message({
+              message: '操作成功！',
+              type: 'success'
+            });
               _this.refreshTable()
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
              } 
-            alert(res.data.msg);
+            this.$message.error(res.data.msg);
 
             });
          },
@@ -563,18 +573,18 @@
           if(res.data.code==0){ 
              this.options = res.data.data;
           }else{
-          alert(res.data.msg);
+          this.$message.error(res.data.msg);
             }
           });
         },
         //查询我创建的会议列表
         searchCreateMeeting(){
           if(typeof this.myCreateMeeting.searchForm.endTime=='undefined'&&typeof this.myCreateMeeting.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
+            this.$message.error("请输入会议结束时间");
             return
           }
           if(typeof this.myCreateMeeting.searchForm.startTime=='undefined'&&typeof this.myCreateMeeting.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
+            this.$message.error("请输入会议开始时间");
             return
           }
             var _this = this;
@@ -596,11 +606,11 @@
         //查询我参与的会议列表
         searchJoinMeeting(){
           if(typeof this.myJoinMeeting.searchForm.endTime=='undefined'&&typeof this.myJoinMeeting.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
+            this.$message.error("请输入会议结束时间");
             return
           }
           if(typeof this.myJoinMeeting.searchForm.startTime=='undefined'&&typeof this.myJoinMeeting.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
+            this.$message.error("请输入会议开始时间");
             return
           }
          var _this = this;

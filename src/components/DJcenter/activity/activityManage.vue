@@ -1,6 +1,7 @@
 <!-- 我的活动 --> 
 <template>
-	<div>
+  <div>
+	<div v-if="creating">
 		<div class="breadcrumb">
   <el-breadcrumb separator="/">
   <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
@@ -85,11 +86,21 @@
             :total="total">
         </el-pagination>
     </el-tab-pane> 
-</el-tabs>
-  
-  <!-- 详情弹窗 -->
-  <el-dialog  :title="dialogTitle"  :visible.sync="conDetail">
-  <el-form :model="activityDetail" :rules="rules" ref="activityDetail" class="activity_form">
+</el-tabs> 
+</div>
+
+  <div v-else>
+    <div class="breadcrumb">
+  <el-breadcrumb separator="/">
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>党建中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>活动</el-breadcrumb-item> 
+  <el-breadcrumb-item @click="creating=true">活动管理</el-breadcrumb-item>
+  <el-breadcrumb-item>新建活动</el-breadcrumb-item>  
+  </el-breadcrumb>
+</div>
+<e-card
+<el-form :model="activityDetail" :rules="rules" ref="activityDetail" class="activity_form">
     <el-form-item label="活动名称" prop="name">
       <el-input class="notEdit" v-model="activityDetail.name"></el-input>
     </el-form-item>
@@ -114,13 +125,10 @@
       <el-date-picker size="large" v-model="activityDetail.activityEndTime" type="date" placeholder="选择日期时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
     </el-form-item> 
   </el-form>
-  <div slot="footer" class="dialog-footer">
-     <el-button v-if="showBtn" @click="submitForm('activityDetail')">提交</el-button> 
+  <el-button @click="submitForm('activityDetail')">提交</el-button> 
     <el-button @click="conDetail = false">关闭</el-button> 
   </div>
-</el-dialog>
-
-	</div>
+</div>
 </template>
 
 <script>
@@ -139,6 +147,7 @@ const toolbarOptions = [
         },
 		data(){
 			return{
+      creating:false,
       createlLoading:true,
 			theme:'' /*`<p></p><p><br></p><ol><li><strong><em>Or drag/paste an image here.</em></strong></li><li><strong><em>rerew</em></strong></li><li><strong><em>rtrete</em></strong></li><li><strong><em>tytrytr</em></strong></li><li><strong><em>uytu</em></strong></li></ol>`*/,
        editorOption: {
@@ -217,6 +226,9 @@ const toolbarOptions = [
             $(".is-active").removeClass("is-active");
             $("#tab-"+num).addClass("is-active");
           }, 
+          jumpTo(){
+            this.creating=true;
+          },
       		handleSizeChange(size){
             console.log("条数:"+size);
             this.pageSize = size;
@@ -243,10 +255,15 @@ const toolbarOptions = [
            'id':row.id,
            'state':status
            }).then(res=>{ 
-          console.log(res.data); 
-          alert(res.data.msg)
+          console.log(res.data);  
           if(res.data.code==0){
+          this.$message({
+          message: '操作成功！',
+          type: 'success'
+          });
           _this.getMyActivity(1,5);
+          }else{
+          this.$message.error(res.data.msg)
           }
           });
           },
@@ -257,10 +274,14 @@ const toolbarOptions = [
            }).then(res=>{
             console.log(res.data);
              if(res.data.code==0){ 
+             this.$message({
+              message: '删除失败！',
+              type: 'success'
+            });
               //操作成功刷新页面退出弹窗 
               _this.getMyActivity(1,5); 
              } 
-            alert(res.data.msg);
+            this.$message.error(res.data.msg);
 
             });
           },
@@ -302,7 +323,7 @@ const toolbarOptions = [
           if(res.data.code==0){
            _this.activityDetail = res.data.data; 
           }else{
-           alert(res.data.msg);
+           this.$message.error(res.data.msg);
           }
          
           }); 
@@ -326,10 +347,10 @@ const toolbarOptions = [
         },
         searhMyActivity(){ 
           if(typeof this.searchForm.activityEndTime=='undefined'&&typeof this.searchForm.activityStartTime=='string'){
-            alert("请输入活动结束时间");
+            this.$message.error("请输入活动结束时间");
           }
           if(typeof this.searchForm.activityStartTime=='undefined'&&typeof this.searchForm.activityEndTime=='string'){
-            alert("请输入活动开始时间");
+            this.$message.error("请输入活动开始时间");
           }
          var _this = this;
            this.$http.get(this.$ports.activity.list,{
@@ -348,7 +369,7 @@ const toolbarOptions = [
           _this.total = res.data.page.total; 
           _this.currentPage = 1;
         }else{
-           alert("查询失败，"+res.data.msg);
+           this.$message.error("查询失败，"+res.data.msg);
         }
           
           });
@@ -388,11 +409,15 @@ const toolbarOptions = [
           this.$http.post(url,_this.activityDetail).then(res=>{
             console.log(res.data);
              if(res.data.code==0){ 
+              this.$message({
+              message: '操作成功！',
+              type: 'success'
+            });
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
               _this.getMyActivity(1,5); 
              } 
-            alert(res.data.msg);
+            this.$message.error(res.data.msg);
 
             });
          }, 

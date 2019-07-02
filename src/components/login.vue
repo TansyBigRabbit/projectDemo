@@ -100,6 +100,10 @@
 					console.log("登录者信息.....");
 					console.log(res.data);
 					if(res.data.code == 0) {
+						this.$message({
+				          message: '登录成功！',
+				          type: 'success'
+				        });
 						loginInfoMain = res.data.data;
 						window.localStorage.setItem('userId', res.data.data.userId);
 						window.localStorage.setItem('idCard', res.data.data.idCard);
@@ -108,7 +112,7 @@
 							name: 'home'
 						});
 					} else {
-						alert(res.data.msg);
+						this.$message.error(res.data.msg);
 					}
 				})
 				/*https://171.223.100.47:8443/*/

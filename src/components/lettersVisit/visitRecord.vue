@@ -7,7 +7,17 @@
   <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
   <el-breadcrumb-item>信访记录</el-breadcrumb-item> 
   </el-breadcrumb>
-</div> 
+</div>
+      <div class="search_box"> 
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入会议名称"></el-input>
+        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker size="large" v-model="searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-select v-model="searchForm.status" placeholder="请选择状态">
+        <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
+        </el-select>
+        <el-button @click="searchCreateMeeting()" type="primary" size="small">查询</el-button> 
+ 
+</div>   
 	<div class="table_title">
 		<span>信访记录</span>
 	</div>
@@ -62,7 +72,7 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[10, 50, 100, 200]"
+            :page-sizes="[5, 10, 20, 40]"
             :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total">
@@ -74,28 +84,14 @@
 	export default{
 		data(){
 			return{
-		total: 5,
+		    total: 5,
         currentPage: 1,
 　　　　pageSize: 10,		
- 		meetings: [{
-          conName: 'XX会议',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' 
-        }, {
-          conName: 'XX会议',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc'  
-        }, {
-          conName: 'XX会议',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' 
-        }, {
-          conName: 'XX会议',
-          startTime: '2016-05-02 19:20',
-          creator: 'ccc' 
-        }]
+ 		    visitRecords: [],
+        visitDtail:{},
+        searchForm:{}
 			}
-		},
+    },
 		created(){
             this.getLetterRecord();
 		},

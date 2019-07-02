@@ -158,9 +158,15 @@
            }).then(res=>{
           console.log("取消会议......");
           console.log(res.data); 
-          alert(res.data.msg)
+          
           if(res.data.code==0){
+          this.$message({
+          message: '操作成功！',
+          type: 'success'
+          });
           this.refreshTable();
+          }else{
+          this.$message.error(res.data.msg)
           }
           });
 },*/
@@ -174,11 +180,14 @@
            }).then(res=>{  
              console.log(res.data)
              if(res.data.code==0){
-              alert('签到成功！');
+              this.$message({
+              message: '签到成功！',
+              type: 'success'
+              });
               console.log("刷新签到列表....")
               _this.refreshSignList();
              }else{
-              alert(res.data.msg);
+              this.$message.error(res.data.msg);
              }
            }); 
         },
@@ -196,12 +205,12 @@
 
                _this.records = res.data.data;
              }else{
-              alert(res.msg);
+              this.$message.error(res.msg);
              }
            }); 
         },
        /*if(!window.WebSocket){ 
-        alert("该版本浏览器不支持WebSocket");
+        this.$message.error("该版本浏览器不支持WebSocket");
         return
         } 
         var websocket = new WebSocket("ws://127.0.0.1:9000/");
