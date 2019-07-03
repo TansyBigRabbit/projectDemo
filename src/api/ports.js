@@ -19,6 +19,16 @@ export default {
 		sign: hosturl +'/meetsign/insert',
 		list: hosturl +'/meetsign/queryListWithNoPage',
 	},
+	activity:{
+        insert: hosturl+'/partybuilding/insert',
+        list: hosturl+'/partybuilding/queryListWithPage',
+        update: hosturl+'/partybuilding/update',
+        findById: hosturl+'/partybuilding/queryOne',
+        delete: hosturl+'/partybuilding/delete'
+	},
+	letters:{
+       list:hosturl+'/petitionroominfo/queryListWithPage',
+	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

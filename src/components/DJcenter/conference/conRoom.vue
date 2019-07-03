@@ -3,8 +3,8 @@
 	<div class="room"> 
 		<el-row class="video_row">
 			<!-- 用户列表 -->
-			<el-col :span="4">
-				<div class="user_box">
+			<el-col :span="4" style="width: 15%">
+		<div class="vedio_box">	 
 	<div class="sidebar"> 
      <h2>用户列表</h2> 
      <div class="sidebar-list-wrap"> 
@@ -24,7 +24,7 @@
       </ul> 
      </div> 
     </div> 
-				</div>
+			</div> 
 			</el-col>
 			<!-- 视频窗口 -->
 			<el-col :span="12">
@@ -120,14 +120,14 @@
       <div class="typing-area"> 
        <!-- <input type="text" class="input-element" v-model="form.msg" placeholder="输入你想要回复的内容"> --> 
        <textarea v-model="form.msg" placeholder="输入你想要回复的内容"></textarea> 
-       <el-button @click="handleMsgSend" type="primary" size="small">发送</el-button> 
+       <el-button class="vedio_btn" @click="handleMsgSend" type="primary" size="small">发送</el-button> 
       </div> 
      </div> 
 				</div>
 			</el-col>
 		</el-row>
-    <el-button v-if="showClose" type="primary" size="small" @click="quitRoom('meetCreate')">结束会议</el-button>
-    <el-button type="primary" size="small" @click="quitRoom('meetLeave')">退出会议</el-button>
+    <el-button class="vedio_btn" v-if="showClose" type="primary" size="small" @click="quitRoom('meetCreate')">结束会议</el-button>
+    <el-button class="vedio_btn" type="primary" size="small" @click="quitRoom('meetLeave')">退出会议</el-button>
 	</div>
 </template>
 <script>
@@ -321,7 +321,7 @@ initWebsocket(){
     ws.onclose = function(e) {
      console.log(e);
     //app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-      alert("连接已中断，请刷新页面！")
+      app.$message("视频连接已断开......");
       app.chatList.push({
         who: '系统',
         content: "连接已中断，请刷新页面",
@@ -797,9 +797,14 @@ padding: 10px;
 		width: 100%;
 	}
 	.chat_box,.vedio_box,.user_box{
-    border: 1px solid;
-    height: 100vh
-		
+    
+    height: 100vh;
+		border: 1px solid #EBEEF5;
+    background-color: #FFF;
+    color: #303133;
+    -webkit-transition: .3s;
+    transition: .3s;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
 	}
    
   .chatting-area {
@@ -827,5 +832,16 @@ padding: 10px;
 }
 .typing-area .el-button{
   float: right;
+}
+.vedioCard{
+   height: 100vh;
+} 
+.fixed .video-item { 
+    background: #333333;
+}
+.vedio_btn{
+  padding: 10px;
+  margin: auto;
+  border: none;
 }
 </style>

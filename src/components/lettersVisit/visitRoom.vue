@@ -1,14 +1,21 @@
 <template>
 	<div >  
 	 <div v-if="roomListFlag">
+	 	<div class="breadcrumb">
+  <el-breadcrumb separator="/">
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>房间列表</el-breadcrumb-item> 
+  </el-breadcrumb>
+</div> 
 		<div>
-			<h3>房间列表</h3>
+			<h3>信访房间列表</h3>
 		</div>
 		<el-divider class="divider"></el-divider>
 		<!-- <el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button> -->
         <div>
 			<el-row>
-				<el-col v-for="(item,index) in roomList" :data-roomnum="item.info.roomnum" :key="index" class="margin_r" :span="5">
+				<el-col v-if="roomList.length>0" v-for="(item,index) in roomList" :data-roomnum="item.info.roomnum" :key="index" class="margin_r" :span="5">
 				 <el-card :body-style="{ padding: '0px' }">
 			      <img :src="imgUrl" class="image">
 			      <div style="padding: 14px;">
@@ -19,14 +26,24 @@
 			        </div>
 			      </div>
 			    </el-card>	
-				</el-col>    
+				</el-col>  
+				<el-card v-else class="letterCard">
+					暂无信访房间!
+				</el-card>  
 			</el-row>
 		</div>
 	</div>
 		<div v-else>
 		<!-- <el-button type="primary" style="width: 150px" @click="quitRoom">退出房间</el-button> -->
+		<div class="breadcrumb">
+  <el-breadcrumb separator="/">
+  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>信访视频房间</el-breadcrumb-item> 
+  </el-breadcrumb>
+</div> 
 		<el-row class="container">
-			<el-col :span="11">
+			<el-col :span="9">
 				<div class="box_1">
 					<!-- v-if="item.videoId == 'local'" muted :id="item.videoId"  -->
 					<video class="vedioBox" id="creator" autoplay="autoplay" data-videotype="remote"></video> 
@@ -34,8 +51,8 @@
 				<div class="box_1">
 					<video class="vedioBox" id="participant" autoplay="autoplay" data-videotype="remote"></video> 
 				</div>
-			</el-col>
-			<el-col :span="11">
+			</el-col> 
+			<el-col :span="11" style="margin-left: 5vw">
 				<div>
 					<el-row class="infoList">
 						<p>房间信息：</p>
@@ -77,19 +94,15 @@
 					<el-input 
 					  type="textarea"
 					  :rows="12"
-					  placeholder="请记录上访内容内容"
+					  placeholder="请记录上访内容"
 					  v-model="submitConInfo.content"
 					  style="margin:30px 0" >
 					</el-input>
-					<div style="width: 20%;margin: 0 auto">
+					<div style=" width:80%;margin: 0 auto">
 					 <el-button type="primary" @click="submitContent(1)" style="width: 150px">提交</el-button>
-				    </div>
-				</div>
-				<div v-if="isRole"> 
-					<div style="width: 20%;margin: 40px auto">
 					 <el-button type="primary" @click="quitRoom" style="width: 150px">结束上访</el-button>
 				    </div>
-				</div>
+				</div> 
 			</el-col>
         </el-row>
         
@@ -228,12 +241,17 @@
         ).then(res=>{
           console.log("提交接访的上访记录......");
           console.log(res.data);
-          if(res.data.errorCode==0){   
+          if(res.data.code==0){   
             if(p==1){
-            	alert("保存成功");
-            } 
+            	_this.$message({
+		          message: "保存成功!",
+		          type: 'success'
+		        }); 
+            } else{
+            	console.log("定时任务，保存上访记录......");
+            }
         }else{
-          alert(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
         });
           
@@ -395,7 +413,7 @@
 			ws.onclose = function(e) {
 				console.log(e);
 		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-			alert("连接已中断，请刷新页面！")
+			app.$message("视频连接已中断...");
 			app.chatList.push({
 				who: '系统',
 				content: "连接已中断，请刷新页面",
@@ -646,7 +664,7 @@ getRoomList: function(opts, succ, err) {
            _this.initWebsocket(); 
            return;
         }else{
-          alert(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
         });
   },
@@ -739,6 +757,9 @@ Participant(senderName) {
 </script>
 
 <style> 
+ .letterCard{
+ 	margin-top: 30px; 
+ }
  .margin_r{
     margin-right: 25px;
     margin-bottom: 25px;
@@ -769,10 +790,15 @@ Participant(senderName) {
   }
     .container{
     	padding-top:25px;
+    	overflow: hidden;
+    	height: 100vh;
+    }
+    .container>div{
+    	height: 80vh
     }
 	.box_1{
-		height: 300px;
-		width: 450px;
+		height: 50%;
+		width: 100%;
 		border:1px solid; 
 		margin-bottom:25px;
 	}

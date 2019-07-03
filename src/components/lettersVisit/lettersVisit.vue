@@ -3,12 +3,12 @@
     <textarea style="display: none" userName="cardinfo" cols="100" rows="10" id="cardinfo"></textarea>
   <div class="breadcrumb">
   <el-breadcrumb separator="/">
-  <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-  <el-breadcrumb-item><a href="/">活动管理</a></el-breadcrumb-item>
-  <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-  <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+  <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+  <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
+  <el-breadcrumb-item>开启信访</el-breadcrumb-item> 
   </el-breadcrumb>
-</div>  
+</div> 
+<el-card class="box-card idCard"> 
   <el-form :model="userinfoExtend"  ref="userinfoExtend" label-width="130px" class="demo-userinfoExtend">
     <!-- 基本信息 -->
     <el-row>
@@ -72,7 +72,7 @@
       </el-col>
  </el-row>
 </el-form>
-  
+ </el-card> 
 <!-- 选择部门弹窗 -->
 <el-dialog title="选择上访类型" :visible.sync="dialogDepartment" width=30% >
   <div v-if="!checkDepart">
@@ -159,7 +159,7 @@
         }
           });
         }else{
-          alert("数据保存失败，请联系管理员！");
+          this.$message.error("数据保存失败，请联系管理员！");
         }
         })*/ 
         
@@ -188,7 +188,7 @@
               }
            });
         }else{
-          alert(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
         });
         
@@ -196,6 +196,7 @@
       },
       //选择上方模式之后查询的对应乡镇信息
       checkDepartMethod(typeVal){ 
+        var _this = this;
       this.$http.get(this.$ports.department+'/queryListWithNoPage',{
         type:typeVal
       }).then(res=>{
@@ -203,7 +204,7 @@
           this.department_country = res.data.data;
           this.checkDepart=true;
         }else{
-          alert(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
           });  
       },
@@ -218,7 +219,7 @@
 
 
        /*if(!window.WebSocket){ 
-        alert("该版本浏览器不支持WebSocket");
+        this.$message.error("该版本浏览器不支持WebSocket");
         return
         } 
         var websocket = new WebSocket("ws://127.0.0.1:9000/");
@@ -303,17 +304,17 @@
                 _this.$router.push({
                 name:'VisitRoom',
                 params:{
-                roleType:"petitionJoin",
+                roleType:"petition2oin",
                 roomNum:_this.roomInfo.roomName, 
                 departId:_this.roomInfo.interviewDepartId,}});
 
                 }else{
-                alert(json.data.msg);
+                _this.$message.error(json.data.msg);
                 }
             }); 
       } 
         }else{
-          alert(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
           });  
       } 
@@ -337,4 +338,10 @@
   .container { 
     background-color: #fff;
   }
+  .el-form-item > label {
+    text-align: right;
+}
+.idCard{
+  padding-top: 30px;
+}
 </style>
