@@ -506,13 +506,13 @@
           console.log(res.data); 
           
           if(res.data.code==0){
-          this.$message({
+          _this.$message({
           message: '操作成功！',
           type: 'success'
           });
           this.refreshTable();
           }else{
-            this.$message.error(res.data.msg)
+            _this.$message.error(res.data.msg)
           }
           });
          },
@@ -552,7 +552,7 @@
           this.$http.post(url,_this.meetingDetail).then(res=>{
             console.log(res.data);
              if(res.data.code==0){
-              this.$message({
+              _this.$message({
               message: '操作成功！',
               type: 'success'
             });
@@ -560,7 +560,7 @@
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
              } 
-            this.$message.error(res.data.msg);
+            _this.$message.error(res.data.msg);
 
             });
          },
@@ -571,9 +571,9 @@
           console.log("获取用户列表下拉框数据......");
           console.log(res.data);
           if(res.data.code==0){ 
-             this.options = res.data.data;
+             _this.options = res.data.data;
           }else{
-          this.$message.error(res.data.msg);
+          _this.$message.error(res.data.msg);
             }
           });
         },

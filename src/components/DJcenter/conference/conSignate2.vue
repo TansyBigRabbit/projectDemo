@@ -180,14 +180,14 @@
            }).then(res=>{  
              console.log(res.data)
              if(res.data.code==0){
-              this.$message({
+              _this.$message({
               message: '签到成功！',
               type: 'success'
               });
               console.log("刷新签到列表....")
               _this.refreshSignList();
              }else{
-              this.$message.error(res.data.msg);
+              _this.$message.error(res.data.msg);
              }
            }); 
         },

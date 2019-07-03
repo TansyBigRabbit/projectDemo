@@ -4,21 +4,23 @@
   <el-header class="main-header" id="header001" style="text-align: right; font-size: 12px"> 
     <el-row>
       <el-col :span="12" style="text-align: left;">
-      <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+      <el-radio-group v-model="isCollapse" >
   <el-radio-button :label="false">展开</el-radio-button>
   <el-radio-button :label="true">收起</el-radio-button>
 </el-radio-group>
 </el-col>
 <el-col :span="11">
   <el-dropdown>
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
+        <i class="el-icon-setting titleUser" style="margin-right: 15px">
+          &nbsp;&nbsp;<span class="titleUser">你好，{{userInfo.userName}}</span>
+        </i>
        <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>我的消息</el-dropdown-item>
-            <el-dropdown-item>设置</el-dropdown-item>
-            <el-dropdown-item divided >退出登录</el-dropdown-item>
+            <el-dropdown-item @click="editUserInfo">修改个人信息</el-dropdown-item>
+            <el-dropdown-item @click="changePwd" divided>修改密码</el-dropdown-item>
+            <el-dropdown-item @click="logout" divided >退出登录</el-dropdown-item>
           </el-dropdown-menu>
       </el-dropdown>
-      <span>王小虎</span>
+      
 </el-col>
     </el-row>
       
@@ -123,7 +125,27 @@
       </el-table> -->
     </el-main> </el-col>
 </el-row> 
- 
+ <!-- 个人信息-->
+  <el-dialog  title="修改个人信息"  :visible.sync="userInfoDialog">
+  <el-form :model="userInfoDetail" :rules="rules" ref="userInfoDetail" class="meeting_form"> 
+      <el-form-item label="登录账号" prop="userName">
+      <el-input disabled v-model="userInfoDetail.userName"></el-input>
+    </el-form-item> 
+      <el-form-item label="用户名" prop="userName">
+      <el-input v-model="userInfoDetail.userName"></el-input>
+    </el-form-item>  
+      <el-form-item label="电话号码" prop="userName">
+      <el-input v-model="userInfoDetail.userName"></el-input>
+    </el-form-item>  
+      <el-form-item label="所属部门" prop="userName">
+      <el-input v-model="userInfoDetail.userName"></el-input>
+    </el-form-item>    
+  </el-form>
+  <div slot="footer" v-if="showBtn" class="dialog-footer">
+     <el-button @click="submitForm('userInfoDetail')">提交</el-button> 
+    <el-button @click="closeForm('userInfoDetail')">关闭</el-button> 
+  </div> 
+</el-dialog>
 </el-container>
 </template>
 
@@ -132,10 +154,15 @@
     data() {
       return {
         isCollapse: false, 
+        userInfo:{},
+        userInfoDetail:{},
+        userInfoDialog:false,
+        pwdDialog:false,
       };
     },
     created(){
-      //this.testInterface();
+      this.userInfo=JSON.parse(window.localStorage.getItem('userInfo'));
+      console.log(this.userInfo);
     },
     methods: { 
       testInterface(){
@@ -161,6 +188,38 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath); 
         this.open=false
+      },
+      //编辑个人信息
+      editUserInfo(){
+      this.userInfoDialog=true;
+      },
+      closeForm(form){
+      this.$refs[form].clearValidate();
+      this.userInfoDialog=false; 
+      },
+
+      //退出登录
+      logout(){
+       var _this = this;
+           this.$confirm('确定退出？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'info',
+            message: '退出'
+          }); 
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消'
+          });       
+        });
+      },
+      //修改密码
+      changePwd(){
+
       }
     }
   }
@@ -228,6 +287,10 @@ a{
   #menuRow .el-col-20 {
         width: 87.5%
 }
+}
+.titleUser{
+  font-size: 16px;
+  color: #fff;
 }
 </style>
  

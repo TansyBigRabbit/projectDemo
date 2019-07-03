@@ -321,7 +321,7 @@ initWebsocket(){
     ws.onclose = function(e) {
      console.log(e);
     //app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
-      alert("连接已中断，请刷新页面！")
+      app.$message("视频连接已断开......");
       app.chatList.push({
         who: '系统',
         content: "连接已中断，请刷新页面",

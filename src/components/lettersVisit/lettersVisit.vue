@@ -188,7 +188,7 @@
               }
            });
         }else{
-          this.$message.error(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
         });
         
@@ -196,6 +196,7 @@
       },
       //选择上方模式之后查询的对应乡镇信息
       checkDepartMethod(typeVal){ 
+        var _this = this;
       this.$http.get(this.$ports.department+'/queryListWithNoPage',{
         type:typeVal
       }).then(res=>{
@@ -203,7 +204,7 @@
           this.department_country = res.data.data;
           this.checkDepart=true;
         }else{
-          this.$message.error(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
           });  
       },
@@ -303,17 +304,17 @@
                 _this.$router.push({
                 name:'VisitRoom',
                 params:{
-                roleType:"petitionJoin",
+                roleType:"petition2oin",
                 roomNum:_this.roomInfo.roomName, 
                 departId:_this.roomInfo.interviewDepartId,}});
 
                 }else{
-                this.$message.error(json.data.msg);
+                _this.$message.error(json.data.msg);
                 }
             }); 
       } 
         }else{
-          this.$message.error(res.data.msg);
+          _this.$message.error(res.data.msg);
         }
           });  
       } 
