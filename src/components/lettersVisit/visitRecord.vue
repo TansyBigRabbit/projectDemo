@@ -99,6 +99,7 @@
 　　　　pageSize: 10,		
  		    visitRecords: [],
         visitDtail:{},
+<<<<<<< HEAD
         searchForm:{},
         departId:'',
         dialogData:{
@@ -106,6 +107,9 @@
           word:'',
           videoUrl:''
         }
+=======
+        searchForm:{}
+>>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
 			}
     },
 		created(){

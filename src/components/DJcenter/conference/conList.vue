@@ -170,8 +170,13 @@
     </el-table-column>
   </el-table>
   <el-pagination class="page" background
+<<<<<<< HEAD
             @size-change="handleSizeChange01"
             @current-change="handleCurrentChange01"
+=======
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+>>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
             :current-page="monthMeeting.currentPage"
             :page-sizes="[5, 10, 20, 40]"
             :page-size="monthMeeting.pageSize"
@@ -387,6 +392,26 @@
             'endTime':this.monthMeeting.searchForm.endTime,
             'status':this.monthMeeting.searchForm.status,
            }
+<<<<<<< HEAD
+=======
+
+          }
+          var _this = this;
+           this.$http.get(this.$ports.conference.list,params).then(res=>{
+          console.log("查询会议数据......");
+          console.log(res.data); 
+          if(type=='all'){
+          _this.meeting.meetingList = res.data.data;
+          _this.meeting.total = res.data.page.total;
+          }else{
+          _this.monthMeeting.meetingList = res.data.data;
+          _this.monthMeeting.total = res.data.page.total;
+          }
+          
+          });
+          },
+      		handleSizeChange(){
+>>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
 
           }
           var _this = this;
