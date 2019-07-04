@@ -26,12 +26,9 @@ export default {
         findById: hosturl+'/partybuilding/queryOne',
         delete: hosturl+'/partybuilding/delete'
 	},
-<<<<<<< HEAD
 	letters:{
        list:hosturl+'/petitionroominfo/queryListWithPage',
 	},
-=======
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

@@ -91,13 +91,8 @@
     </el-table-column>
   </el-table>
   <el-pagination class="page" background
-<<<<<<< HEAD
             @size-change="handleSizeChange($event)"
             @current-change="handleCurrentChange($event)"
-=======
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
             :current-page="meeting.currentPage"
             :page-sizes="[5, 10, 20, 40]"
             :page-size="meeting.pageSize"
@@ -169,13 +164,8 @@
     </el-table-column>
   </el-table>
   <el-pagination class="page" background
-<<<<<<< HEAD
             @size-change="handleSizeChange01($event)"
             @current-change="handleCurrentChange01($event)"
-=======
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
             :current-page="monthMeeting.currentPage"
             :page-sizes="[5, 10, 20, 40]"
             :page-size="monthMeeting.pageSize"
@@ -183,11 +173,7 @@
             :total="monthMeeting.total">
         </el-pagination>
     </el-tab-pane>
-<<<<<<< HEAD
 </el-tabs> 
-=======
-</el-tabs>
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
   
   <!-- 详情弹窗 -->
   <el-dialog  title="会议详情" :visible.sync="conDetail">
@@ -398,7 +384,6 @@
             'endTime':this.monthMeeting.searchForm.endTime,
             'status':2,
            }
-<<<<<<< HEAD
 
           }
           var _this = this;
@@ -435,29 +420,6 @@
             this.monthMeeting.currentPage = currentPage;
             this.getMonthMeetingList(this.monthMeeting.currentPage,this.monthMeeting.pageSize);
           
-=======
-
-          }
-          var _this = this;
-           this.$http.get(this.$ports.conference.list,params).then(res=>{
-          console.log("查询会议数据......");
-          console.log(res.data); 
-          if(type=='all'){
-          _this.meeting.meetingList = res.data.data;
-          _this.meeting.total = res.data.page.total;
-          }else{
-          _this.monthMeeting.meetingList = res.data.data;
-          _this.monthMeeting.total = res.data.page.total;
-          }
-          
-          });
-          },
-          handleSizeChange(){
-
-          },
-          handleCurrentChange(){
-
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
           },
           //日期格式化
           dateFormate(row, column, cellValue, index){

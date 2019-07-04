@@ -4,6 +4,8 @@ import Home from './components/Home'
 import LettersVisit from './components/lettersVisit/lettersVisit'
 import VisitRoom from './components/lettersVisit/VisitRoom'
 import VisitRecord from './components/lettersVisit/visitRecord'
+import LettersStatic from './components/lettersVisit/lettersStatic'
+
 //会议
 import ConList from './components/DJcenter/conference/conList'
 import ConRecord from './components/DJcenter/conference/conRecord'
@@ -23,7 +25,7 @@ export const routes = [{
 	path: '/home',
 	name: 'home',
 	component: Home,
-	redirect:'/home/lettersVisit',
+	redirect: '/home/lettersVisit',
 	children: [{
 			//信访部分
 			path: '/home/lettersVisit',
@@ -41,7 +43,12 @@ export const routes = [{
 			path: '/home/VisitRecord',
 			name: 'visitRecord',
 			component: VisitRecord,
+		}, {
+			path: '/home/LettersStatic',
+			name: 'LettersStatic',
+			component: LettersStatic,
 		},
+
 		//会议部分
 		{
 			path: '/home/ConList',
@@ -68,16 +75,15 @@ export const routes = [{
 			name: 'MyCon',
 			component: MyCon,
 		},
-        //党建活动
+		//党建活动
 		{
-           path: '/home/ActivityList',
-		   name: 'ActivityList',
-		   component: ActivityList,
-		},
-		{
-           path: '/home/ActivityManage',
-		   name: 'ActivityManage',
-		   component: ActivityManage,
+			path: '/home/ActivityList',
+			name: 'ActivityList',
+			component: ActivityList,
+		}, {
+			path: '/home/ActivityManage',
+			name: 'ActivityManage',
+			component: ActivityManage,
 		},
 	]
 }];

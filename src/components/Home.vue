@@ -47,6 +47,10 @@
           <router-link :to="'/home/VisitRecord'">
           <el-menu-item index="1-3">信访记录</el-menu-item>
           </router-link>
+          <router-link :to="'/home/LettersStatic'">
+          <el-menu-item index="1-4">信访统计</el-menu-item>
+          </router-link>
+          
     </el-menu-item-group>  
   </el-submenu>
   <el-submenu index="2"> 
@@ -141,11 +145,7 @@
       <el-input v-model="userInfoDetail.userName"></el-input>
     </el-form-item>    
   </el-form>
-<<<<<<< HEAD
   <div slot="footer"  class="dialog-footer">
-=======
-  <div slot="footer" v-if="showBtn" class="dialog-footer">
->>>>>>> 30f05ec2829b4c66d49b56ae3a0ded5037f5e4f9
      <el-button @click="submitForm('userInfoDetail')">提交</el-button> 
     <el-button @click="closeForm('userInfoDetail')">关闭</el-button> 
   </div> 
