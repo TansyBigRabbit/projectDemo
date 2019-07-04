@@ -3,7 +3,12 @@
 		<!--<el-header>
     <h2>XXX管理系统</h2></el-header>-->
 		<el-main :style="note">
-			<div class="loginBox" style="background-color: #f5f7fa;">
+			<div class="loginBox" 
+            v-loading="loading"
+		    element-loading-text="登陆中..."
+		    element-loading-spinner="el-icon-loading"
+		    element-loading-background="rgba(0, 0, 0, 0.3)"
+			style="background-color: #f5f7fa;">
 				<el-row>
 					<el-col :span="12">
 						<el-row>
@@ -77,6 +82,7 @@
 		name: 'login',
 		data() {
 			return {
+				loading:false,
 				userName: '',
 				password: '',
 				/*增加*/
@@ -93,6 +99,7 @@
 		methods: {
 			login: function() {
 				var _this = this;
+				_this.loading=true;
 				this.$http.post(this.$ports.login, {
 					userId: this.userName,
 					password: this.password
@@ -100,6 +107,7 @@
 					console.log("登录者信息.....");
 					console.log(res.data);
 					if(res.data.code == 0) {
+						_this.loading=false;
 						_this.$message({
 				          message: '登录成功！',
 				          type: 'success'
@@ -114,6 +122,7 @@
 							name: 'home'
 						});
 					} else {
+						_this.loading=false;
 						_this.$message.error(res.data.msg);
 					}
 				})
