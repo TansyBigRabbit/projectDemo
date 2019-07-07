@@ -14,9 +14,9 @@
 		<el-divider class="divider"></el-divider>
 		<!-- <el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button> -->
         <div>
-			<el-row>
+			<el-row style="padding-top: 15px;">
 				<el-col v-if="roomList.length>0" v-for="(item,index) in roomList" :data-roomnum="item.info.roomnum" :key="index" class="margin_r" :span="5">
-				 <el-card :body-style="{ padding: '0px' }">
+				 <el-card :body-style="{ padding: '5px' }">
 			      <img :src="imgUrl" class="image">
 			      <div style="padding: 14px;">
 			        <span>{{item.info.roomnum}}</span>
@@ -116,7 +116,7 @@
 			return{ 
 			//默认页面是房间列表
 			  roomListFlag:true,
-			  imgUrl:'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+			  imgUrl:require('../../assets/images/room_bg.png'),
               isRole:true,
               //接访者记录的信息
               submitConInfo:{

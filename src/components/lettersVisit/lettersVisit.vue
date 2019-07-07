@@ -304,7 +304,7 @@
                 _this.$router.push({
                 name:'VisitRoom',
                 params:{
-                roleType:"petition2oin",
+                roleType:"petitionJoin",
                 roomNum:_this.roomInfo.roomName, 
                 departId:_this.roomInfo.interviewDepartId,}});
 
