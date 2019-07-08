@@ -15,19 +15,26 @@ export default {
 		list: hosturl + 'conferenceroom/queryListWithPage',
 		findById: hosturl + 'conferenceroom/queryOne',
 	},
-	meetsign:{
-		sign: hosturl +'/meetsign/insert',
-		list: hosturl +'/meetsign/queryListWithNoPage',
+	meetsign: {
+		sign: hosturl + '/meetsign/insert',
+		list: hosturl + '/meetsign/queryListWithNoPage',
 	},
-	activity:{
-        insert: hosturl+'/partybuilding/insert',
-        list: hosturl+'/partybuilding/queryListWithPage',
-        update: hosturl+'/partybuilding/update',
-        findById: hosturl+'/partybuilding/queryOne',
-        delete: hosturl+'/partybuilding/delete'
+	activity: {
+		insert: hosturl + '/partybuilding/insert',
+		list: hosturl + '/partybuilding/queryListWithPage',
+		update: hosturl + '/partybuilding/update',
+		findById: hosturl + '/partybuilding/queryOne',
+		delete: hosturl + '/partybuilding/delete'
 	},
-	letters:{
-       list:hosturl+'/petitionroominfo/queryListWithPage',
+	letters: {
+		list: hosturl + '/petitionroominfo/queryListWithPage',
+	},
+	user: {
+		list: hosturl + '/userinfo/queryListWithPage',
+		insert: hosturl + '/userinfo/insert',
+		update: hosturl + '/userinfo/update',
+		delete: hosturl + '/userinfo/delete',
+		findById: hosturl + '/userinfo/queryOne',
 	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',

@@ -70,10 +70,10 @@
       align="center"
       label="会议状态" >
       <template slot-scope="scope">
-    <span v-if="scope.row.status==1">已取消</span>
-    <span v-if="scope.row.status==2">已过期</span>
-    <span v-if="scope.row.status==3">已完成</span>
-    <span v-if="scope.row.status==4">正在进行</span>
+    <span v-if="scope.row.status==1">正在进行</span>
+    <span v-if="scope.row.status==2">已完成</span>
+    <span v-if="scope.row.status==3">已过期</span>
+    <span v-if="scope.row.status==4">已取消</span>
     <span v-if="scope.row.status==0">未开始</span>
     </template>
     </el-table-column>
@@ -143,10 +143,10 @@
       align="center"
       label="会议状态" >
       <template slot-scope="scope">
-    <span v-if="scope.row.status==1">已取消</span>
-    <span v-if="scope.row.status==2">已过期</span>
-    <span v-if="scope.row.status==3">已完成</span>
-    <span v-if="scope.row.status==4">正在进行</span>
+    <span v-if="scope.row.status==1">正在进行</span>
+    <span v-if="scope.row.status==2">已完成</span>
+    <span v-if="scope.row.status==3">已过期</span>
+    <span v-if="scope.row.status==4">已取消</span>
     <span v-if="scope.row.status==0">未开始</span>
     </template>
     </el-table-column>
@@ -240,11 +240,11 @@
     nextYear:2020,
  
     status:[
-      {text:'已取消',value:'0'},
-      {text:'未开始',value:'1'},
-      {text:'已过期',value:'2'},
-      {text:'已完成',value:'3'},
-      {text:'正在进行',value:'4'},
+      {text:'已取消',value:'4'},
+      {text:'未开始',value:'0'},
+      {text:'已过期',value:'3'},
+      {text:'已完成',value:'2'},
+      {text:'正在进行',value:'1'},
     ],  
         //会议详情
         meetingDetail:{}

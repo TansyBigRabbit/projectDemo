@@ -12,11 +12,14 @@
 
 <el-card class="box-card data_card">
  <el-row>
-    <el-col style="text-align: center;" :span="12">
+    <el-col style="text-align: center;" :span="8">
       <p>我创建的会议</p>
       <p @click="tabTo(0)">{{myCreateMeeting.pageTotalNum}}&nbsp;场</p>
     </el-col>
-    <el-col style="text-align: center;" :span="12">
+    <el-col style="text-align: center;padding-top: 2%;" :span="8" >
+      <el-button type="primary" round icon="el-icon-edit" @click="showModel('add')">创建会议</el-button>
+    </el-col>
+    <el-col style="text-align: center;" :span="8">
       <p>我参与的会议</p>
       <p @click="tabTo(1)">{{myJoinMeeting.pageTotalNum}}&nbsp;场</p>
     </el-col> 
@@ -26,9 +29,7 @@
     </el-col> --> 
   </el-row> 
 </el-card>
-<div>
-	<el-button @click="" type="primary" size="small" @click="showModel('add')">创建会议</el-button>
-</div>
+
 <el-tabs class="tab_box" type="border-card" @tab-click="handleClick">
     <el-tab-pane label="我创建的会议" >
       <div class="search_box"> 
@@ -49,7 +50,7 @@
     class="table_body"
     :data="myCreateMeeting.createMeetingList"
     border
-    style="width: 100%">
+    style="width: 100%" >
     <el-table-column
       fixed
       prop="meetName"
@@ -68,8 +69,8 @@
     <el-table-column 
       prop="status"
       align="center"
-      label="会议状态" >
-      <template slot-scope="scope">
+      label="会议状态"  width="150px">
+      <template slot-scope="scope" >
     <span v-if="scope.row.status==4">已取消</span>
     <span v-if="scope.row.status==3">已过期</span>
     <span v-if="scope.row.status==2">已完成</span>
@@ -80,7 +81,7 @@
     <el-table-column
       prop="creator"
       align="center"
-      label="会议创建人" >
+      label="会议创建人" width="150px">
     </el-table-column>  
     <el-table-column 
       label="操作" 

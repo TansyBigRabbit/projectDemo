@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import Router from 'vue-router'
 import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css' 
+import 'element-ui/lib/theme-chalk/index.css'
 import {
 	routes
 } from './routes.js'
@@ -19,7 +19,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$http = http;
 Vue.prototype.$ports = ports;
 Vue.use(Router);
-Vue.use(ElementUI); 
+Vue.use(ElementUI);
 /* eslint-disable no-new */
 const router = new Router({
 	routes,

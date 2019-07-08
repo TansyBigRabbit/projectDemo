@@ -10,14 +10,14 @@
 </el-radio-group>
 </el-col>
 <el-col :span="11">
-  <el-dropdown>
+  <el-dropdown @command="handleCommand">
         <i class="el-icon-setting titleUser" style="margin-right: 15px">
           &nbsp;&nbsp;<span class="titleUser">你好，{{userInfo.userName}}</span>
         </i>
        <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click="editUserInfo">修改个人信息</el-dropdown-item>
-            <el-dropdown-item @click="changePwd" divided>修改密码</el-dropdown-item>
-            <el-dropdown-item @click="logout" divided >退出登录</el-dropdown-item>
+            <el-dropdown-item command="userInfo">修改个人信息</el-dropdown-item>
+            <el-dropdown-item command="changePwd" divided>修改密码</el-dropdown-item>
+            <el-dropdown-item command="logout" divided >退出登录</el-dropdown-item>
           </el-dropdown-menu>
       </el-dropdown>
       
@@ -105,15 +105,27 @@
   <el-submenu index="4">
     <template slot="title">
     <i class="el-icon-setting"></i>
-    <span slot="title">用户管理</span>
+    <span slot="title">系统管理</span>
   </template>
+  <el-menu-item-group> 
+          <router-link :to="'/home/User'">
+          <el-menu-item index="4-1">用户管理</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/Role'">
+          <el-menu-item index="4-2">角色管理</el-menu-item>
+          </router-link>
+          <router-link :to="'/home/Rights'">
+          <el-menu-item index="4-3">权限设置</el-menu-item>
+          </router-link> 
+          
+    </el-menu-item-group>  
   </el-submenu>
-  <el-submenu index="5">
+  <!-- <el-submenu index="5">
     <template slot="title">
     <i class="el-icon-setting"></i>
     <span slot="title">系统管理</span>
   </template>
-  </el-submenu>
+  </el-submenu> -->
 </el-menu>
 </el-aside></el-col>
  <el-col id="main" :span="isCollapse?22:20">  
@@ -150,6 +162,24 @@
     <el-button @click="closeForm('userInfoDetail')">关闭</el-button> 
   </div> 
 </el-dialog>
+<!-- 修改密码 -->
+<el-dialog  title="修改密码"  :visible.sync="changpwdDialog">
+  <el-form :model="pwdDetail" :rules="rules01" ref="pwdDetail" class="meeting_form"> 
+      <el-form-item label="原密码" prop="userName">
+      <el-input disabled v-model="pwdDetail.password"></el-input>
+    </el-form-item> 
+      <el-form-item label="新密码" prop="userName">
+      <el-input v-model="pwdDetail.newPassword"></el-input>
+    </el-form-item>  
+      <el-form-item label="确认新密码" prop="userName">
+      <el-input v-model="pwdDetail.newPassword01"></el-input>
+    </el-form-item>      
+  </el-form>
+  <div slot="footer"  class="dialog-footer">
+     <el-button @click="submitForm('pwdDetail')">提交</el-button> 
+    <el-button @click="closeForm('pwdDetail')">关闭</el-button> 
+  </div> 
+</el-dialog>
 </el-container>
 </template>
 
@@ -161,7 +191,28 @@
         userInfo:{},
         userInfoDetail:{},
         userInfoDialog:false,
-        pwdDialog:false,
+        changpwdDialog:false, 
+        pwdDetail:{},
+        rules:{
+          userName: [
+            { required: true, message: '请输入用户名称', trigger: 'blur' },
+            { min: 1, max:10, message: '用户名称请控制在10字以内', trigger: 'blur' }
+          ],  
+        },
+        rules01:{
+          password: [
+            { required: true, message: '请输入原密码', trigger: 'blur' },
+            { min: 1, max:12, message: '请输入6-12位密码', trigger: 'blur' }
+          ],  
+          newPassword: [
+            { required: true, message: '请输入新密码', trigger: 'blur' },
+            { min: 1, max:12, message: '请输入6-12位密码', trigger: 'blur' }
+          ],
+          newPassword01: [
+            { required: true, message: '请确认密码', trigger: 'blur' },
+            { min: 1, max:12, message: '请输入6-12位密码', trigger: 'blur' }
+          ],
+        }
       };
     },
     created(){
@@ -223,7 +274,16 @@
       },
       //修改密码
       changePwd(){
-
+      this.changpwdDialog=true;
+      },
+      handleCommand(command){
+        if(command=='userInfo'){
+          this.editUserInfo();
+        }else if(command=="changePwd"){
+          this.changePwd();
+        }else{
+          this.logout();
+        }
       }
     }
   }

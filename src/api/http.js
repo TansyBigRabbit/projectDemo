@@ -8,8 +8,7 @@ var service = axios.create({
 	timeout: 500000,
 	headers: {
 		'content-type': 'application/json',
-		'Cookie': window.localStorage.getItem("cookie")
-		//"token":'14a1347f412b319b0fef270489f'
+		"token": window.localStorage.getItem("apiToken")
 	}
 });
 export default {
@@ -20,11 +19,6 @@ export default {
 				method: 'get',
 				url,
 				params: param,
-				headers: {
-					'content-type': 'application/json',
-					'Cookie': window.localStorage.getItem("cookie")
-					//"token":'14a1347f412b319b0fef270489f'
-				}
 			}).then(res => {
 				//axios返回的是一个promise对象 
 				var res_code = res.status.toString();

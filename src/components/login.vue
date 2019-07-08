@@ -96,6 +96,9 @@
 				logoUrl: require('../assets/images/shlogo.png')
 			}
 		},
+		created(){
+        window.localStorage.clear();
+		},
 		methods: {
 			login: function() {
 				var _this = this;
@@ -115,7 +118,7 @@
 						loginInfoMain = res.data.data;
 						window.localStorage.setItem('userId', res.data.data.userId);
 						window.localStorage.setItem('idCard', res.data.data.idCard);
-						window.localStorage.setItem('cookie', res.data.Cookie);
+						window.localStorage.setItem('apiToken', res.data.token);
 						var userInfo = JSON.stringify(res.data.data);
 						window.localStorage.setItem('userInfo', userInfo);
 						_this.$store.state.login = true;

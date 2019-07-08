@@ -17,6 +17,11 @@ import MyCon from './components/DJcenter/conference/myCon'
 import ActivityList from './components/DJcenter/activity/activityList'
 import ActivityManage from './components/DJcenter/activity/activityManage'
 //面谈
+//用户管理
+import User from './components/userManage/user'
+import Rights from './components/userManage/rights'
+import Role from './components/userManage/role'
+
 export const routes = [{
 	path: '/',
 	name: 'login',
@@ -84,6 +89,20 @@ export const routes = [{
 			path: '/home/ActivityManage',
 			name: 'ActivityManage',
 			component: ActivityManage,
+		},
+		//用户管理
+		{
+			path: '/home/User',
+			name: 'User',
+			component: User,
+		}, {
+			path: '/home/Rights',
+			name: 'Rights',
+			component: Rights,
+		}, {
+			path: '/home/Role',
+			name: 'Role',
+			component: Role,
 		},
 	]
 }];
