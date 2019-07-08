@@ -12,8 +12,8 @@ export default {
 	conference: {
 		insert: hosturl + '/conferenceroom/insert',
 		update: hosturl + '/conferenceroom/update',
-		list: hosturl + 'conferenceroom/queryListWithPage',
-		findById: hosturl + 'conferenceroom/queryOne',
+		list: hosturl + '/conferenceroom/queryListWithPage',
+		findById: hosturl + '/conferenceroom/queryOne',
 	},
 	meetsign: {
 		sign: hosturl + '/meetsign/insert',

@@ -82,8 +82,8 @@
           <el-menu-item index="2-2-2">活动管理</el-menu-item>
           </router-link>    
         </el-submenu>
-        <el-submenu index="2-3">
-          <template slot="title">面谈</template>
+        <el-submenu index="2-3" disabled>
+          <template slot="title"><div @click="kaifa()">面谈</div></template>
           <router-link :to="'/home/ConSignate'">
           <el-menu-item index="2-3-1">会议签到</el-menu-item>
           </router-link> 
@@ -96,10 +96,10 @@
         </el-submenu>
       </el-submenu> 
   </el-submenu>
-  <el-submenu index="3" >
+  <el-submenu index="3" disabled>
     <template slot="title">
     <i class="el-icon-document"></i>
-    <span slot="title">综治中心系统</span>
+    <span slot="title" @click="kaifa()">综治中心系统</span>
   </template>
   </el-submenu>
   <el-submenu index="4">
@@ -144,17 +144,17 @@
  <!-- 个人信息-->
   <el-dialog  title="修改个人信息"  :visible.sync="userInfoDialog">
   <el-form :model="userInfoDetail" :rules="rules" ref="userInfoDetail" class="meeting_form"> 
-      <el-form-item label="登录账号" prop="userName">
-      <el-input disabled v-model="userInfoDetail.userName"></el-input>
+      <el-form-item label="登录账号" prop="userId">
+      <el-input disabled v-model="userInfoDetail.userId"></el-input>
     </el-form-item> 
       <el-form-item label="用户名" prop="userName">
       <el-input v-model="userInfoDetail.userName"></el-input>
     </el-form-item>  
-      <el-form-item label="电话号码" prop="userName">
-      <el-input v-model="userInfoDetail.userName"></el-input>
+      <el-form-item label="电话号码" prop="telePhone">
+      <el-input v-model="userInfoDetail.telePhone"></el-input>
     </el-form-item>  
-      <el-form-item label="所属部门" prop="userName">
-      <el-input v-model="userInfoDetail.userName"></el-input>
+      <el-form-item label="所属部门" prop="departName">
+      <el-input disabled v-model="userInfoDetail.depart.departName"></el-input>
     </el-form-item>    
   </el-form>
   <div slot="footer"  class="dialog-footer">
@@ -166,13 +166,13 @@
 <el-dialog  title="修改密码"  :visible.sync="changpwdDialog">
   <el-form :model="pwdDetail" :rules="rules01" ref="pwdDetail" class="meeting_form"> 
       <el-form-item label="原密码" prop="userName">
-      <el-input disabled v-model="pwdDetail.password"></el-input>
+      <el-input type="password" v-model="pwdDetail.password"></el-input>
     </el-form-item> 
       <el-form-item label="新密码" prop="userName">
-      <el-input v-model="pwdDetail.newPassword"></el-input>
+      <el-input type="password" v-model="pwdDetail.newPassword"></el-input>
     </el-form-item>  
       <el-form-item label="确认新密码" prop="userName">
-      <el-input v-model="pwdDetail.newPassword01"></el-input>
+      <el-input type="password" v-model="pwdDetail.newPassword01"></el-input>
     </el-form-item>      
   </el-form>
   <div slot="footer"  class="dialog-footer">
@@ -189,7 +189,9 @@
       return {
         isCollapse: false, 
         userInfo:{},
-        userInfoDetail:{},
+        userInfoDetail:{
+          depart:{}
+        },
         userInfoDialog:false,
         changpwdDialog:false, 
         pwdDetail:{},
@@ -219,23 +221,7 @@
       this.userInfo=JSON.parse(window.localStorage.getItem('userInfo'));
       console.log(this.userInfo);
     },
-    methods: { 
-      testInterface(){
-      this.$http.get(this.$ports.department+'/queryOne',
-       {
-          departId:'111'
-      }).then(res=>{
-        console.log(res.data)
-      })
-
-      /*this.axios.get('/queryOne',{
-        params:{
-          departId:'111'
-        }
-      }).then((response) => {
-      console.log(response.data)
-      })*/
-      },
+    methods: {  
       handleOpen(key, keyPath) {
         console.log(key, keyPath); 
         this.open=true 
@@ -246,13 +232,66 @@
       },
       //编辑个人信息
       editUserInfo(){
+      this.getMyInfo();
       this.userInfoDialog=true;
       },
       closeForm(form){
       this.$refs[form].clearValidate();
       this.userInfoDialog=false; 
       },
+      //首页个人信息获取
+      getMyInfo(){
+        var _this = this;
+      this.$http.get(this.$ports.user.findById,
+       {
+          userId:window.localStorage.getItem('userId')
+      }).then(res=>{
+        console.log("findById...")
+        if(res.data.code==0){
+            _this.userInfoDetail = res.data.data;
+        } 
+      })
+      },
+      //提交代码
+      submitForm(form){
+      var _this = this;
+      var param = {};
+           this.$refs[form].validate((valid) => {
+          if (valid) {
+            if(form=='userInfoDetail'){
+             //用户信息更新
+            param = _this.userInfoDetail;
+            console.log("修改个人信息...");
+            }else{
+             //密码修改
+             if(_this.pwdDetail.newPassword!=_this.pwdDetail.newPassword01){
+                _this.$message.error("两次输入的密码不一致！");
+                return
+             }
+             console.log("修改密码...");
+             param = {
+              userId:window.localStorage.getItem('userId'),
+              password:_this.pwdDetail.password,
+              newPassword:_this.pwdDetail.newPassword
 
+             }
+            }
+            this.$http.post(this.$ports.user.update,param).then(res=>{
+            if(res.data.code==0){
+                _this.$message({
+                message: '修改成功！',
+                type: 'success'
+                });
+            }else{
+              _this.$message.error(res.data.msg)
+            }
+            _this[form]=false;
+          });
+          } else {
+            return false;
+          }
+        });
+      },
       //退出登录
       logout(){
        var _this = this;
@@ -284,7 +323,12 @@
         }else{
           this.logout();
         }
-      }
+      },
+      kaifa() { 
+        this.$alert('功能正在开发中，请等待新版本更新功能！', '系统提示', {
+          confirmButtonText: '确定'
+        });
+      },
     }
   }
 </script>
