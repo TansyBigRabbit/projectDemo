@@ -6,19 +6,31 @@ import {
 var service = axios.create({
 	baseURL: '',
 	timeout: 500000,
-	headers: {
+	/*headers: {
 		'content-type': 'application/json',
 		"token": window.localStorage.getItem("apiToken")
-	}
+	}*/
 });
 export default {
 	//get请求，其他类型请求复制粘贴，修改method
 	get(url, param) {
+		var headers = {}
+		if (typeof window.localStorage.getItem("apiToken") == "object") {
+			headers = {
+				'content-type': 'application/json',
+			}
+		} else {
+			headers = {
+				'content-type': 'application/json',
+				"token": window.localStorage.getItem("apiToken")
+			}
+		}
 		return new Promise((cback, reject) => {
 			service({
 				method: 'get',
 				url,
 				params: param,
+				headers: headers
 			}).then(res => {
 				//axios返回的是一个promise对象 
 				var res_code = res.status.toString();
@@ -45,11 +57,23 @@ export default {
 		})
 	},
 	post(url, param) {
+		var headers = {}
+		if (typeof window.localStorage.getItem("apiToken") == "object") {
+			headers = {
+				'content-type': 'application/json',
+			}
+		} else {
+			headers = {
+				'content-type': 'application/json',
+				"token": window.localStorage.getItem("apiToken")
+			}
+		}
 		return new Promise((cback, reject) => {
 			service({
 				method: 'post',
 				url,
 				data: param,
+				headers: headers
 			}).then(res => {
 				//axios返回的是一个promise对象 
 				var res_code = res.status.toString();

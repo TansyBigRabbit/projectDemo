@@ -6,6 +6,7 @@ export default {
 	department: hosturl + '/depart',
 	userInfo: hosturl + '/userinfo',
 	login: hosturl + '/userinfo/login',
+	logout: hosturl + '/userinfo/logout',
 	getToken: hosturl + '/api/account/getTonkenByIdCard',
 	checkRoom: hosturl + '/petitionroominfo/queryListWithNoPage',
 	submitContent: hosturl + '/appealrecord/insert',

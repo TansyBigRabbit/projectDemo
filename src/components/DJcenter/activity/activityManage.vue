@@ -6,7 +6,7 @@
   <el-breadcrumb separator="/">
   <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
   <el-breadcrumb-item>党建中心系统</el-breadcrumb-item>
-  <el-breadcrumb-item>活动</el-breadcrumb-item> 
+  <el-breadcrumb-item>党建活动</el-breadcrumb-item> 
   <el-breadcrumb-item>活动管理</el-breadcrumb-item> 
   </el-breadcrumb>
 </div>

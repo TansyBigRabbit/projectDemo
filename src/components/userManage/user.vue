@@ -17,7 +17,8 @@
         <el-select style="width: 15%" v-model="userlist.searchForm.state" placeholder="请选择状态">
         <el-option  v-for="item in state" :label='item.text' :value="item.value"></el-option> 
         </el-select> 
-        <el-button @click="searchMeeting('all')" type="primary" size="small">查询</el-button> 
+        <el-button @click="searchUser()" type="primary" size="large">查询</el-button> 
+        <el-button @click="showModel('add')" type="warning" size="large">新增用户</el-button> 
  
 </div> 
   <div class="table_title">
@@ -59,21 +60,21 @@
       align="center"
       label="用户状态" >
       <template slot-scope="scope">
-    <span v-if="scope.row.state==0">正常</span> 
-    <span v-if="scope.row.state==1">已注销</span>
+    <span v-if="scope.row.state==0" style="color: #1890F5">正常</span> 
+    <span v-if="scope.row.state==1" style="color: red">已注销</span>
     </template>
     </el-table-column>  
     <el-table-column 
       label="操作" 
       align="center">
       <template slot-scope="scope">
-        <el-button @click="checkDetail(scope.row)" type="primary" size="small">详情</el-button> 
+        <el-button @click="showModel('edit',scope.row)" type="primary" size="small">编辑</el-button>  
       </template> 
     </el-table-column>
   </el-table>
   <el-pagination class="page" background
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
+            @size-change="handleSizeChange($event)"
+            @current-change="handleCurrentChange($event)"
             :current-page="userlist.currentPage"
             :page-sizes="[5, 10, 20, 40]"
             :page-size="userlist.pageSize"
@@ -82,29 +83,37 @@
         </el-pagination>  
   </el-card>
   <!-- 详情弹窗 -->
-  <el-dialog  title="用户信息详情" :visible.sync="conDetail">
-  <el-form :model="userDetail" class="meeting_form">
-    <el-form-item label="用户名称">
+  <el-dialog  :title="dialogTitle" :visible.sync="conDetail">
+  <el-form :model="userDetail" :rules="rules" ref="userDetail" class="meeting_form">
+    <el-form-item label="用户名称" prop="userName">
       <el-input v-model="userDetail.userName" ></el-input>
     </el-form-item>
-    <el-form-item label="登陆账号">
-      <el-input v-model="userDetail.userId" ></el-input>
+    <el-form-item label="登陆账号" prop="userId">
+      <el-input class="notEdit" v-model="userDetail.userId" ></el-input>
     </el-form-item>
-    <el-form-item label="身份证号码">
-      <el-input v-model="userDetail.idCard" ></el-input>
+    <div v-if="add">
+    <el-form-item label="登陆密码" prop="password">
+      <el-input type="password" v-model="userDetail.password" ></el-input>
+    </el-form-item>
+    <el-form-item label="确认密码" prop="password01">
+      <el-input type="password" v-model="userDetail.password01" ></el-input>
+    </el-form-item>
+    </div>
+    <el-form-item label="身份证号码" prop="idCard">
+      <el-input class="notEdit" v-model="userDetail.idCard" ></el-input>
     </el-form-item>  
-    <el-form-item label="所属部门">
-      <el-input v-model="userDetail.depart.departName" ></el-input>
+    <el-form-item label="所属部门" prop="departName">
+      <el-input class="notEdit" v-model="userDetail.depart.departName" ></el-input>
     </el-form-item>  
-    <el-form-item label="状态">
+    <el-form-item label="状态" prop="state">
       <el-select style="width: 25%" v-model="userDetail.state" placeholder="请选择状态">
         <el-option  label='正常' value='0'></el-option> 
         <el-option  label='已注销' value='1'></el-option> 
         </el-select> 
     </el-form-item>  
   </el-form>
-  <div slot="footer" class="dialog-footer">
-  	<el-button @click="submitUserInfo()">提交</el-button> 
+  <div slot="footer" v-if="showBtn" class="dialog-footer">
+  	<el-button @click="submitUserInfo('userDetail')">提交</el-button> 
     <el-button @click="conDetail = false">关闭</el-button> 
   </div>
 </el-dialog>
@@ -116,10 +125,11 @@
 	export default{
 		data(){
 		return{
+    add:false,//输入密码框是否要显示
     createLoading:true,
     monthLoading:true,
     conDetail:false,//弹窗
-
+    dialogTitle:'',
     userlist:{
     totalNum:0,
     pageSize:10,
@@ -129,14 +139,35 @@
     searchForm:{},
     detail:{}
     },  
- 
+    showBtn:false,
     state:[ 
     {text:'全部',value:''},{text:'正常',value:0},{text:'已注销',value:1}
     ],   
-        userDetail:{
-        	depart:{}
-        }
+    userDetail:{
+    depart:{}
+    },
+    rules:{
+          userName: [
+            { required: true, message: '请输入用户名称', trigger: 'blur' },
+            { min: 1, max: 60, message: '用户名称请控制在30字以内', trigger: 'blur' }
+          ], 
+          userId : [
+            { required: true, message: '请输入登陆账号', trigger: 'change' },
+            { min: 6, max: 20, message: '请输入6-12位登账号', trigger: 'blur' },{pattern: /^\d{6,20}$/,message: '只能输入数字', trigger: 'blur'}
+          ],
+          password : [
+            {  required: true, message: '请输入密码', trigger: 'change'},
+            { min: 6, max: 12, message: '请输入6-12位密码', trigger: 'blur' }
+          ],
+          password01: [
+            { required: true, message: '请确认密码', trigger: 'blur' },
+            { min: 6, max: 12, message: '请输入6-12位密码', trigger: 'blur' } 
+          ],
+          state: [
+            { required: true, message: '请选择状态', trigger: 'blur' }, 
+          ] 
 			}
+    }
 		},
 		created(){
         this.getUserList(1,10);
@@ -159,22 +190,27 @@
           });
       },
       showModel(type,obj){ //type:add,edit
-          this.conDetail=true;
+          
           var _this = this;
           $("input").removeAttr('disabled'); 
          if(type=='add'){
             this.showBtn=true;
-            _this.dialogTitle="创建会议";
-            _this.userDetail={};
+            this.add=true;
+            _this.dialogTitle="新增用户信息";
+            _this.userDetail={
+              depart:{}
+            };
          }else{
+            this.add=false;
             if (type=='edit') {
+              $(".notEdit input").attr('disabled');
+              _this.dialogTitle="编辑用户信息";
               _this.showBtn=true;
-              $(".notEdit input").attr('disabled',true);
-            _this.dialogTitle="编辑会议信息";
+              
             }else{
                _this.showBtn=false;
-               $("input").attr('disabled',true);
-            _this.dialogTitle="会议详情";
+               $("input").attr('disabled');
+               _this.dialogTitle="用户信息详情";
             }
             //查询单条数据v
            this.$http.get(this.$ports.user.findById,{ 
@@ -185,17 +221,20 @@
           _this.userDetail = res.data.data; 
           }); 
          } 
-         
+         this.conDetail=true;
         },  
         //新增 修改
-        submitUserInfo(){ 
+        submitUserInfo(form){ 
         	var _this = this;
            this.$refs[form].validate((valid) => {
           if (valid) {
-            if(typeof(this.meetingDetail.id)=='undefined'){
-             //新增
-             _this.meetingDetail.status=0;
-             _this.meetingDetail.creator=window.localStorage.getItem('userId');
+            if(_this.add){
+              if(_this.userDetail.password01!=_this.userDetail.password){
+                _this.$message.error("两次输入的密码不一致!");
+                return
+              }
+             //新增 
+             _this.userDetail.creator=window.localStorage.getItem('userId');
              _this.operateData('add');
              }else{
               //修改
@@ -210,20 +249,20 @@
           var url ;
           var _this = this;
          if(type=='add'){
-          url = this.$ports.conference.insert;
-          console.log("新增会议......");
+          url = this.$ports.user.insert;
+          console.log("新增用户......");
          }else{
-          url = this.$ports.conference.update;
-          console.log("修改会议......");
+          url = this.$ports.user.update;
+          console.log("修改用户......");
          }
-          this.$http.post(url,_this.meetingDetail).then(res=>{
+          this.$http.post(url,_this.userDetail).then(res=>{
             console.log(res.data);
              if(res.data.code==0){
               _this.$message({
               message: '操作成功！',
               type: 'success'
             });
-              _this.refreshTable()
+              _this.getUserList(1,5)
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
              } 
@@ -231,67 +270,34 @@
 
             });
          },
-          searchMeeting(type){
-          var params={}
-          if(type=='all'){
-          if(typeof this.userlist.searchForm.endTime=='undefined'&&typeof this.userlist.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
-            return
-          }
-          if(typeof this.userlist.searchForm.startTime=='undefined'&&typeof this.userlist.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
-            return
-          }
+          searchUser(){
+          var params={}  
           params={
             'pageNum':1,
             'size':5,
-            'meetName':this.userlist.searchForm.conName,
-            'startTime':this.userlist.searchForm.startTime,
-            'endTime':this.userlist.searchForm.endTime,
-            'status':this.userlist.searchForm.status,
+            'userName':this.userlist.searchForm.userName,
+            'userId':this.userlist.searchForm.userId,
+            'state':this.userlist.searchForm.state,
+            'createTime':this.userlist.searchForm.createTime,
            }
-          }else{
-          if(typeof this.monthMeeting.searchForm.endTime=='undefined'&&typeof this.monthMeeting.searchForm.startTime=='string'){
-            alert("请输入会议结束时间");
-            return
-          }
-          if(typeof this.monthMeeting.searchForm.startTime=='undefined'&&typeof this.monthMeeting.searchForm.endTime=='string'){
-            alert("请输入会议开始时间");
-            return
-          }
-          params={
-            'pageNum':1,
-            'size':5,
-            'meetName':this.monthMeeting.searchForm.conName,
-            'startTime':this.monthMeeting.searchForm.startTime,
-            'endTime':this.monthMeeting.searchForm.endTime,
-            'status':this.monthMeeting.searchForm.status,
-           }
-
-          }
-          var _this = this;
-           this.$http.get(this.$ports.conference.list,params).then(res=>{
-          console.log("查询会议数据......");
-          console.log(res.data); 
-          if(type=='all'){
-          _this.userlist.meetingList = res.data.data;
-          _this.userlist.total = res.data.page.total;
-          }else{
-          _this.monthMeeting.meetingList = res.data.data;
-          _this.monthMeeting.total = res.data.page.total;
-          }
           
+          var _this = this;
+           this.$http.get(this.$ports.user.list,params).then(res=>{
+          console.log("查询用户数据......");
+          console.log(res.data); 
+          _this.userlist.userlistTable = res.data.data;
+          _this.userlist.total = res.data.page.total;
           });
           },
       		handleSizeChange(size){
             console.log("条数:"+size);
             this.userlist.pageSize = size;
-            this.getMeetingList(1,size); 
+            this.getUserList(1,size); 
           },
           handleCurrentChange(currentPage){
             console.log("页数:"+currentPage);
             this.userlist.currentPage = currentPage;
-            this.getMeetingList(this.userlist.currentPage,this.userlist.pageSize);
+            this.getUserList(this.userlist.currentPage,this.userlist.pageSize);
           },  
           //日期格式化
       		dateFormate(row, column, cellValue, index){

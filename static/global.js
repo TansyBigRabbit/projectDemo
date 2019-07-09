@@ -26,7 +26,7 @@ var ILiveSDK = {
 	}
 };
 //var webUrlMain = "ws:10.10.100.199:8080/threeCentreProject/groupcall?";
-var webUrlMain = "ws:weipan.51vip.biz/threeCentreProject/groupcall?";
+var webUrlMain = "ws:47.102.139.17:9090/threeCentreProject/groupcall?";
 var video_list = [];
 var userList = [];
 

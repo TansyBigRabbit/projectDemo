@@ -165,13 +165,13 @@
 <!-- 修改密码 -->
 <el-dialog  title="修改密码"  :visible.sync="changpwdDialog">
   <el-form :model="pwdDetail" :rules="rules01" ref="pwdDetail" class="meeting_form"> 
-      <el-form-item label="原密码" prop="userName">
+      <el-form-item label="原密码" prop="password">
       <el-input type="password" v-model="pwdDetail.password"></el-input>
     </el-form-item> 
-      <el-form-item label="新密码" prop="userName">
+      <el-form-item label="新密码" prop="newPassword">
       <el-input type="password" v-model="pwdDetail.newPassword"></el-input>
     </el-form-item>  
-      <el-form-item label="确认新密码" prop="userName">
+      <el-form-item label="确认新密码" prop="newPassword01">
       <el-input type="password" v-model="pwdDetail.newPassword01"></el-input>
     </el-form-item>      
   </el-form>
@@ -190,7 +190,9 @@
         isCollapse: false, 
         userInfo:{},
         userInfoDetail:{
-          depart:{}
+          depart:{
+            departName:''
+          }
         },
         userInfoDialog:false,
         changpwdDialog:false, 
@@ -237,7 +239,12 @@
       },
       closeForm(form){
       this.$refs[form].clearValidate();
-      this.userInfoDialog=false; 
+      if(form=='userInfoDetail'){
+      this.userInfoDialog=false;
+      }else{
+      this.changpwdDialog=false;
+      }
+       
       },
       //首页个人信息获取
       getMyInfo(){
@@ -249,6 +256,8 @@
         console.log("findById...")
         if(res.data.code==0){
             _this.userInfoDetail = res.data.data;
+            var userInfo = res.data.data;
+           window.localStorage.setItem('userInfo',JSON.stringify(userInfo)); 
         } 
       })
       },
@@ -278,14 +287,33 @@
             }
             this.$http.post(this.$ports.user.update,param).then(res=>{
             if(res.data.code==0){
+              if(form=='userInfoDetail'){
+                _this.userInfoDialog=false;
+                //刷新顶部用户名称
+                _this.userInfo.userName = _this.userInfoDetail.userName;
                 _this.$message({
-                message: '修改成功！',
+                message: '用户信息修改成功！',
                 type: 'success'
                 });
+              }else{
+                _this.changpwdDialog=false
+                _this.$message({
+                message: '密码修改成功，请重新登陆！',
+                type: 'success'
+                });
+                  //跳转到登陆页面
+                setTimeout(function(){
+                _this.$store.state.login=false;
+                 _this.$router.push({
+                  name:'login'
+                 })
+                },200);
+              }
+               
             }else{
               _this.$message.error(res.data.msg)
             }
-            _this[form]=false;
+             
           });
           } else {
             return false;
@@ -300,14 +328,29 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
+          _this.$http.post(_this.$ports.logout).then(function(res){
+            console.log(res);
+            console.log("退出登陆...");
+            if(res.data.code==0){
+                  _this.$message({
+                type: 'info',
+                message: '退出成功'
+              }); 
+             _this.$store.state.login=false;
+             _this.$router.push({
+              name:'login'
+             })
+            }else{
+              _this.$message({
             type: 'info',
-            message: '退出'
-          }); 
+            message: res.data.msg
+          });
+            }
+          })
         }).catch(() => {
-          this.$message({
+          _this.$message({
             type: 'info',
-            message: '取消'
+            message: '退出失败'
           });       
         });
       },
