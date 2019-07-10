@@ -31,8 +31,8 @@
     <el-tab-pane label="所有会议">
       <div class="search_box">
       <el-input style="width: 15%" v-model="meeting.searchForm.conName" placeholder="请输入会议名称"></el-input>
-        <el-date-picker style="width: 20%" size="large" v-model="meeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-        <el-date-picker style="width: 20%" size="large" v-model="meeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker style="width: 20%" size="large" v-model="meeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker style="width: 20%" size="large" v-model="meeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-select style="width: 15%" v-model="meeting.searchForm.status" placeholder="请选择创建人">
         <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
         </el-select> 
@@ -105,8 +105,8 @@
 <el-tab-pane label="本月会议" > 
       <div class="search_box">
     <el-input style="width: 15%" v-model="monthMeeting.searchForm.conName" placeholder="请输入会议名称"></el-input>
-        <el-date-picker style="width: 20%" size="large" v-model="monthMeeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-        <el-date-picker style="width: 20%" size="large" v-model="monthMeeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker style="width: 20%" size="large" v-model="monthMeeting.searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-date-picker style="width: 20%" size="large" v-model="monthMeeting.searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format="yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-select style="width: 15%" v-model="monthMeeting.searchForm.status" placeholder="请选择创建人">
         <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
         </el-select> 
@@ -435,7 +435,8 @@
            }).then(res=>{
           console.log("findbyId......");
           console.log(res.data); 
-          _this.meetingDetail = res.data.data; 
+          _this.meetingDetail = res.data.data;
+          _this.meetingDetail.joinUserName = res.data.data.joinUserName.toString(); 
           }); 
           this.conDetail=true;
 

@@ -19,7 +19,6 @@ import ActivityManage from './components/DJcenter/activity/activityManage'
 //面谈
 //用户管理
 import User from './components/userManage/user'
-import Rights from './components/userManage/rights'
 import Role from './components/userManage/role'
 
 export const routes = [{
@@ -95,10 +94,6 @@ export const routes = [{
 			path: '/home/User',
 			name: 'User',
 			component: User,
-		}, {
-			path: '/home/Rights',
-			name: 'Rights',
-			component: Rights,
 		}, {
 			path: '/home/Role',
 			name: 'Role',

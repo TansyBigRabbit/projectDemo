@@ -102,13 +102,15 @@
     <el-form-item label="身份证号码" prop="idCard">
       <el-input class="notEdit" v-model="userDetail.idCard" ></el-input>
     </el-form-item>  
+    <el-form-item label="电话号码" prop="telePhone ">
+      <el-input class="notEdit" v-model="userDetail.telePhone " ></el-input>
+    </el-form-item>  
     <el-form-item label="所属部门" prop="departName">
       <el-input class="notEdit" v-model="userDetail.depart.departName" ></el-input>
     </el-form-item>  
     <el-form-item label="状态" prop="state">
       <el-select style="width: 25%" v-model="userDetail.state" placeholder="请选择状态">
-        <el-option  label='正常' value='0'></el-option> 
-        <el-option  label='已注销' value='1'></el-option> 
+        <el-option v-for="item in stateList" :label='item.name' :value='item.id'></el-option>  
         </el-select> 
     </el-form-item>  
   </el-form>
@@ -142,7 +144,8 @@
     showBtn:false,
     state:[ 
     {text:'全部',value:''},{text:'正常',value:0},{text:'已注销',value:1}
-    ],   
+    ], 
+    stateList:[{name:'正常',id:0},{name:'注销',id:1}],  
     userDetail:{
     depart:{}
     },
@@ -152,8 +155,7 @@
             { min: 1, max: 60, message: '用户名称请控制在30字以内', trigger: 'blur' }
           ], 
           userId : [
-            { required: true, message: '请输入登陆账号', trigger: 'change' },
-            { min: 6, max: 20, message: '请输入6-12位登账号', trigger: 'blur' },{pattern: /^\d{6,20}$/,message: '只能输入数字', trigger: 'blur'}
+            { required: true, message: '请输入登陆账号', trigger: 'change' },{pattern: /^\d{6,20}$/,message: '只能输入数字', trigger: 'blur'}
           ],
           password : [
             {  required: true, message: '请输入密码', trigger: 'change'},
@@ -165,7 +167,13 @@
           ],
           state: [
             { required: true, message: '请选择状态', trigger: 'blur' }, 
-          ] 
+          ],
+          telePhone: [
+            { required: true, message: '请输入电话号码', trigger: 'blur' }, 
+          ],
+          idCard: [
+            { required: true, message: '请输入身份证号码', trigger: 'blur' }, 
+          ]  
 			}
     }
 		},
@@ -228,16 +236,18 @@
         	var _this = this;
            this.$refs[form].validate((valid) => {
           if (valid) {
+            _this.userDetail.departId = '1';
             if(_this.add){
               if(_this.userDetail.password01!=_this.userDetail.password){
                 _this.$message.error("两次输入的密码不一致!");
                 return
               }
-             //新增 
-             _this.userDetail.creator=window.localStorage.getItem('userId');
+              delete _this.userDetail.password01;
+             //新增  
              _this.operateData('add');
              }else{
               //修改
+              delete _this.userDetail.password01;
              _this.operateData('edit');
             } 
           } else {

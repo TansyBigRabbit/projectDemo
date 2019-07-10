@@ -113,9 +113,6 @@
           </router-link>
           <router-link :to="'/home/Role'">
           <el-menu-item index="4-2">角色管理</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/Rights'">
-          <el-menu-item index="4-3">权限设置</el-menu-item>
           </router-link> 
           
     </el-menu-item-group>  

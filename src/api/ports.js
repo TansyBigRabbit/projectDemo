@@ -37,6 +37,19 @@ export default {
 		delete: hosturl + '/userinfo/delete',
 		findById: hosturl + '/userinfo/queryOne',
 	},
+	role: {
+		list: hosturl + '/role/queryListWithPage',
+		insert: hosturl + '/role/insert',
+		update: hosturl + '/role/update',
+		delete: hosturl + '/role/delete',
+		findById: hosturl + '/role/queryListWithNoPage',
+	},
+	roleAndUser:{
+
+	},
+	roleAndRight:{
+
+	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

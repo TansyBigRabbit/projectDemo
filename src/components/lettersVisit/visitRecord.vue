@@ -9,9 +9,9 @@
   </el-breadcrumb>
 </div>
       <div class="search_box"> 
-        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入会议名称"></el-input>
-        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
-        <el-date-picker size="large" v-model="searchForm.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入上访者姓名"></el-input>
+        <el-input style="width: 20%" v-model="searchForm.conName" placeholder="请输入接访者姓名"></el-input>
+        <el-date-picker size="large" v-model="searchForm.startTime" type="datetime" placeholder="选择上访开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker>  
         <el-select v-model="searchForm.status" placeholder="请选择状态">
         <el-option  v-for="item in status" :label='item.text' :value="item.value"></el-option> 
         </el-select>
@@ -96,7 +96,7 @@
 			return{
 		    total: 5,
         currentPage: 1,
-　　　　pageSize: 10,		
+　　　　   pageSize: 10,		
  		    visitRecords: [],
         visitDtail:{},
         searchForm:{},
@@ -105,7 +105,10 @@
           dialogTitle:'',
           word:'',
           videoUrl:''
-        }
+        },
+        conDetail:false,
+        status:[{text:'已处理',value:0},{text:'未处理',value:1}],
+        videoInfo:false
 			}
     },
 		created(){

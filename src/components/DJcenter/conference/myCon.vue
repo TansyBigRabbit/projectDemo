@@ -434,6 +434,13 @@
           console.log("findbyId......");
           console.log(res.data); 
           _this.meetingDetail = res.data.data; 
+          var num = res.data.data.joinUserName.length;
+           if(num>0){
+            for(let i=0;i<num;i++){
+              res.data.data.joinUserName[i]=parseInt( res.data.data.joinUserName[i])
+            }
+            _this.meetingDetail.joinUserName = res.data.data.joinUserName;
+           } 
           }); 
          }
          //else if(type=='edit'){
