@@ -44,6 +44,9 @@ export default {
 		delete: hosturl + '/role/delete',
 		findById: hosturl + '/role/queryListWithNoPage',
 	},
+	permission:{
+        list: hosturl + '/permission/queryListWithPage',
+	},
 	roleAndUser:{
 
 	},

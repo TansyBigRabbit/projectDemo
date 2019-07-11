@@ -275,10 +275,10 @@
               _this.getUserList(1,5)
               //操作成功刷新页面退出弹窗
               _this.conDetail=false;
-             } 
-            _this.$message.error(res.data.msg);
-
-            });
+             }else{
+              _this.$message.error(res.data.msg);
+             }
+             });
          },
           searchUser(){
           var params={}  
