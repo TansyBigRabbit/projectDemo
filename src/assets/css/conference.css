@@ -50,7 +50,7 @@
     width: 100%
   }
   .el-select-dropdown.el-popper.is-multiple{
-    top:41%!important;
+/*    top:41%!important;*/
   }
   .meetName{
     text-decoration: underline;

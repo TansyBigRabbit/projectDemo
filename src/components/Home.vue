@@ -219,6 +219,7 @@
     created(){
       this.userInfo=JSON.parse(window.localStorage.getItem('userInfo'));
       console.log(this.userInfo);
+      this.getUserRights(this.userInfo);
     },
     methods: {  
       handleOpen(key, keyPath) {
@@ -369,6 +370,35 @@
           confirmButtonText: '确定'
         });
       },
+      //用户权限去重&展示侧边菜单menu
+      getUserRights(data){
+         if(data.roles){
+          var rights = [];
+         for(let i=0;i<data.roles.length;i++){
+          if(data.roles[i].permissions){
+            for(let j=0;j<data.roles[i].permissions.length;j++){
+              rights.push(data.roles[i].permissions[j]);
+            }
+          }
+         }
+         if(rights.length>1){
+          //开始查重
+           var hash=[];
+            for (var m = 0; m < rights.length; m++) {
+              for (var n = m+1; n < rights.length; n++) {
+                if(rights[m].id==rights[n].id){
+                  ++m;
+                }
+              }
+                hash.push(rights[m]);
+            }
+            rights = hash;
+         }
+         console.log(rights)
+         }else{
+          this.$message.warning("您尚未添加权限，请联系管理员添加权限！");
+         }
+      }
     }
   }
 </script>

@@ -123,7 +123,7 @@
 						window.localStorage.setItem('userInfo', userInfo);
 						_this.$store.state.login = true;
 						_this.$router.push({
-							name: 'home'
+							name: 'home' 
 						});
 					} else {
 						_this.loading=false;

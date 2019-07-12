@@ -44,14 +44,14 @@ export default {
 		delete: hosturl + '/role/delete',
 		findById: hosturl + '/role/queryListWithNoPage',
 	},
-	permission:{
-        list: hosturl + '/permission/queryListWithPage',
+	permission: {
+		list: hosturl + '/permission/queryListWithPage',
 	},
-	roleAndUser:{
-
+	roleAndUser: {
+		insert: hosturl + '/userinforole/insert'
 	},
-	roleAndRight:{
-
+	roleAndRight: {
+		insert: hosturl + '/rolepermission/insert'
 	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',

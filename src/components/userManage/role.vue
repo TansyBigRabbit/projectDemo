@@ -7,19 +7,8 @@
   <el-breadcrumb-item>系统管理</el-breadcrumb-item>
   <el-breadcrumb-item>角色管理</el-breadcrumb-item>  
   </el-breadcrumb>
-</div> 
-  
-<el-tree
-  :data="treeData"
-  show-checkbox
-  default-expand-all
-  node-key="id"
-  ref="tree"
-  highlight-current
-  :props="defaultProps">
-</el-tree>
-
-    <el-card class="box-card">
+</div>  
+  <el-card class="box-card">
       <div class="search_box">
       <el-input style="width: 15%" v-model="roleList.searchForm.userName" placeholder="请输入角色名称"></el-input>  
         <!-- <el-select style="width: 15%" v-model="roleList.searchForm.state" placeholder="请选择成员">
@@ -40,22 +29,26 @@
  <el-table
   v-loading="createLoading"
   class="table_body"
-    :data="roleList.userlistTable"
+    :data="roleList.rolelistTable"
     border
     style="width: 100%">
     <el-table-column
       fixed
-      prop="userName"
+      prop="name"
       align="center"
       label="角色名称" >
       <template slot-scope="scope">
-    <span class="meetName" @click="showModel('edit',scope.row)">{{ scope.row.userName }}</span>
+    <span class="meetName" @click="showModel('edit',scope.row)">{{ scope.row.name }}</span>
     </template>
     </el-table-column>
     <el-table-column 
-      prop="userId"
+      prop="users"
       align="center"
       label="成员" >
+      <template slot-scope="scope">
+    <span v-if="scope.row.users">{{ scope.row.users }}</span>
+    <span v-else>-</span>
+    </template>
     </el-table-column>     
     <el-table-column 
       label="操作" 
@@ -90,32 +83,33 @@
 </el-dialog>
  <!-- 角色权限维护 -->
   <el-dialog  title="角色权限维护" :visible.sync="roleRightDialog">
-  <el-form :model="roleList.roleRight" :rules="rules" ref="roleList.roleRight" class="meeting_form">
-    <el-form-item label="角色名称" prop="userName">
-      <!-- <el-input v-model="userDetail.userName" ></el-input> -->
-    </el-form-item>
-  </el-form>
+ <el-tree
+  :data="treeData"
+  show-checkbox
+  default-expand-all
+  node-key="id"
+  ref="tree"
+  highlight-current
+  :props="defaultProps">
+</el-tree> 
   <div slot="footer" class="dialog-footer">
-  	<el-button @click="submitUserInfo('userDetail')">提交</el-button> 
+  	<el-button @click="submitRoleRight()">提交</el-button> 
     <el-button @click="roleRightDialog = false">关闭</el-button> 
   </div>
 </el-dialog>
  <!-- 人员维护 -->
-  <el-dialog  title="角色人员维护" :visible.sync="roleUserDialog">
-  <el-form :model="roleList.roleUser" :rules="rules" ref="roleList.roleUser" class="meeting_form">
-    <el-form-item label="角色成员" prop="userName">
-      <el-select multiple v-model="roleList.roleUser" filterable placeholder="请选择">
+  <el-dialog  title="角色人员维护" :visible.sync="roleUserDialog"> 
+    <div>
+      <el-select style="width:80%" multiple v-model="roleList.roleDetail.userinfos" filterable placeholder="请选择">
     <el-option
-      v-for="item in users"
-      :key="item.userId"
+      v-for="item in users"  
       :label="item.userName"
       :value="item.userId">
     </el-option>
-  </el-select>
-    </el-form-item>
-  </el-form>
+  </el-select>   
+</div>
   <div slot="footer" class="dialog-footer">
-  	<el-button @click="submitUserInfo('userDetail')">提交</el-button> 
+  	<el-button @click="submitRoleUser()">提交</el-button> 
     <el-button @click="roleUserDialog = false">关闭</el-button> 
   </div>
 </el-dialog>
@@ -141,9 +135,12 @@
     currentPage:1,
     rolelistTable:[],
     searchForm:{},
-    roleDetail:{},
-    roleUser:{},
-    roleRight:{},
+    roleDetail:{
+      userinfos:[],
+      permissions:[],
+    },
+   /* roleUser:{},
+    roleRight:{},*/
     },
     //人员列表
     users:[], 
@@ -166,17 +163,7 @@
 			//获取角色列表
 		this.getRoleList(1,10);
 		  //获取用户下拉数据
-		this.getUserList();
-        
-
-        console.log("查询权限列表...");
-          this.$http.get(this.$ports.permission.list).then((res)=>{
-            if(res.data.code==0){
-              console.log(res.data);
-              //构造树形图
-              this.createTree(res.data.data);
-            }
-          }) 
+		//this.getUserList(); 
 		},
 		methods:{ 
         getRoleList(num,size){
@@ -190,7 +177,27 @@
           console.log("获取角色列表......");
           console.log(res.data); 
           if(res.data.code==0){
-           _this.roleList.rolelistTable = res.data.data;
+            var role = res.data.data;
+            if(role.length>0){
+              var roleList = [];
+              var roleObj = {};
+              for(let i=0;i<role.length;i++){
+                roleObj = {};
+                var users = [];
+                roleObj.name = role[i].name;
+                roleObj.id = role[i].id;
+                if(role[i].userinfos!=null){
+                  for(let j=0;j<role[i].userinfos.length;j++){
+                   users.push(role[i].userinfos[j].userName);
+                  }
+                  roleObj.users = users.toString();
+                } 
+               roleList.push(roleObj);
+              }
+               _this.roleList.rolelistTable = roleList;
+            }
+            
+           var users = [];
           _this.roleList.total = res.data.page.total; 
           _this.roleList.pageSize = size;
           _this.roleList.currentPage = num;
@@ -219,17 +226,16 @@
           if(type=='add'){
           //新增角色
           _this.roleDialog = true;
-          }else if(type=='edit'){
+          }else{
+          if(type=='edit'){
           //编辑角色
           _this.roleDialog = true;
-          _this.$http.get(_this.$ports.role.findbyId,obj.id).then(
-          	function(res){
-          		console.log('角色信息findbyid...');
-          		console.log(res);
-          	})
+          
           }else if(type=='user'){
           //维护人员
           _this.roleUserDialog=true;
+          //
+          _this.getUserList();
           }else{
           //维护权限
           console.log("查询权限列表...");
@@ -237,11 +243,41 @@
             if(res.data.code==0){
               console.log(res.data);
               //构造树形图
+              _this.createTree(res.data.data);
             }
           })
           _this.roleRightDialog=true;
 
-          } 
+          }
+          //单个数据查询
+          _this.$http.get(_this.$ports.role.findById,{
+            id:obj.id
+          }).then(
+            function(res){
+              console.log('角色信息findbyid...');
+              console.log(res);
+              if(res.data.code==0){ 
+               //userinfos
+               var role = res.data.data[0];
+               var userinfos01 = [];
+               if(role.userinfos){
+                for(let i=0;i<role.userinfos.length;i++){
+                  userinfos01.push(role.userinfos[i].userId);
+                }
+                role.userinfos = userinfos01
+               }
+               _this.roleList.roleDetail=role;
+               var treeKeys = [];
+               if(role.permissions){
+                 for(let m=0;m<role.permissions.length;m++){
+                  treeKeys.push(role.permissions[m].id)
+                 }
+               }
+                _this.$refs.tree.setCheckedKeys(treeKeys);
+              }
+            })
+          }
+          
          },
          //新增、修改角色
         submitRole(){
@@ -272,9 +308,55 @@
             }
           })
         },
+        //权限人员维护提交
+        submitRoleUser(){
+         var _this = this;
+         _this.$http.post(_this.$ports.roleAndUser.insert,{
+          roleId:_this.roleList.roleDetail.id,
+          userId:_this.roleList.roleDetail.userinfos,
+         }).then((res)=>{
+           console.log("角色人员维护......");
+           console.log(res.data);
+           if(res.data.code==0){
+            _this.$message({
+              message:"人员更新成功!",
+              type:"success"
+            })
+            _this.roleUserDialog=false;
+            _this.getRoleList(1,10);
+           }else{
+            _this.$message.error("人员更新失败!")
+           }
+
+         })
+         
+        },
+        //角色权限维护提交
+        submitRoleRight(){
+           console.log(this.$refs.tree.getCheckedKeys());
+           var _this = this;
+           _this.$http.post(_this.$ports.roleAndRight.insert,{
+            roleId:_this.roleList.roleDetail.id,
+            premissionIdList:_this.$refs.tree.getCheckedKeys(),
+           }).then((res)=>{
+            console.log("新增角色权限......");
+            console.log(res);
+            if(res.data.code==0){
+              _this.$message({
+              message: "权限更新成功!",
+              type: 'success'
+              });
+              _this.roleRightDialog=false;
+              _this.getRoleList(1,10);
+            }else{
+              _this.$message.error("权限更新失败!")
+            }
+           })
+        },
        //构造树形图
        createTree(data){
        var num = data.length;
+       this.treeData=[];
        for(let i=0;i<num;i++){
         if(data[i].pid==0){
           var obj={children:[]};
@@ -288,62 +370,12 @@
             obj.children.push(obj1)
             }
           }
+
         this.treeData.push(obj);
         }
        }
        },
-
-
-
-        //新增 修改
-        submitUserInfo(form){ 
-        	var _this = this;
-           this.$refs[form].validate((valid) => {
-          if (valid) {
-            _this.userDetail.departId = '1';
-            if(_this.add){
-              if(_this.userDetail.password01!=_this.userDetail.password){
-                _this.$message.error("两次输入的密码不一致!");
-                return
-              }
-              delete _this.userDetail.password01;
-             //新增  
-             _this.operateData('add');
-             }else{
-              //修改
-              delete _this.userDetail.password01;
-             _this.operateData('edit');
-            } 
-          } else {
-            return false;
-          }
-        });
-         },
-         operateData(type){
-          var url ;
-          var _this = this;
-         if(type=='add'){
-          url = this.$ports.user.insert;
-          console.log("新增角色......");
-         }else{
-          url = this.$ports.user.update;
-          console.log("修改角色......");
-         }
-          this.$http.post(url,_this.userDetail).then(res=>{
-            console.log(res.data);
-             if(res.data.code==0){
-              _this.$message({
-              message: '操作成功！',
-              type: 'success'
-            });
-              _this.getUserList(1,5)
-              //操作成功刷新页面退出弹窗
-              _this.conDetail=false;
-             } 
-            _this.$message.error(res.data.msg);
-
-            });
-         },
+ 
           searchUser(){
           var params={}  
           params={
