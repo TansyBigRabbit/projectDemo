@@ -367,6 +367,13 @@
             var obj1={};
             obj1.id = data[j].id;
             obj1.label = data[j].name;
+            obj1.children=[];
+            for(let k=0;k<num;k++){
+              if(data[k].pid==data[j].id){
+                data[k].label = data[k].name;
+                obj1.children.push(data[k]);
+              }
+            }
             obj.children.push(obj1)
             }
           }

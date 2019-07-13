@@ -32,77 +32,90 @@
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
 <el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-  <el-submenu index="1">
+  <el-submenu :index='index.toString()' v-for="(item,index) in submenuList">
     <template slot="title">
-      <i class="el-icon-location"></i>
-      <span slot="title">信访中心系统</span>
-    </template>
-    <el-menu-item-group> 
-          <router-link :to="'/home/lettersVisit'">
-          <el-menu-item index="1-1">开启信访</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/VisitRoom'">
-          <el-menu-item index="1-2">信访房间列表</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/VisitRecord'">
-          <el-menu-item index="1-3">信访记录</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/LettersStatic'">
-          <el-menu-item index="1-4">信访统计</el-menu-item>
-          </router-link>
+     <i class="el-icon-location"></i>
+     <span slot="title">{{item.name}}</span>
+   </template>
+   <router-link v-if="item01.children.length==0" v-for="(item01,index01) in item.children" :to="item01.url">
+    <el-menu-item :index="index-index01">{{item01.name}}</el-menu-item>
+    </router-link>
+    <el-submenu v-else :index="index-index01" v-for="(item01,index01) in item.children">
+      <template slot="title">{{item01.name}}</template>
+      <router-link v-for="(item02,index02) in item01.children" :to="item02.url">
+         <el-menu-item index="index-index01-index02">{{item02.name}}</el-menu-item>
+         </router-link>
+    </el-submenu>
+  </el-submenu> 
+<!--  <el-submenu index="1">
+  <template slot="title">
+    <i class="el-icon-location"></i>
+    <span slot="title">信访中心系统</span>
+  </template>  
+         <router-link :to="'/home/lettersVisit'">
+         <el-menu-item index="1-1">开启信访</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/VisitRoom'">
+         <el-menu-item index="1-2">信访房间列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/VisitRecord'">
+         <el-menu-item index="1-3">信访记录</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/LettersStatic'">
+         <el-menu-item index="1-4">信访统计</el-menu-item>
+         </router-link>
           
-    </el-menu-item-group>  
-  </el-submenu>
-  <el-submenu index="2"> 
-    <template slot="title">
-      <i class="el-icon-location"></i>
-      <span slot="title">党建中心系统</span>
-    </template>
+</el-submenu>  -->
+
+<!-- <el-submenu index="2"> 
+   <template slot="title">
+     <i class="el-icon-location"></i>
+     <span slot="title">党建中心系统</span>
+   </template> 
     <el-submenu index="2-1">
-          <template slot="title">会议</template>
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-1-1">会议签到</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/ConList'">
-          <el-menu-item index="2-1-2">会议列表</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/ConRecord'">
-          <el-menu-item index="2-1-3">会议记录</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/MyCon'">
-          <el-menu-item index="2-1-4">我的会议</el-menu-item>
-          </router-link>
-        </el-submenu>
-      <el-submenu index="2-2">
-          <template slot="title">党建活动</template>
-          <router-link :to="'/home/ActivityList'">
-          <el-menu-item index="2-2-1">活动列表</el-menu-item>
-          </router-link>
-          <router-link :to="'/home/ActivityManage'">
-          <el-menu-item index="2-2-2">活动管理</el-menu-item>
-          </router-link>    
-        </el-submenu>
-        <el-submenu index="2-3" disabled>
-          <template slot="title"><div @click="kaifa()">面谈</div></template>
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-3-1">会议签到</el-menu-item>
-          </router-link> 
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-3-2">会议签到</el-menu-item>
-          </router-link> 
-          <router-link :to="'/home/ConSignate'">
-          <el-menu-item index="2-3-3">会议签到</el-menu-item>
-          </router-link> 
-        </el-submenu>
-      </el-submenu> 
-  </el-submenu>
-  <el-submenu index="3" disabled>
+         <template slot="title">会议</template>
+         <router-link :to="'/home/ConSignate'">
+         <el-menu-item index="2-1-1">会议签到</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/ConList'">
+         <el-menu-item index="2-1-2">会议列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/ConRecord'">
+         <el-menu-item index="2-1-3">会议记录</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/MyCon'">
+         <el-menu-item index="2-1-4">我的会议</el-menu-item>
+         </router-link>
+       </el-submenu>
+     <el-submenu index="2-2">
+         <template slot="title">党建活动</template>
+         <router-link :to="'/home/ActivityList'">
+         <el-menu-item index="2-2-1">活动列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/ActivityManage'">
+         <el-menu-item index="2-2-2">活动管理</el-menu-item>
+         </router-link>    
+       </el-submenu>
+       <el-submenu index="2-3" disabled>
+         <template slot="title"><div @click="kaifa()">面谈</div></template>
+         <router-link :to="'/home/ConSignate'">
+         <el-menu-item index="2-3-1">会议签到</el-menu-item>
+         </router-link> 
+         <router-link :to="'/home/ConSignate'">
+         <el-menu-item index="2-3-2">会议签到</el-menu-item>
+         </router-link> 
+         <router-link :to="'/home/ConSignate'">
+         <el-menu-item index="2-3-3">会议签到</el-menu-item>
+         </router-link> 
+       </el-submenu>
+     </el-submenu>  -->
+  <!-- <el-submenu index="3" disabled>
     <template slot="title">
     <i class="el-icon-document"></i>
     <span slot="title" @click="kaifa()">综治中心系统</span>
   </template>
-  </el-submenu>
-  <el-submenu index="4">
+  </el-submenu> -->
+  <!-- <el-submenu index="4">
     <template slot="title">
     <i class="el-icon-setting"></i>
     <span slot="title">系统管理</span>
@@ -116,13 +129,7 @@
           </router-link> 
           
     </el-menu-item-group>  
-  </el-submenu>
-  <!-- <el-submenu index="5">
-    <template slot="title">
-    <i class="el-icon-setting"></i>
-    <span slot="title">系统管理</span>
-  </template>
-  </el-submenu> -->
+  </el-submenu> --> 
 </el-menu>
 </el-aside></el-col>
  <el-col id="main" :span="isCollapse?22:20">  
@@ -213,7 +220,8 @@
             { required: true, message: '请确认密码', trigger: 'blur' },
             { min: 1, max:12, message: '请输入6-12位密码', trigger: 'blur' }
           ],
-        }
+        },
+        submenuList:[],
       };
     },
     created(){
@@ -392,13 +400,41 @@
               }
                 hash.push(rights[m]);
             }
-            rights = hash;
-         }
-         console.log(rights)
+            rights = hash; 
+            console.log(rights);
+            this.showSubar(rights);
          }else{
-          this.$message.warning("您尚未添加权限，请联系管理员添加权限！");
+           this.$message.warning("您尚未添加权限，请联系管理员分配权限！");
          }
-      }
+         
+         }else{
+           this.$message.warning("您尚未加入角色，请联系管理员分配角色！");
+         }
+      },
+      showSubar(data){
+       for(let i=0;i<data.length;i++){
+        if(data[i].pid==0){
+          var obj01 = {};
+          obj01 = data[i];
+          obj01.children=[];
+          for(let j=0;j<data.length;j++){
+            if(data[j].pid==data[i].id){
+              var obj02 = {};
+              obj02=data[j];
+              obj02.children=[];
+              for(let k=0;k<data.length;k++){
+                if(data[k].pid==data[j].id){
+                  obj02.children.push(data[k]);
+                }
+              } 
+              obj01.children.push(obj02);
+            }
+          }
+          this.submenuList.push(obj01);
+        }
+       }
+      console.log(this.submenuList);
+      },
     }
   }
 </script>
