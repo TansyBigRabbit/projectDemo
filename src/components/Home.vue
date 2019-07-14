@@ -38,12 +38,12 @@
      <span slot="title">{{item.name}}</span>
    </template>
    <router-link v-if="item01.children.length==0" v-for="(item01,index01) in item.children" :to="item01.url">
-    <el-menu-item :index="index-index01">{{item01.name}}</el-menu-item>
+    <el-menu-item :index="(index-index01).toString()">{{item01.name}}</el-menu-item>
     </router-link>
-    <el-submenu v-else :index="index-index01" v-for="(item01,index01) in item.children">
+    <el-submenu v-if="item01.children.length>0" :index="(index-index01).toString()" v-for="(item01,index01) in item.children">
       <template slot="title">{{item01.name}}</template>
       <router-link v-for="(item02,index02) in item01.children" :to="item02.url">
-         <el-menu-item index="index-index01-index02">{{item02.name}}</el-menu-item>
+         <el-menu-item :index="(index-index01-index02).toString()">{{item02.name}}</el-menu-item>
          </router-link>
     </el-submenu>
   </el-submenu> 
