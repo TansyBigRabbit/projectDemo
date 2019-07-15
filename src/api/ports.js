@@ -1,7 +1,9 @@
 //const hosturl = 'http://192.168.1.149:8080/webrtc_conference_war';//localhost:8080 threeCentreProject
 //const hosturl = 'http://192.168.1.153:8080/threeCentreProject';
 //const hosturl = 'http://47.102.139.17:9090/threeCentreProject';
-const hosturl = '/api';
+
+var hosturl = '';
+process.env.NODE_ENV === 'development' ? hosturl = '/api' : hosturl = "http://47.102.139.17:9090/threeCentreProject";
 export default {
 	department: hosturl + '/depart',
 	userInfo: hosturl + '/userinfo',
