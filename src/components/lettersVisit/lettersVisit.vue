@@ -75,12 +75,12 @@
  </el-card> 
 <!-- 选择部门弹窗 -->
 <el-dialog title="选择上访类型" :visible.sync="dialogDepartment" width=30% >
-  <div v-if="!checkDepart">
+  <!-- <div v-if="!checkDepart">
   <el-button type="primary" @click="checkDepartMethod(0)" plain>县级信访</el-button>
   <el-button type="success" @click="checkDepartMethod(1)" plain>乡镇信访</el-button>
   <el-button type="info" @click="checkDepartMethod(2)" plain>村信访</el-button>
-  </div>
-  <div v-else>
+  </div> -->
+  <div >
     <el-select  v-model="countryId" filterable placeholder="请选择上访部门">
         <el-option v-for="item1 in department_country"
         :key="item1.departId" :label='item1.departName' :value="item1.departId"></el-option> 
@@ -142,6 +142,8 @@
         }else{
           this.userinfoExtend.sex=9;
         }
+        this.countryId="";
+       this.checkDepartMethod();
 
        this.dialogDepartment=true;
         
@@ -168,7 +170,13 @@
       //创建信访房间
       createRoom(){
         //获取上访者的token
+        //判断有无选择部门
         var _this = this; 
+        if(_this.countryId==""){
+        _this.$message.error("请选择信访部门!");
+        return
+        }
+        
         this.$http.get(this.$ports.getToken,{
         idCard:this.userinfoExtend.idCard
         }).then(res=>{
@@ -197,8 +205,8 @@
       //选择上方模式之后查询的对应乡镇信息
       checkDepartMethod(typeVal){ 
         var _this = this;
-      this.$http.get(this.$ports.department+'/queryListWithNoPage',{
-        type:typeVal
+      this.$http.get(this.$ports.department,{
+        departId:JSON.parse(window.localStorage.getItem('userInfo')).departId
       }).then(res=>{
           if(res.data.code==0){ 
           this.department_country = res.data.data;

@@ -133,10 +133,10 @@
     </el-col>
     </el-form>
     </el-card>
-    <div v-if="isEdit" class="m_t_value btnBox01">
-    <el-button type="primary" @click="submitForm('activityDetail')">提交</el-button> 
+    <div class="m_t_value btnBox01">
+    <el-button v-if="isEdit" type="primary" @click="submitForm('activityDetail')">提交</el-button>
     <el-button type="warning" @click="notCreating=true">返回上一页</el-button> 
-    </div>
+     </div>
   </div>
 </div>
 </template>
@@ -573,4 +573,5 @@ const toolbarOptions = [
 .ql-editor{
          height:30vh;
      }
+ 
 </style>

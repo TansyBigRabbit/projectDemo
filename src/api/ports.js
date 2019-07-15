@@ -5,7 +5,7 @@
 var hosturl = '';
 process.env.NODE_ENV === 'development' ? hosturl = '/api' : hosturl = "http://47.102.139.17:9090/threeCentreProject";
 export default {
-	department: hosturl + '/depart',
+	department: hosturl + '/depart/superiorDepart',
 	userInfo: hosturl + '/userinfo',
 	login: hosturl + '/userinfo/login',
 	logout: hosturl + '/userinfo/logout',

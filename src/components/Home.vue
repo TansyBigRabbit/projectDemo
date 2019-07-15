@@ -31,19 +31,19 @@
 
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
-<el-menu default-active="1-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-  <el-submenu :index='index.toString()' v-for="(item,index) in submenuList">
+<el-menu default-active="0-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+  <el-submenu :index="''+index" v-for="(item,index) in submenuList">
     <template slot="title">
      <i class="el-icon-location"></i>
      <span slot="title">{{item.name}}</span>
    </template>
    <router-link v-if="item01.children.length==0" v-for="(item01,index01) in item.children" :to="item01.url">
-    <el-menu-item :index="(index-index01).toString()">{{item01.name}}</el-menu-item>
+    <el-menu-item :index="''+index+'-'+''+index01">{{item01.name}}</el-menu-item>
     </router-link>
-    <el-submenu v-if="item01.children.length>0" :index="(index-index01).toString()" v-for="(item01,index01) in item.children">
+    <el-submenu v-show="item01.children.length>0" :index="''+index+'-'+''+index01" v-for="(item01,index01) in item.children">
       <template slot="title">{{item01.name}}</template>
       <router-link v-for="(item02,index02) in item01.children" :to="item02.url">
-         <el-menu-item :index="(index-index01-index02).toString()">{{item02.name}}</el-menu-item>
+         <el-menu-item :index="''+index+'-'+''+index01+'-'+''+index02">{{item02.name}}</el-menu-item>
          </router-link>
     </el-submenu>
   </el-submenu> 
