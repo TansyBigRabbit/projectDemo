@@ -82,7 +82,9 @@
 
 <el-dialog  :title="dialogData.dialogTitle"  :visible.sync="conDetail">
   <div class="dialogBox">
-  <div v-if="videoInfo"></div>
+  <div v-if="videoInfo">
+     <video style="width: 100%" src="http://118.24.128.185:8080/kurento/E:/usr1561884556367_512926196402171622_%E5%BC%A0%E6%98%8E%E6%B3%8920190630164916_512926196402171622_%E5%BC%A0%E6%98%8E%E6%B3%89.mp4" controls="controls"></video>
+  </div>
   <div v-else></div>
     
   </div>
@@ -108,7 +110,7 @@
         },
         conDetail:false,
         status:[{text:'已处理',value:0},{text:'未处理',value:1}],
-        videoInfo:false
+        videoInfo:true
 			}
     },
 		created(){
@@ -150,7 +152,7 @@
       		},
       		//查看信访记录详情
       		checkDetail(row){
-
+           this.conDetail = true;
       		},
       		dateFormate(val){
              return val.startTime
