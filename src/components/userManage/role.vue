@@ -313,7 +313,7 @@
          var _this = this;
          _this.$http.post(_this.$ports.roleAndUser.insert,{
           roleId:_this.roleList.roleDetail.id,
-          userId:_this.roleList.roleDetail.userinfos,
+          userIdList:_this.roleList.roleDetail.userinfos,
          }).then((res)=>{
            console.log("角色人员维护......");
            console.log(res.data);
