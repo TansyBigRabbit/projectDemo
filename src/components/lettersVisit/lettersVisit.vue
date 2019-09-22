@@ -55,7 +55,7 @@
     </el-col>
   </el-row>
    <el-form-item class="submitBtn">
-    <el-button type="primary" @click="readCard()">读卡</el-button>
+    <el-button type="primary" @click="readCard()">{{btnText}}</el-button>
    <el-button type="cancel" :disabled="isShow?false:true" @click="submitForm('userinfoExtend')">下一步</el-button>
 
     <!-- <el-button @click="resetForm('userinfoExtend')">取消上访</el-button> -->
@@ -98,6 +98,8 @@
     data() {
       return {
         sex:'',
+        //所有信访者的信息
+        petitionArr:[],
         userinfoExtend: {
           idCard:'',
           userName: '',
@@ -123,6 +125,8 @@
         //true,读卡成功进入下一步骤
         isShow:false,
         url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg', 
+        //
+        btnText:"读卡"
       };
     },
     mounted(){ 
@@ -135,35 +139,27 @@
         //是否异常退出房间
         //是--回到之前房间
         //否--打开选择部门弹窗
-        if(this.userinfoExtend.sex=='女'){
-          this.userinfoExtend.sex=1;
-        }else if(this.userinfoExtend.sex=='男'){
-          this.userinfoExtend.sex=0;
-        }else{
-          this.userinfoExtend.sex=9;
-        }
-        this.countryId="";
-       this.checkDepartMethod();
-
-       this.dialogDepartment=true;
-        
-
+        // if(this.userinfoExtend.sex=='女'){
+        //   this.userinfoExtend.sex=1;
+        // }else if(this.userinfoExtend.sex=='男'){
+        //   this.userinfoExtend.sex=0;
+        // }else{
+        //   this.userinfoExtend.sex=9;
+        // }
+        var _this = this;
         //保存上访者身份信息
-        /*this.$http.post(this.$ports.userInfo+'/insert',
-        this.userinfoExtend).then(res=>{
+        this.$http.post(this.$ports.userinfoextend.insertList,
+        this.petitionArr).then(res=>{
         console.log(res.data);
         if(res.data.code==0){
           //获取部门信息
-          this.$http.get(this.$ports.department+'/queryListWithNoPage').then(res=>{
-          if(res.data.code==0){
-
-          this.dialogDepartment=true
-        }
-          });
+           _this.countryId="";
+           _this.checkDepartMethod();
+           _this.dialogDepartment=true;
         }else{
           this.$message.error("数据保存失败，请联系管理员！");
         }
-        })*/ 
+        })
         
       },
 
@@ -277,6 +273,8 @@
       this.userinfoExtend.birthAddress = arr[7];
       this.url=arr[12];
       this.userinfoExtend.picturePath = arr[12];
+      //
+      this.petitionArr.push(this.userinfoExtend);
       },
       dateFormat(date){
        String.prototype.splice = function(start, newStr) {
@@ -310,7 +308,7 @@
                 name =  json.data.data.userName; 
 
                 _this.$router.push({
-                name:'VisitRoom',
+                name:'VisitRoom', 
                 params:{
                 roleType:"petitionJoin",
                 roomNum:_this.roomInfo.roomName, 
@@ -320,6 +318,9 @@
                 _this.$message.error(json.data.msg);
                 }
             }); 
+      }else{
+        console.log("没有异常退出的房间");
+        _this.btnText = "继续读卡";
       } 
         }else{
           _this.$message.error(res.data.msg);

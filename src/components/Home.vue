@@ -344,7 +344,10 @@
               }); 
              _this.$store.state.login=false;
              _this.$router.push({
-              name:'login'
+              name:'login',
+              param:{
+                isLogout:true
+              }
              })
             }else{
               _this.$message({

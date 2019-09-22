@@ -51,6 +51,9 @@
 									</el-col>
 								</el-row>
 								<el-row>
+									<el-checkbox  v-model="check">下次自动登录</el-checkbox>
+								</el-row>
+								<el-row>
 									<el-col style="opacity:0.7">
 										<el-button id="login" @click="login" style="width:100%" type="primary">登录</el-button>
 									</el-col>
@@ -85,6 +88,7 @@
 				loading:false,
 				userName: '',
 				password: '',
+				check:false,
 				/*增加*/
 				note: {
 					backgroundImage: "url(" + require("../assets/images/bg.jpg") + ") ",
@@ -97,16 +101,35 @@
 			}
 		},
 		created(){
-        window.localStorage.clear();
+        //window.localStorage.clear();
+        //判断是否通过注销而来
+        if(this.$route.params.isLogout){
+        	debugger
+        	console.log("通过注销进入登录页面");
+        }else{
+         if(window.localStorage.getItem("check")){
+         	console.log("自动登录");
+            this.login("auto");
+         }
+        }
 		},
 		methods: {
-			login: function() {
+			login: function(type) {
 				var _this = this;
+				var obj = {};
+				if(type=="auto"){
+	                 obj={
+						userId: window.localStorage.getItem("account"),
+						password: window.localStorage.getItem("password")
+					}
+				}else{
+					obj={
+						userId: this.userName,
+						password: this.password
+					}
+				}
 				_this.loading=true;
-				this.$http.post(this.$ports.login, {
-					userId: this.userName,
-					password: this.password
-				}).then(function(res) {
+				this.$http.post(this.$ports.login, obj).then(function(res) {
 					console.log("登录者信息.....");
 					console.log(res.data);
 					if(res.data.code == 0) {
@@ -121,6 +144,15 @@
 						window.localStorage.setItem('apiToken', res.data.token);
 						var userInfo = JSON.stringify(res.data.data);
 						window.localStorage.setItem('userInfo', userInfo);
+						//本地存储账号密码和登录状态
+						if(_this.check){
+							window.localStorage.setItem("account",_this.userName);
+							window.localStorage.setItem("password",_this.password);
+							window.localStorage.setItem("check",true);
+						}else{
+							window.localStorage.setItem("check",false);
+						}
+						//
 						_this.$store.state.login = true;
 						_this.$router.push({
 							name: 'home' 
@@ -150,7 +182,8 @@
 				catch (function(error) { 
 				});*/
 
-			}
+			},
+			 
 		}
 	}
 </script>

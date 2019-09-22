@@ -55,6 +55,11 @@ export default {
 	roleAndRight: {
 		insert: hosturl + '/rolepermission/insert'
 	},
+	//身份证读卡信息
+	userinfoextend:{
+        insertList: hosturl + '/userinfoextend/insertList'
+	},
+	
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

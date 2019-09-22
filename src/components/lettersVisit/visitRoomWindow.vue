@@ -9,7 +9,7 @@
 				<div class="box_1"></div>
 			</el-col>
 			<el-col :span="11">
-				<div>
+				<div> 
 					<el-row class="infoList">
 						<p>房间信息：</p>
 						<el-col :span="12">

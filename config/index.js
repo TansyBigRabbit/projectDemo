@@ -16,9 +16,9 @@ module.exports = {
                 //target: "http://r2v5359193.zicp.vip/threeCentreProject",
                 //target: "http://47.102.139.17:9090/threeCentreProject",
                 //target: "http://weipan.51vip.biz:48169/threeCentreProject",
-                target: "http://weipan.51vip.biz/threeCentreProject",
+                //target: "http://weipan.51vip.biz/threeCentreProject",
                 //target: "http://10.10.100.199:8080/threeCentreProject",
-                //target: "http://192.168.1.153:8080/threeCentreProject",
+                target: "http://192.168.1.153:8081/threeCentreProject",
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
