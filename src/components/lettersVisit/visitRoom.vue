@@ -57,33 +57,33 @@
 					<el-row class="infoList">
 						<p>房间信息：</p>
 						<el-col :span="12">
-							房间号：<span>12022152777</span>
+							房间号：<span>{{roomInfo.number}}</span>
 						</el-col>
 						<el-col :span="12">
-							接访时间：<span id="mytime"></span>
+							接访时间：<span id="mytime">{{roomInfo.startTime}}</span>
 						</el-col> 
 					</el-row>
 					 <el-divider class="divider"></el-divider>
 				     <el-row class="infoList">
-						<p>信访人员信息：</p>
+						<p>上访人员信息：</p>
 						<el-col :span="6">
-							姓名：<span>陈大颖</span>
+							姓名：<span>{{interview.name}}</span>
 						</el-col>
 						<el-col :span="6">
-							性别：<span>女</span>
+							性别：<span>{{interview.sex}}</span>
 						</el-col>
 						<el-col :span="12">
-							身份证号：<span>510723199401180043</span>
+							身份证号：<span>{{interview.idNum}}</span>
 						</el-col>
 					</el-row>
 					 <el-divider class="divider"></el-divider>
 					<el-row class="infoList">
-						<p>信访人员信息：</p>
+						<p>接访访人员信息：</p>
 						<el-col :span="12">
-							姓名：<span>陈小颖</span>
+							姓名：<span>{{petition.name}}</span>
 						</el-col>
 						<el-col :span="12">
-							工号：<span>10086</span>
+							工号：<span>{{petition.workNum}}</span>
 						</el-col>
 						<!-- <el-col :span="12">
 							身份证号：<span>510723199401180043</span>
@@ -181,6 +181,18 @@
 		    	pageToRoom:this.$route.params.roomNum,
 		    	departId:this.$route.params.departId,
 		    },
+		    //接访者信息
+		    petition:{
+
+		    },
+		    //上访者信息
+		    interview:{
+
+		    },
+			roomInfo:{
+				
+			}
+
     ///////////////////////////////////////////////////////////////////////  
 			}
 		},
