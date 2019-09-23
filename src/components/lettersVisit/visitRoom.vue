@@ -21,7 +21,7 @@
 			      <div style="padding: 14px;">
 			        <span>{{item.info.roomnum}}</span>
 			        <div class="bottom clearfix">
-			          <el-button v-if='item.info.memsize<2' type="text" @click="joinRoom(item.info.roomnum)">加入房间</el-button>
+			          <el-button v-if='item.info.memsize<6' type="text" @click="joinRoom(item.info.roomnum)">加入房间</el-button>
 			          <span v-else>房间满员，无法加入</span>
 			        </div>
 			      </div>
@@ -40,22 +40,66 @@
   <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
   <el-breadcrumb-item>信访中心系统</el-breadcrumb-item>
   <el-breadcrumb-item>信访视频房间</el-breadcrumb-item> 
-  </el-breadcrumb>
+  <el-breadcrumb-item>房间号:{{roomnum}}</el-breadcrumb-item> 
+  
+  </el-breadcrumb> 
 </div> 
 		<el-row class="container">
-			<el-col :span="9">
-				<div class="box_1">
-					<!-- v-if="item.videoId == 'local'" muted :id="item.videoId"  -->
+			<el-col :span="13">
+				<div class="boxFlex">
+					<div v-for="item in video_list" :class="'boxItem'+(item.first ? ' flex-item first' : ' flex-item')" @click="unshiftThis" :data-id="item.videoId">
+								<video v-if="item.videoId == 'local'" muted :id="item.videoId" class="video-item local-video " autoplay="autoplay" data-videotype="remote"></video>
+								<video v-else :id="item.videoId" class="video-item" autoplay="autoplay" data-videotype="remote"></video>
+								<div id="button-container">
+
+									<svg @click="toggleFullScreen(item.videoId)" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 1024 1024" :class="open.screen?'off':'on'">
+										<circle cx="524" cy="524" r="530">
+											<title>full</title>
+										</circle>
+
+										<path class="off" id="svg_1" fill="#ffffff" d="m610.99945,368.88964l-211.33222,0c-19.37212,0 -35.22204,15.2417 -35.22204,33.87043l0,203.2226c0,18.62874 15.84992,33.87043 35.22204,33.87043l211.33222,0c19.37212,0 35.22204,-15.2417 35.22204,-33.87043l0,-203.2226c0,-18.62874 -15.84992,-33.87043 -35.22204,-33.87043zm-191.9601,27.09635l40.50534,38.951l22.89432,-22.01578l0,69.43439l-70.44407,0l22.89432,-23.7093l-40.50534,-38.951l24.65543,-23.7093zm63.39967,199.83556l-22.89432,-22.01578l-40.50534,38.951l-24.65543,-23.7093l40.50534,-38.951l-22.89432,-23.7093l70.44407,0l0,69.43439zm109.18831,16.93522l-40.50534,-38.951l-22.89432,22.01578l0,-69.43439l70.44407,0l-22.89432,23.7093l40.50534,38.951l-24.65543,23.7093zm-15.84992,-154.11047l22.89432,22.01578l-70.44407,0l0,-67.74087l22.89432,22.01578l40.50534,-38.951l24.65543,23.7093l-40.50534,38.951z" />
+										<path class="on" id="svg_1" fill="#ffffff" d="m593.97965,428.11583l-66.47625,67.74963l66.47625,67.74963l26.95303,-27.46932c3.62526,-3.93566 7.99922,-4.81918 13.12187,-2.69071c4.88622,2.16863 7.28993,5.90349 7.28993,11.28491l0,85.50027c0,3.29311 -1.18215,6.18461 -3.54645,8.55404c-2.3643,2.40959 -5.20146,3.61438 -8.39327,3.61438l-83.93267,0c-5.24087,0 -8.94494,-2.53007 -11.07281,-7.63037c-2.12787,-4.97982 -1.26096,-9.35724 2.64014,-13.17242l26.95303,-27.46932l-66.43685,-67.74963l-66.47625,67.74963l26.95303,27.46932c3.86169,3.81518 4.7286,8.15244 2.64014,13.17242c-2.12787,5.1003 -5.79254,7.63037 -11.07281,7.63037l-83.85386,0c-3.23121,0 -6.06837,-1.20479 -8.39327,-3.61438c-2.3643,-2.40959 -3.54645,-5.3011 -3.54645,-8.55404l0,-85.46011c0,-5.34126 2.48252,-9.11628 7.48695,-11.28491c4.88622,-2.16863 9.18137,-1.28511 12.92484,2.69071l26.95303,27.46932l66.43685,-67.78979l-66.51566,-67.74963l-26.95303,27.46932c-2.3643,2.40959 -5.20146,3.61438 -8.39327,3.61438c-1.49739,0 -2.99478,-0.32128 -4.49217,-0.96384c-5.00444,-2.16863 -7.48695,-5.90349 -7.48695,-11.28491l0,-85.41995c0,-3.29311 1.18215,-6.18461 3.54645,-8.55404c2.3643,-2.40959 5.16206,-3.61438 8.39327,-3.61438l83.89327,0c5.24087,0 8.94494,2.53007 11.07281,7.63037c2.12787,4.97982 1.26096,9.35724 -2.64014,13.17242l-26.95303,27.46932l66.47625,67.70947l66.47625,-67.74963l-26.95303,-27.46932c-3.86169,-3.81518 -4.76801,-8.15244 -2.64014,-13.17242c2.12787,-5.1003 5.79254,-7.63037 11.07281,-7.63037l83.89327,0c3.23121,0 6.06837,1.20479 8.39327,3.61438c2.3643,2.40959 3.54645,5.3011 3.54645,8.55404l0,85.50027c0,5.34126 -2.44311,9.11628 -7.28993,11.28491c-1.61561,0.64256 -3.19181,0.96384 -4.6892,0.96384c-3.23121,0 -6.06837,-1.20479 -8.39327,-3.61438l-26.99243,-27.50948z" />
+
+									</svg>
+
+									<svg v-if="item.videoId == 'local'" @click="toggleCamera(item.videoId)" xmlns="http://www.w3.org/2000/svg" viewbox="-10 -10 68 68" :class="open.video?'on':'off'">
+										<circle cx="24" cy="24" r="34">
+											<title>Mute video</title>
+										</circle>
+										<path class="off" transform="scale(0.6), translate(17,16)" d="M40 8H15.64l8 8H28v4.36l1.13 1.13L36 16v12.36l7.97 7.97L44 36V12c0-2.21-1.79-4-4-4zM4.55 2L2 4.55l4.01 4.01C4.81 9.24 4 10.52 4 12v24c0 2.21 1.79 4 4 4h29.45l4 4L44 41.46 4.55 2zM12 16h1.45L28 30.55V32H12V16z" fill="white" />
+										<path class="on" transform="scale(0.6), translate(17,16)" d="M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zm-4 24l-8-6.4V32H12V16h16v6.4l8-6.4v16z" fill="white" />
+									</svg>
+									<svg v-if="item.videoId == 'local'" @click="toggleMic(item.videoId)" xmlns="http://www.w3.org/2000/svg" viewbox="-10 -10 68 68" :class="open.audio?'on':'off'">
+										<title>title</title>
+										<circle cx="24" cy="24" r="34">
+											<title>Mute audio</title>
+										</circle>
+										<path class="off" transform="scale(0.6), translate(17,18)" d="M38 22h-3.4c0 1.49-.31 2.87-.87 4.1l2.46 2.46C37.33 26.61 38 24.38 38 22zm-8.03.33c0-.11.03-.22.03-.33V10c0-3.32-2.69-6-6-6s-6 2.68-6 6v.37l11.97 11.96zM8.55 6L6 8.55l12.02 12.02v1.44c0 3.31 2.67 6 5.98 6 .45 0 .88-.06 1.3-.15l3.32 3.32c-1.43.66-3 1.03-4.62 1.03-5.52 0-10.6-4.2-10.6-10.2H10c0 6.83 5.44 12.47 12 13.44V42h4v-6.56c1.81-.27 3.53-.9 5.08-1.81L39.45 42 42 39.46 8.55 6z" fill="white" />
+										<path class="on" transform="scale(0.6), translate(17,18)" d="M24 28c3.31 0 5.98-2.69 5.98-6L30 10c0-3.32-2.68-6-6-6-3.31 0-6 2.68-6 6v12c0 3.31 2.69 6 6 6zm10.6-6c0 6-5.07 10.2-10.6 10.2-5.52 0-10.6-4.2-10.6-10.2H10c0 6.83 5.44 12.47 12 13.44V42h4v-6.56c6.56-.97 12-6.61 12-13.44h-3.4z" fill="white" />
+									</svg>
+								</div>
+								<div :id="+'_extinfo'" class="extinfo">
+									<span class="box"></span>
+									<br>{{ item.videoId }}
+									<br>{{ item.videoId }}
+								</div>
+							</div>
+							<div v-for="item in [0,1,2,3,4,5]" v-if="item >= video_list.length" class="flex-item boxItem">
+								<video class="video-item" autoplay="autoplay" data-videotype="remote"></video>
+
+							</div>
+				</div>
+				<!-- <div class="box_1"> 
 					<video class="vedioBox" id="creator" autoplay="autoplay" data-videotype="remote"></video> 
 				</div>
 				<div class="box_1">
 					<video class="vedioBox" id="participant" autoplay="autoplay" data-videotype="remote"></video> 
-				</div>
+				</div> -->
 			</el-col> 
-			<el-col :span="11" style="margin-left: 5vw">
+			<el-col :span="7" style="margin-left: 5vw">
 				<div>
-					<el-row class="infoList">
-						<p>房间信息：</p>
+					<!-- <el-row class="infoList">
+						<p>房间信息：</p> 
 						<el-col :span="12">
 							房间号：<span>{{roomInfo.number}}</span>
 						</el-col>
@@ -63,7 +107,7 @@
 							接访时间：<span id="mytime">{{roomInfo.startTime}}</span>
 						</el-col> 
 					</el-row>
-					 <el-divider class="divider"></el-divider>
+					 <el-divider class="divider"></el-divider> -->
 				     <el-row class="infoList">
 						<p>上访人员信息：</p>
 						<el-col :span="6">
@@ -191,7 +235,7 @@
 		    },
 			roomInfo:{
 				
-			}
+			}, 
 
     ///////////////////////////////////////////////////////////////////////  
 			}
@@ -199,6 +243,7 @@
 		created(){   
 			//接访者
 	 	if(this.pageToData.pageToRole!='petitionJoin'&&this.pageToData.pageToRole!='petitionCreate'){
+	 		console.log("接访者加入...");
 			this.roomListFlag=true;
 			this.isRole=true;
 			//获取自身token 
@@ -299,8 +344,8 @@
 	  this.role = 'LiveMaster';//主播
 		 //输入框中输入的值
 		 //self.roomnum ="信访房间001";
-	  self.roomListFlag=false;
-	  self.renderRoom();
+	  self.roomListFlag=false; 
+	  //self.renderRoom();
 	  self.initWebRTC(this.pageToData.departId,"petitionCreate");
 
         },
@@ -310,19 +355,21 @@
 		      this.chatList = []; 
 
 		    },
-       //初始化websocket
+       
        initWebRTC: function(did,roleType) {
          //name=ILiveSDK.loginInfo.identifier; 
 		      var message = {
 		    			id : 'joinRoom',
 		    			name : name,//用户名
 		    			room : this.roomnum,//房间号
-		    			type : roleType,
+		    			type : roleType,//petitionCreate petitionJoin interviewJoin
 		    			departId : did,
+		    			sysUserId:window.localStorage.getItem("userId"),
+		    			idCardList:this.$route.params.idCardList
 		    		}
 		      this.sendMessage(message);
        },
-
+    //初始化websocket
        initWebsocket(){
     var app = this;
             
@@ -353,7 +400,9 @@
 		console.info('Received message: ' + message.data);
 
 		switch (parsedMessage.id) {
-			case 'existingParticipants':
+			case 'existingParticipants': 
+			    console.log("existingParticipants成员:");
+			    console.log(parsedMessage);
 				app.onExistingParticipants(parsedMessage);
 				break;
 			case 'newParticipantArrived':
@@ -412,9 +461,11 @@
 
 	   //如果是上访者->创建房间
 	 	if(app.pageToData.pageToRole=='petitionCreate'){ 
+	 		console.log("上访者创建房间")
 			app.createRoom();
 			//上访者异常退出加入房间
          }else if(app.pageToData.pageToRole=='petitionJoin'){
+         	console.log("上访者异常退出加入房间")
             app.petitionJoinRoom();
          }else{//如果是接访者->获取房间列表 
          	 app.getRoomList();	
@@ -480,7 +531,7 @@
 	};
 	//	console.log(name + " registered in room " + room);
 
-	var participant = new app.Participant(name);
+	var participant = new app.Participant(name,app);
 
 	participants[name] = participant;
 
@@ -522,7 +573,7 @@ onNewParticipant(request) {
 },
 receiveVideo(sender) {
 	var app = this;
-	var participant = new app.Participant(sender);
+	var participant = new app.Participant(sender,app);
 	participants[sender] = participant;
 
 	setTimeout(function() {
@@ -680,25 +731,27 @@ getRoomList: function(opts, succ, err) {
         }
         });
   },
-Participant(senderName) {
+Participant(senderName,obj) {
+	console.log("创建成员姓名:"+senderName);
 	this.name = name; 
-	var rtcPeer;
-
-
-	var videoId = '';
+	var rtcPeer; 
 	var first = false;
-
-	if (senderName == name) {
-		videoId = 'creator';
-	}else{
-        videoId = 'participant';
+    var videoId = senderName + '-video'; 
+    
+	if(name == senderName) {
+	videoId = 'local';
 	}
+	// if (senderName == name) {
+	// 	videoId = 'creator';
+	// }else{
+   //        videoId = 'participant';
+	// }
 
-	if (video_list.length == 0) {
+	if (obj.video_list.length == 0) {
 		first = true;
 	}
 
-	video_list.push({
+	obj.video_list.push({
 		videoId: videoId,
 		openId: videoId,
 		first: first
@@ -764,11 +817,146 @@ Participant(senderName) {
 		//this.onRemoteStreamRemove(this.name);
 	};
 },
+
+			toggleCamera: function(videoId) {
+
+				var video = document.getElementById(videoId);
+
+				if(this.open.video) {
+
+					//        video.srcObject.getTracks().forEach(t => t.enabled = !t.enabled);
+					video.srcObject.getVideoTracks().forEach(t => t.enabled = !t.enabled);
+				} else {
+					video.srcObject.getVideoTracks().forEach(t => t.enabled = !t.enabled);
+				}
+
+				this.open.video = !this.open.video
+			},
+			toggleFullScreen: function(videoId) {
+
+				var isFullscreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+				if(isFullscreen) {
+
+					//退出全屏,三目运算符
+					document.exitFullscreen ? document.exitFullscreen() :
+						document.mozCancelFullScreen ? document.mozCancelFullScreen() :
+						document.webkitExitFullscreen ? document.webkitExitFullscreen() : '';
+
+				} else {
+					//          var el = document.getElementById("local").parentNode;   
+					var el = document.getElementById(videoId);
+					//进入全屏,多重短路表达式
+					(el.requestFullscreen && el.requestFullscreen()) ||
+					(el.mozRequestFullScreen && el.mozRequestFullScreen()) ||
+					(el.webkitRequestFullscreen && el.webkitRequestFullscreen()) || (el.msRequestFullscreen && el.msRequestFullscreen());
+
+				}
+			},
+			toggleMic: function(videoId) {
+
+				console.log(this.videoId);
+
+				var video = document.getElementById(videoId);
+
+				if(this.open.audio) {
+					//        document.getElementById(videoId).muted = true;
+					video.srcObject.getAudioTracks().forEach(t => t.enabled = !t.enabled);
+				} else {
+					//        document.getElementById(videoId).muted = false;
+					video.srcObject.getAudioTracks().forEach(t => t.enabled = !t.enabled);
+				}
+
+				this.open.audio = !this.open.audio
+			},
 		}
 	}
 </script>
 
 <style> 
+
+@import '../../assets/css/common.css';
+/*覆盖*/
+	.container {
+    position: static;
+    left: 0;
+    top: 60px;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+   }
+    /**/
+	.room {
+		position: relative;
+		bottom: 20px;
+	}
+	
+	.video_row>.el-col {
+		padding: 10px;
+	}
+	
+	.sidebar {
+		background: #fff;
+		height: 100vh;
+		width: 100%;
+	}
+	
+	.chat_box,
+	.vedio_box,
+	.user_box {
+		height: 100vh;
+		border: 1px solid #EBEEF5;
+		background-color: #FFF;
+		color: #303133;
+		-webkit-transition: .3s;
+		transition: .3s;
+		box-shadow: 0 2px 12px 0 rgba(0, 0, 0, .1);
+	}
+	
+	.chatting-area {
+		position: static;
+		top: 0;
+		bottom: 40px;
+		width: auto;
+		padding: 10px;
+		overflow-y: auto;
+		box-sizing: border-box;
+		height: 70vh;
+	}
+	
+	.typing-area {
+		position: static;
+		display: table;
+		width: 100%;
+		height: 50px;
+		left: 0;
+		bottom: 0;
+		padding: 10px;
+		height: 30vh;
+	}
+	
+	.typing-area textarea {
+		width: 100%;
+		height: 70%;
+	}
+	
+	.typing-area .el-button {
+		float: right;
+	}
+	
+	.vedioCard {
+		height: 100vh;
+	}
+	
+	.fixed .video-item {
+		background: #333333;
+	}
+	
+	.vedio_btn {
+		padding: 10px;
+		margin: auto;
+		border: none;
+	}
+	/**/
  .letterCard{
  	margin-top: 30px; 
  }
@@ -820,6 +1008,23 @@ Participant(senderName) {
 	.vedioBox{
 		width: 100%;
 		height: 100%;
+	}
+
+	.boxFlex{ 
+		box-sizing: border-box;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+		align-content: flex-start;
+		height: 100vh; 
+	}
+	.boxItem{
+		height: 30vh;
+		width: calc(50% - 2px); 
+		box-sizing: border-box;
+		margin-bottom: 5px;
+		background-color: #ddd;
+		border-radius: 10px;
 	}
 </style>
 

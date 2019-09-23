@@ -214,7 +214,7 @@
 					var  reg  =  /[\u4e00-\u9fa5]/g;          
 					return  strValue.match(reg).join("");      
 				}      
-				else           return  "";  
+				else   return  "";  
 			},
 			 
 			getUserToken() {
@@ -363,6 +363,7 @@
 
 			//对话列表清空
 			renderRoom() {
+				console.log("每进来一个人清空一次对话列表");
 				this.chatList = [];
 			},
 			//初始化webRtc websocket发送消息
@@ -425,7 +426,9 @@
 				participants[name] = participant;
 
 				setTimeout(function() {
+					//当前成员对应的视频窗口
 					var video = participant.getVideoElement();
+					//加入用户组
 					app.userList.push({
 						id: name,
 						role: 1
@@ -436,15 +439,16 @@
 						mediaConstraints: constraints,
 						onicecandidate: participant.onIceCandidate.bind(participant)
 					}
-
+                      
 					participant.rtcPeer = new kurentoUtils.WebRtcPeer.WebRtcPeerSendonly(options,
 						function(error) {
 							if(error) {
 								return console.error(error);
 							}
+
 							this.generateOffer(participant.offerToReceiveVideo.bind(participant));
 						});
-
+                    //每个成员都调用一次receiveVideo 以前的成员接收新成员的视频流
 					msg.data.forEach(app.receiveVideo);
 
 				}, 5);
@@ -454,6 +458,7 @@
 			},
 			receiveVideo(sender) {
 				var app = this;
+				//老成员一起加进去
 				var participant = new app.Participant(sender, app);
 				participants[sender] = participant;
 				setTimeout(function() {
@@ -629,14 +634,15 @@
 				var rtcPeer;
 				var videoId = senderName + '-video';
 				var first = false;
-
+                //如果当前登录人是该新成员
 				if(name == senderName) {
 					videoId = 'local';
 				}
+				//排第一个
 				if(obj.video_list.length == 0) {
 					first = true;
 				}
-
+                //增加video_list长度
 				obj.video_list.push({
 					videoId: videoId,
 					openId: videoId,
@@ -656,7 +662,7 @@
 
 					return videoObj;
 				}
-
+                //callback(null, localDescription.sdp, self.processAnswer.bind(self));
 				this.offerToReceiveVideo = function(error, offerSdp, wp) {
 					if(error) return console.error("sdp offer error")
 					console.log('Invoking SDP offer callback function');

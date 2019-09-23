@@ -100,6 +100,8 @@
         sex:'',
         //所有信访者的信息
         petitionArr:[],
+        //所有上访者的身份证号码集合
+        idCardList:[],
         userinfoExtend: {
           idCard:'',
           userName: '',
@@ -189,6 +191,7 @@
               params:{
                roleType:"petitionCreate",
                departId:_this.countryId, 
+               idCardList:_this.idCardList
               }
            });
         }else{
@@ -275,6 +278,7 @@
       this.userinfoExtend.picturePath = arr[12];
       //
       this.petitionArr.push(this.userinfoExtend);
+      this.idCardList.push(this.userinfoExtend.idCard);
       },
       dateFormat(date){
        String.prototype.splice = function(start, newStr) {

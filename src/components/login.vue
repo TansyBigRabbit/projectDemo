@@ -103,14 +103,17 @@
 		created(){
         //window.localStorage.clear();
         //判断是否通过注销而来
-        if(this.$route.params.isLogout){
-        	debugger
+        if(this.$route.params.isLogout){ 
         	console.log("通过注销进入登录页面");
-        }else{
-         if(window.localStorage.getItem("check")){
+        }else{ 
+         if(window.localStorage.getItem("check")=="true"){
+
          	console.log("自动登录");
+         	this.userName = window.localStorage.getItem("account");
+         	this.password = window.localStorage.getItem("password");
+         	this.check = true;
             this.login("auto");
-         }
+         } 
         }
 		},
 		methods: {

@@ -345,7 +345,7 @@
              _this.$store.state.login=false;
              _this.$router.push({
               name:'login',
-              param:{
+              params:{
                 isLogout:true
               }
              })
