@@ -143,9 +143,9 @@
 					  v-model="submitConInfo.content"
 					  style="margin:30px 0" >
 					</el-input>
-					<div style=" width:80%;margin: 0 auto">
-					 <el-button type="primary" @click="submitContent(1)" style="width: 150px">提交</el-button>
-					 <el-button type="primary" @click="quitRoom" style="width: 150px">结束上访</el-button>
+					<div style=" width:80%;margin: 0 auto;display: flex">
+					 <el-button type="primary" @click="submitContent(1)" style="flex: 1">提交</el-button>
+					 <el-button type="primary" @click="quitRoom" style="flex: 1">结束上访</el-button>
 				    </div>
 				</div> 
 			</el-col>
