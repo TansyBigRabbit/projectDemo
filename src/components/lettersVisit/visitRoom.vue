@@ -21,14 +21,14 @@
 			      <div style="padding: 14px;">
 			        <span>{{item.info.roomnum}}</span>
 			        <div class="bottom clearfix">
-			          <el-button v-if='item.info.memsize<6' type="text" @click="joinRoom(item.info.roomnum)">加入房间</el-button>
+			          <el-button v-if='item.info.memsize<6' type="text" @click="joinRoom(item)">加入房间</el-button>
 			          <span v-else>房间满员，无法加入</span>
 			        </div>
 			      </div>
 			    </el-card>	
 				</el-col>  
-				<el-card v-else class="letterCard">
-					暂无信访房间!
+				<el-card v-if="!hasRoom||roomList.length==0" class="letterCard">
+					{{roomTextInfo}}
 				</el-card>  
 			</el-row>
 		</div>
@@ -123,7 +123,7 @@
 					 <el-divider class="divider"></el-divider>
 					<el-row class="infoList">
 						<p class="userTitle">接访访人员信息</p>
-						<ul class="interviewList">
+						<ul v-if="interviewList.length>0" >
 						 <li style="display: flex;justify-content: space-between;" v-for="item in interviewList">
 						 	<span style="flex: 2">姓名：{{item.userName}}</span>
 						 	<span style="flex: 2">工号：{{item.userId}}</span>
@@ -231,15 +231,11 @@
          
 		    },
 		    //接访者列表
-		    interviewList:[
-		    {
-             userName:"1111",
-             userId:123
-		    },
-		    ]
-		     
-            
-    ///////////////////////////////////////////////////////////////////////  
+		    interviewList:[ 
+		    ],
+		    //
+		    roomTextInfo:"当前没有可接访的房间",
+		    hasRoom:true
 			}
 		},
 		created(){   
@@ -332,17 +328,23 @@
         });
           
         }, 
-    joinRoom: function(roomNum) { 
+    joinRoom: function(obj) { 
       var app = this;
       this.role = 'LiveGuest';
       this.entryType = 'join';
-      this.roomnum = roomNum;
+      this.roomnum = obj.info.roomnum;
       //
-      this.submitConInfo.roomId = roomNum;
+      this.submitConInfo.roomId = obj.info.roomnum;
       this.submitConInfo.idCard = loginInfoMain.idCard;
       //
       this.roomListFlag=false;
-      this.renderRoom();
+      //this.renderRoom();
+      this.interviewList.push({
+      	userName:JSON.parse(window.localStorage.getItem("userInfo")).userName,
+      	userId:window.localStorage.getItem("userId"),
+      })
+      //查询上访者信息
+	  this.getPetitionInfo(obj.petitionIdCard);
       this.initWebRTC(loginInfoMain.depart.departId,"interviewJoin"); 
       //开启计时器，开始定时任务
       //this.time_fun();
@@ -425,6 +427,10 @@
 			    console.log(parsedMessage);
 				app.onExistingParticipants(parsedMessage);
 				break;
+			//返回的接访者的信息
+			case 'interviewJoinUserInfo':
+			    app.interviewJoinUserInfo(parsedMessage);
+			//
 			case 'newParticipantArrived':
 				app.onNewParticipant(parsedMessage);
 				break;
@@ -494,7 +500,6 @@
        } 
 
 			ws.onclose = function(e) {
-				console.log(e);
 		//app.$root.$refs.toastr.e("连接已中断，请刷新页面！");
 			app.$message("视频连接已中断...");
 			app.chatList.push({
@@ -502,8 +507,7 @@
 				content: "连接已中断，请刷新页面",
 				isSelfSend: 0,
 				isSystem: 1
-			});
-		console.log(app.chatList[0].who)
+			}); 
 	};
       
        },
@@ -515,6 +519,14 @@
 	console.log('Senging message: ' + jsonMessage);
 	ws.send(jsonMessage);
 },
+//返回的接访者信息
+	interviewJoinUserInfo(data){
+    console.log("返回的接访者信息");
+    console.log(data);
+    if(data.interviewJoinUserInfoList.length>0){
+      this.interviewList = this.interviewList.concat(data.interviewJoinUserInfoList);
+    }
+	},
        onExistingParticipants(msg) {
     var app = this;
 	var defaultSetting = {
@@ -589,7 +601,9 @@
 	}, 5);
 },
 onNewParticipant(request) {
+	this.$message.info(request.name+"进入房间");
 	this.receiveVideo(request.name);
+
 },
 receiveVideo(sender) {
 	var app = this;
@@ -599,8 +613,7 @@ receiveVideo(sender) {
 	setTimeout(function() {
 
 		var video = participant.getVideoElement();
-		console.log("///////////////////6");
-		console.log(video);
+		console.log("///////////////////6"); 
 
 		var options = {
 			remoteVideo: video,
@@ -629,11 +642,12 @@ receiveVideo(sender) {
 
 
 
-	}, 5);
+	}, 5); 
 
 },
 onParticipantLeft(request) {
-	console.log('Participant ' + request.name + ' left');
+	console.log('成员 ' + request.name + ' 离开');
+	this.$message.info(request.name+"离开房间");
 	var participant = participants[request.name];
 	participant.dispose();
 	delete participants[request.name];
@@ -646,6 +660,11 @@ receiveVideoResponse(result) {
 
 tipRsp(data) {
 	var app = this;
+	console.log("tipRsp");
+	console.log(data);
+	if(data.errorCode==500){ 
+		this.hasRoom = false;
+	}
 	/*if (data && data.errorCode === 0) {
 		app.$root.$refs.toastr.s(data.errorInfo);
 	} else {
@@ -664,6 +683,7 @@ getRoomListRsp(data) {
 		return item.info;
 	}) || [];*/
 	app.roomList = data.data.rooms;
+	this.hasRoom = true
 
 },
 getRoomUserRsp(data) {
@@ -672,8 +692,7 @@ getRoomUserRsp(data) {
 },
 chatRsp(data) {
 	var app = this
-	var msgData = data.data;
-	console.log(msgData);
+	var msgData = data.data; 
 
 
 	app.chatList.push({
@@ -682,12 +701,7 @@ chatRsp(data) {
 		isSelfSend: msgData.fromUser == app.loginInfo.identifier ? 1 : 0,
 		isSystem: msgData.isSystem != null
 	});
-
-
-
-	//$(".chatting-area").scrollTop(100000);
-
-
+  
 },
 viewerResponse(message) {
 	if (message.response != 'accepted') {
@@ -797,7 +811,7 @@ Participant(senderName,obj) {
 
 	this.offerToReceiveVideo = function(error, offerSdp, wp) {
 		if (error) return console.error("sdp offer error")
-		console.log('Invoking SDP offer callback function');
+		//console.log('Invoking SDP offer callback function');
 		var msg = {
 			id: "receiveVideoFrom",
 			sender: senderName,
@@ -808,7 +822,7 @@ Participant(senderName,obj) {
 
 
 	this.onIceCandidate = function(candidate, wp) {
-		console.log("Local candidate" + JSON.stringify(candidate));
+		//console.log("Local candidate" + JSON.stringify(candidate));
 
 		var message = {
 			id: 'onIceCandidateRoom',
@@ -916,6 +930,9 @@ Participant(senderName,obj) {
     right: 0;
     bottom: 0;
     background-color: #fff;
+   }
+   .video-item{
+   	max-height: none;
    }
     /**/
 	.room {
