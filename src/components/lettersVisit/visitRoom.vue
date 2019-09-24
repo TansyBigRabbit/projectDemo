@@ -248,7 +248,7 @@
 			var _this = this;
 			this.pageToData.pageToRole="petition";
 			console.log("获取接访者的token并且初始化websocket......");
-            this.getToken(loginInfoMain.idCard); 
+            this.getToken(window.localStorage.getItem("idCard")); 
 
         //上访者异常退出加入房间
         /*}else if(this.pageToData.pageToRole=='petitionJoin'){
@@ -335,14 +335,14 @@
       this.roomnum = obj.info.roomnum;
       //
       this.submitConInfo.roomId = obj.info.roomnum;
-      this.submitConInfo.idCard = loginInfoMain.idCard;
+      this.submitConInfo.idCard = window.localStorage.getItem("idCard");
       //
       this.roomListFlag=false;
       //this.renderRoom();
-      this.interviewList.push({
-      	userName:JSON.parse(window.localStorage.getItem("userInfo")).userName,
-      	userId:window.localStorage.getItem("userId"),
-      })
+      // this.interviewList.push({
+      // 	userName:JSON.parse(window.localStorage.getItem("userInfo")).userName,
+      // 	userId:window.localStorage.getItem("userId"),
+      // })
       //查询上访者信息
 	  this.getPetitionInfo(obj.petitionIdCard);
       this.initWebRTC(loginInfoMain.depart.departId,"interviewJoin"); 
@@ -524,7 +524,7 @@
     console.log("返回的接访者信息");
     console.log(data);
     if(data.interviewJoinUserInfoList.length>0){
-      this.interviewList = this.interviewList.concat(data.interviewJoinUserInfoList);
+      this.interviewList = data.interviewJoinUserInfoList;
     }
 	},
        onExistingParticipants(msg) {
