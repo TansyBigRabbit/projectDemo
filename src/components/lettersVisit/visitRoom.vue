@@ -109,26 +109,27 @@
 					</el-row>
 					 <el-divider class="divider"></el-divider> -->
 				     <el-row class="infoList">
-						<p>上访人员信息：</p>
-						<el-col :span="6">
-							姓名：<span>{{interview.name}}</span>
-						</el-col>
-						<el-col :span="6">
-							性别：<span>{{interview.sex}}</span>
-						</el-col>
-						<el-col :span="12">
-							身份证号：<span>{{interview.idNum}}</span>
-						</el-col>
+						<p class="userTitle">上访人员信息</p>
+						<div style="display: flex;">
+							<div style="flex: 1">
+							<img :src="petition.picturePath">	
+							</div>
+							<div style="flex: 2;display: flex;flex-direction: column;justify-content: space-around;">
+								<span>姓名：{{petition.userName}}</span>
+								<span>身份证号：{{petition.idCard}}</span>
+							</div>
+						</div>
 					</el-row>
 					 <el-divider class="divider"></el-divider>
 					<el-row class="infoList">
-						<p>接访访人员信息：</p>
-						<el-col :span="12">
-							姓名：<span>{{petition.name}}</span>
-						</el-col>
-						<el-col :span="12">
-							工号：<span>{{petition.workNum}}</span>
-						</el-col>
+						<p class="userTitle">接访访人员信息</p>
+						<ul class="interviewList">
+						 <li style="display: flex;justify-content: space-between;" v-for="item in interviewList">
+						 	<span style="flex: 2">姓名：{{item.userName}}</span>
+						 	<span style="flex: 2">工号：{{item.userId}}</span>
+						 	<span style="flex: 1"></span>
+						 </li>
+						</ul>
 						<!-- <el-col :span="12">
 							身份证号：<span>510723199401180043</span>
 						</el-col> -->
@@ -225,18 +226,19 @@
 		    	pageToRoom:this.$route.params.roomNum,
 		    	departId:this.$route.params.departId,
 		    },
-		    //接访者信息
+		    //上访者
 		    petition:{
-
+         
 		    },
-		    //上访者信息
-		    interview:{
-
+		    //接访者列表
+		    interviewList:[
+		    {
+             userName:"1111",
+             userId:123
 		    },
-			roomInfo:{
-				
-			}, 
-
+		    ]
+		     
+            
     ///////////////////////////////////////////////////////////////////////  
 			}
 		},
@@ -289,6 +291,23 @@
                 document.getElementById("mytime").innerText = app.two_char(h) + ":" + app.two_char(m) + ":" + app.two_char(s);
             }, 1000);
         },
+        //0924 查询上访者基本信息（照片 部门 姓名）
+        getPetitionInfo(idNum){
+        var _this = this;
+        _this.$http.get(_this.$ports.userinfoextend.list,{
+        	pageNum:1,
+        	size:5,
+        	idCard:idNum
+        }).then(res=>{
+        	console.log("查询上访者的基本信息");
+        	if(res.data.code==0){
+            console.log(res.data.data);
+            _this.petition = res.data.data[0];
+        	}else{
+        	_this.$message.error("上访者信息查询失败！")
+        	}
+        })
+        },
         //提交记录内容
         submitContent(p){
         var _this = this;
@@ -334,19 +353,20 @@
     petitionJoinRoom(){
       this.roomnum = this.pageToData.pageToRoom; 
       this.roomListFlag=false;
-      this.renderRoom();
+      //this.renderRoom();
+      //查询上访者信息
+	  this.getPetitionInfo(this.$route.params.idCardList[0]);
       this.initWebRTC(this.pageToData.departId,"petitionJoin"); 
     },
-    createRoom(){
-      var self = this;
+    createRoom(){ 
       this.createRoomModel = false
 	  this.entryType = 'create';//进入类型 默认值是join
-	  this.role = 'LiveMaster';//主播
-		 //输入框中输入的值
-		 //self.roomnum ="信访房间001";
-	  self.roomListFlag=false; 
+	  this.role = 'LiveMaster';//主播 
+	  this.roomListFlag=false; 
 	  //self.renderRoom();
-	  self.initWebRTC(this.pageToData.departId,"petitionCreate");
+	  //查询上访者信息
+	  this.getPetitionInfo(this.$route.params.idCardList[0]);
+	  this.initWebRTC(this.pageToData.departId,"petitionCreate");
 
         },
        //初始化会议界面
@@ -868,6 +888,19 @@ Participant(senderName,obj) {
 
 				this.open.audio = !this.open.audio
 			},
+			unshiftThis: function(event) {
+				var videoId = $(event.currentTarget).data("id");
+				var video_list = this.video_list;
+				$.each(video_list, function(item) {
+					if(item.first) {
+						item.first = false;
+					}
+					if(item.videoId == videoId) {
+						item.first = true;
+					}
+				});
+				this.video_list = video_list;
+			},
 		}
 	}
 </script>
@@ -1025,6 +1058,12 @@ Participant(senderName,obj) {
 		margin-bottom: 5px;
 		background-color: #ddd;
 		border-radius: 10px;
+	}
+	.userTitle{
+		font-size: 18px;
+		padding: 15px 0;
+		color: #1890F5;
+		font-weight: bold;
 	}
 </style>
 

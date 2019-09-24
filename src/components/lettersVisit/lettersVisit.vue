@@ -310,14 +310,17 @@
                 //全局变量存储
                 ILiveSDK.loginInfo.token = json.data.data.token;
                 name =  json.data.data.userName; 
-
+                //异常idnum存储进idcardlist
+                _this.idCardList.push(_this.userinfoExtend.idCard)
                 _this.$router.push({
                 name:'VisitRoom', 
                 params:{
                 roleType:"petitionJoin",
                 roomNum:_this.roomInfo.roomName, 
-                departId:_this.roomInfo.interviewDepartId,}});
-
+                departId:_this.roomInfo.interviewDepartId,
+                idCardList:_this.idCardList
+                }});
+                
                 }else{
                 _this.$message.error(json.data.msg);
                 }

@@ -57,7 +57,8 @@ export default {
 	},
 	//身份证读卡信息
 	userinfoextend: {
-		insertList: hosturl + '/userinfoextend/insertList'
+		insertList: hosturl + '/userinfoextend/insertList',
+		list: hosturl + '/userinfoextend/queryListWithPage',
 	},
 
 	//userInfo:"/threeCentreProject/userinfoextend",
