@@ -348,7 +348,7 @@
       this.initWebRTC(loginInfoMain.depart.departId,"interviewJoin"); 
       //开启计时器，开始定时任务
       //this.time_fun();
-      app.myContent = window.setInterval(function () {
+      this.myContent = window.setInterval(function () {
                 app.submitContent();
             }, 60000);
     },
@@ -693,14 +693,19 @@ getRoomUserRsp(data) {
 chatRsp(data) {
 	var app = this
 	var msgData = data.data; 
-
-
-	app.chatList.push({
-		who: msgData.fromUser == app.loginInfo.identifier ? '我' : msgData.fromUser,
-		content: msgData.content,
-		isSelfSend: msgData.fromUser == app.loginInfo.identifier ? 1 : 0,
-		isSystem: msgData.isSystem != null
-	});
+	console.log("chatRsp!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    console.log(msgData)
+    if(msgData.id){
+    	if(msgData.id=="interviewJoinUserInfo"){
+    		this.interviewList = msgData.interviewJoinUserInfoList;
+    	}
+    }
+	// app.chatList.push({
+	// 	who: msgData.fromUser == app.loginInfo.identifier ? '我' : msgData.fromUser,
+	// 	content: msgData.content,
+	// 	isSelfSend: msgData.fromUser == app.loginInfo.identifier ? 1 : 0,
+	// 	isSystem: msgData.isSystem != null
+	// });
   
 },
 viewerResponse(message) {
@@ -730,9 +735,10 @@ getRoomList: function(opts, succ, err) {
   },
   //退出房间
   quitRoom:function(){
+  	console.log("关闭信访")
     var self = this;
-    clearInterval(this.myContent); 
-	self.roomListFlag=true;
+    window.clearInterval(this.myContent); 
+	//self.roomListFlag=true;
     sendMessage({
         id: 'leaveRoom',
         type:'petition',
@@ -740,7 +746,7 @@ getRoomList: function(opts, succ, err) {
     for (var key in participants) {
         participants[key].dispose();
       }
-
+   window.location.reload();
   },
   refreshPage(){
   this.$router.push({
@@ -1039,9 +1045,7 @@ Participant(senderName,obj) {
       clear: both
   }
     .container{
-    	padding-top:25px;
-    	overflow: hidden;
-    	height: 100vh;
+    	padding-top:25px; 
     }
     .container>div{
     	height: 80vh
