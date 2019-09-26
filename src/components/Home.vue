@@ -31,7 +31,7 @@
 
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
-<el-menu default-active="0-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
+<el-menu :default-active="$route.path"  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
   <el-submenu :index="''+index" v-for="(item,index) in submenuList">
     <template slot="title">
      <i class="el-icon-location"></i>

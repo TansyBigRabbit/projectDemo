@@ -145,18 +145,27 @@
 					</el-input>
 					<div style=" width:80%;margin: 0 auto;display: flex">
 					 <el-button type="primary" @click="submitContent(1)" style="flex: 1">提交</el-button>
-					 <el-button type="primary" @click="quitRoom" style="flex: 1">结束上访</el-button>
+					 <el-button type="primary" @click="showPetitionType" style="flex: 1">结束上访</el-button>
 				    </div>
 				</div> 
 			</el-col>
         </el-row>
         
        </div> 
+       <!-- 信访类型组件 -->
+       <petitionType :paramsObj="paramsObj" @chooseId="quitRoom($event)">
+       </petitionType>
    </div>
 </template>
 
 <script>
+	//引入子组件
+	import petitionType from '../childComponent/petitionType';
+
 	export default{
+		components:{
+        petitionType
+		},
 		data(){
 			return{ 
 			//默认页面是房间列表
@@ -235,7 +244,12 @@
 		    ],
 		    //
 		    roomTextInfo:"当前没有可接访的房间",
-		    hasRoom:true
+		    hasRoom:true,
+		    //传递给子组件的参数对象
+		    paramsObj:{
+		    	open:false,
+		    	showDialog:false
+		    }
 			}
 		},
 		created(){   
@@ -345,7 +359,7 @@
       // })
       //查询上访者信息
 	  this.getPetitionInfo(obj.petitionIdCard);
-      this.initWebRTC(loginInfoMain.depart.departId,"interviewJoin"); 
+      this.initWebRTC(JSON.parse(window.localStorage.getItem("userInfo")).departId,"interviewJoin"); 
       //开启计时器，开始定时任务
       //this.time_fun();
       this.myContent = window.setInterval(function () {
@@ -725,7 +739,7 @@ getRoomList: function(opts, succ, err) {
 
     this.sendMessage({
       "type": 'petition',
-      "departId":loginInfoMain.depart.departId,
+      "departId":JSON.parse(window.localStorage.getItem("userInfo")).departId,
       "token": ILiveSDK.loginInfo.token,
       "index": 0,
       "size": 30,
@@ -733,20 +747,27 @@ getRoomList: function(opts, succ, err) {
     });
 
   },
+  //激活组件
+  showPetitionType(){
+   this.paramsObj={open:true,showDialog:true}
+  },
   //退出房间
-  quitRoom:function(){
+  quitRoom:function(e){ 
+  	var self = this;
   	console.log("关闭信访")
-    var self = this;
-    window.clearInterval(this.myContent); 
+  	self.paramsObj={open:false,showDialog:false}
+    
+    window.clearInterval(self.myContent); 
 	//self.roomListFlag=true;
     sendMessage({
         id: 'leaveRoom',
-        type:'petition',
+        type:'interviewFinish',
+        petitionType:e
       });
     for (var key in participants) {
         participants[key].dispose();
       }
-   window.location.reload();
+   //window.location.reload();
   },
   refreshPage(){
   this.$router.push({

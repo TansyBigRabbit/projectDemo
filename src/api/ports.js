@@ -60,7 +60,10 @@ export default {
 		insertList: hosturl + '/userinfoextend/insertList',
 		list: hosturl + '/userinfoextend/queryListWithPage',
 	},
-
+    //信访类型
+	petitionType: {
+       list:hosturl+'/petitiontype/queryListWithNoPage'
+    },
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl
