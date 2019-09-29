@@ -32,7 +32,7 @@
 
 <el-col id="menu" :span="isCollapse?2:4"><el-aside class="overflow_y">
 <el-menu :default-active="$route.path"  class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-  <el-submenu :index="''+index" v-for="(item,index) in submenuList">
+<!--   <el-submenu :index="''+index" v-for="(item,index) in submenuList">
     <template slot="title">
      <i class="el-icon-location"></i>
      <span slot="title">{{item.name}}</span>
@@ -46,26 +46,20 @@
          <el-menu-item :index="''+index+'-'+''+index01+'-'+''+index02">{{item02.name}}</el-menu-item>
          </router-link>
     </el-submenu>
-  </el-submenu> 
-<!--  <el-submenu index="1">
+  </el-submenu>  -->
+ <el-submenu index="1">
   <template slot="title">
     <i class="el-icon-location"></i>
     <span slot="title">信访中心系统</span>
   </template>  
-         <router-link :to="'/home/lettersVisit'">
+         <router-link :to="'/home/StudyVideoList'">
          <el-menu-item index="1-1">开启信访</el-menu-item>
          </router-link>
-         <router-link :to="'/home/VisitRoom'">
-         <el-menu-item index="1-2">信访房间列表</el-menu-item>
-         </router-link>
-         <router-link :to="'/home/VisitRecord'">
-         <el-menu-item index="1-3">信访记录</el-menu-item>
-         </router-link>
-         <router-link :to="'/home/LettersStatic'">
-         <el-menu-item index="1-4">信访统计</el-menu-item>
-         </router-link>
+         
+         
+         
           
-</el-submenu>  -->
+</el-submenu> 
 
 <!-- <el-submenu index="2"> 
    <template slot="title">

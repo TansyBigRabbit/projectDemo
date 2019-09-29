@@ -29,7 +29,7 @@
 							</el-col>
 						</el-row>
 					</el-col>
-					<el-col :span="12" style="padding-top: 10%;padding-left: 6%;">
+					<el-col :span="12" style="padding-top: 5%;padding-left: 6%;">
 						<div style="line-height:60px;padding-top: 30px; width: 90%;">
 							<div>
 								<el-row>

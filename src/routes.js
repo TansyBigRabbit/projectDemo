@@ -17,6 +17,9 @@ import MyCon from './components/DJcenter/conference/myCon'
 import ActivityList from './components/DJcenter/activity/activityList'
 import ActivityManage from './components/DJcenter/activity/activityManage'
 //面谈
+//综治中心
+//学宣
+import StudyVideoList from './components/ZZcenter/studySys/studyVideoList'
 //用户管理
 import User from './components/userManage/user'
 import Role from './components/userManage/role'
@@ -88,6 +91,12 @@ export const routes = [{
 			path: '/home/ActivityManage',
 			name: 'ActivityManage',
 			component: ActivityManage,
+		},
+		//综治中心
+		{
+			path: '/home/StudyVideoList',
+			name: 'StudyVideoList',
+			component: StudyVideoList,
 		},
 		//用户管理
 		{
