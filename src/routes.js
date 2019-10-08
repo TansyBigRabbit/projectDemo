@@ -20,6 +20,7 @@ import ActivityManage from './components/DJcenter/activity/activityManage'
 //综治中心
 //学宣
 import StudyVideoList from './components/ZZcenter/studySys/studyVideoList'
+import StudyRoomList from './components/ZZcenter/studySys/StudyRoomList'
 //用户管理
 import User from './components/userManage/user'
 import Role from './components/userManage/role'
@@ -93,10 +94,15 @@ export const routes = [{
 			component: ActivityManage,
 		},
 		//综治中心
+		//学宣
 		{
 			path: '/home/StudyVideoList',
 			name: 'StudyVideoList',
 			component: StudyVideoList,
+		},{
+			path: '/home/StudyRoomList',
+			name: 'StudyRoomList',
+			component: StudyRoomList,
 		},
 		//用户管理
 		{

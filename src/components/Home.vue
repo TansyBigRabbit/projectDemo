@@ -53,7 +53,10 @@
     <span slot="title">信访中心系统</span>
   </template>  
          <router-link :to="'/home/StudyVideoList'">
-         <el-menu-item index="1-1">开启信访</el-menu-item>
+         <el-menu-item index="1-1">视频列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/StudyRoomList'">
+         <el-menu-item index="1-2">房间列表</el-menu-item>
          </router-link>
          
          
