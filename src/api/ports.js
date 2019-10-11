@@ -32,6 +32,14 @@ export default {
 	letters: {
 		list: hosturl + '/petitionroominfo/queryListWithPage',
 	},
+	//学宣视频接口
+	studyVideoList: {
+		list: hosturl + '/academicAdvocacyTotalController/queryListWithPage',
+		insert: hosturl + '/academicAdvocacyTotalController/insert',
+		delete: hosturl + '/academicAdvocacyTotalController/delete',
+		update: hosturl + '/academicAdvocacyTotalController/update',
+		findById: hosturl + '/academicAdvocacyTotalController/queryOne',
+	},
 	user: {
 		list: hosturl + '/userinfo/queryListWithPage',
 		insert: hosturl + '/userinfo/insert',
@@ -60,10 +68,10 @@ export default {
 		insertList: hosturl + '/userinfoextend/insertList',
 		list: hosturl + '/userinfoextend/queryListWithPage',
 	},
-    //信访类型
+	//信访类型
 	petitionType: {
-       list:hosturl+'/petitiontype/queryListWithNoPage'
-    },
+		list: hosturl + '/petitiontype/queryListWithNoPage'
+	},
 	//userInfo:"/threeCentreProject/userinfoextend",
 	//login: 'api/threeCentreProject/api/account/login',
 	hosturl: hosturl

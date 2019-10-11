@@ -1,5 +1,6 @@
+<!-- 学宣视频列表上传视频 -->
 <template>
-  <el-dialog title="params.videoItem.name" :visible.sync="editVideo" :before-close="closeDialog">
+  <el-dialog :title="videoName" :visible.sync="editVideo" :before-close="closeDialog">
   <el-form ref="form" :model="videoForm" label-width="80px">
   <el-form-item label="视频名称">
   <el-input v-model="videoForm.name"></el-input>
@@ -39,8 +40,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
   </el-form-item>
   <el-form-item label="视频分类">
     <el-select v-model="videoForm.type" placeholder="请选择视频类别">
-      <el-option label="区域一" value="shanghai"></el-option>
-      <el-option label="区域二" value="beijing"></el-option>
+      <el-option v-for="item in typeList" :label="item.name" :value="item.value"></el-option> 
     </el-select>
   </el-form-item>
  <el-form-item label="视频介绍">
@@ -68,11 +68,24 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
              videoForm:{
 
              },
+             videoName:"新增视频",
+             typeList:[{
+             	name:"政法",
+             	value:"001"
+             },{
+             	name:"讲义",
+             	value:"002"
+             }]
 			}
 		},
 		watch:{
-			params(obj){
-				if(obj.open){
+			'params.videoItem':function vedioItem(){
+             if(!this.params.videoItem==null){
+             	this.videoName = this.params.videoItem.name
+             }
+			},
+			'params.open':function open(){
+				if(this.params.open){
 					console.log("组件被触发");
 					this.init(); 
 					this.editVideo = true;
@@ -80,7 +93,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 					console.log("组件未被触发，所有方法不执行");
 					this.editVideo = false;
 				}
-			}
+			} 
 		},
 		created(){
 
@@ -94,12 +107,16 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 		  this.videoUrl="";
 		},
 		 onSubmit(){
-           
-			var obj = {
-				open:false
-			}
-         	  this.$emit("uploadVideo",obj);
-         	  this.editVideo = false;
+           var that = this;
+           that.$http.post(that.$ports.studyVideoList.insert,that.videoForm)
+           .then(res=>{
+
+           })
+			// var obj = {
+			// 	open:false
+			// }
+   //       	  this.$emit("uploadVideo",obj);
+   //       	  this.editVideo = false;
 			 
 		},
          closeDialog(){
