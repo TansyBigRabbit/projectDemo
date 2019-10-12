@@ -5,7 +5,6 @@ import LettersVisit from './components/lettersVisit/lettersVisit'
 import VisitRoom from './components/lettersVisit/VisitRoom'
 import VisitRecord from './components/lettersVisit/visitRecord'
 import LettersStatic from './components/lettersVisit/lettersStatic'
-
 //会议
 import ConList from './components/DJcenter/conference/conList'
 import ConRecord from './components/DJcenter/conference/conRecord'
@@ -17,7 +16,13 @@ import MyCon from './components/DJcenter/conference/myCon'
 import ActivityList from './components/DJcenter/activity/activityList'
 import ActivityManage from './components/DJcenter/activity/activityManage'
 //面谈
+import FaceRoomList from './components/DJcenter/faceToFace/faceRoomList'
+import FaceRecords from './components/DJcenter/faceToFace/faceRecords'
+import FaceStatic from './components/DJcenter/faceToFace/faceStatic'
 //综治中心
+import zzRecords from './components/ZZcenter/zongzhiCenter/zzRecords'
+import zzRoomList from './components/ZZcenter/zongzhiCenter/zzRoomList'
+import zzStatic from './components/ZZcenter/zongzhiCenter/zzStatic'
 //学宣
 import StudyVideoList from './components/ZZcenter/studySys/studyVideoList'
 import StudyRoomList from './components/ZZcenter/studySys/StudyRoomList'
@@ -93,13 +98,40 @@ export const routes = [{
 			name: 'ActivityManage',
 			component: ActivityManage,
 		},
+		//面对面访谈
+		{
+			path: '/home/FaceRoomList',
+			name: 'FaceRoomList',
+			component: FaceRoomList,
+		}, {
+			path: '/home/FaceRecords',
+			name: 'FaceRecords',
+			component: FaceRecords,
+		}, {
+			path: '/home/FaceStatic',
+			name: 'FaceStatic',
+			component: FaceStatic,
+		},
 		//综治中心
+		{
+			path: '/home/zzRecords',
+			name: 'zzRecords',
+			component: zzRecords,
+		}, {
+			path: '/home/zzRoomList',
+			name: 'zzRoomList',
+			component: zzRoomList,
+		}, {
+			path: '/home/zzStatic',
+			name: 'zzStatic',
+			component: zzStatic,
+		},
 		//学宣
 		{
 			path: '/home/StudyVideoList',
 			name: 'StudyVideoList',
 			component: StudyVideoList,
-		},{
+		}, {
 			path: '/home/StudyRoomList',
 			name: 'StudyRoomList',
 			component: StudyRoomList,

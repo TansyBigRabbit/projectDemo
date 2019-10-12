@@ -34,14 +34,16 @@
   				<div><span class="sub_title">上传时间:</span> 2019-10-01 23:45:12</div> 
   			</div>
   		</div>
-      <el-pagination
+     
+  	</div>
+     <el-pagination
+        style="text-align: center;"
         layout="prev, pager, next"
         background
         :total="videoTotal"
         :current-page="currentPage"
         @current-change="handleCurrentChange">
       </el-pagination>
-  	</div>
   </el-tab-pane>
   <el-tab-pane label="我的视频">
   	<div class="searchBox">
@@ -73,15 +75,15 @@
   				<div><span class="sub_title">上传时间:</span> 2019-10-01 23:45:12</div> 
   			</div>
   		</div>
-
-       <el-pagination
+    </div>
+    <el-pagination
+        style="text-align: center;"
         layout="prev, pager, next"
         background
         :total="videoTotal01"
         :current-page="currentPage01"
         @current-change="handleCurrentChange01">
       </el-pagination>
-  		</div>
   </el-tab-pane> 
   </el-tabs>
 
@@ -133,6 +135,8 @@
       //
       currentPage:1,
       videoTotal:0,
+      videoTotal01:0,
+      currentPage01:1,
       //
 			videoList:[{
 				name:"测试视频",
@@ -200,12 +204,20 @@
          getVideoList(num,size,obj){
           var that = this;
           console.log("获取所有视频列表");
+          obj = Object.assign(obj,{
+            'pageNum':that.currentPage,
+            'size':8, 
+          });
           that.$http.get(that.$ports.studyVideoList.list,obj).then(res=>{
             
           })
          },
          getMyVideo(num,size,obj){
-		  console.log("获取我的视频列表");
+          obj = Object.assign(obj,{
+            'pageNum':that.currentPage01,
+            'size':8, 
+          });
+		     onsole.log("获取我的视频列表");
          },
          showVideoDialog(obj){
           this.currentVideo = obj;
@@ -255,6 +267,9 @@
          },
          //分页方法
          handleCurrentChange(val){
+          console.log("当前页数"+val);
+         },
+         handleCurrentChange01(val){
           console.log("当前页数"+val);
          }
 	   }

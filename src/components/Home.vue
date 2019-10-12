@@ -50,7 +50,7 @@
  <el-submenu index="1">
   <template slot="title">
     <i class="el-icon-location"></i>
-    <span slot="title">信访中心系统</span>
+    <span slot="title">学宣</span>
   </template>  
          <router-link :to="'/home/StudyVideoList'">
          <el-menu-item index="1-1">视频列表</el-menu-item>
@@ -58,12 +58,49 @@
          <router-link :to="'/home/StudyRoomList'">
          <el-menu-item index="1-2">房间列表</el-menu-item>
          </router-link>
-         
-         
-         
-          
-</el-submenu> 
+   </el-submenu> 
 
+<el-submenu index="2">
+  <template slot="title">
+    <i class="el-icon-location"></i>
+    <span slot="title">综治</span>
+  </template>  
+         <router-link :to="'/home/zzRecords'">
+         <el-menu-item index="2-1">综治记录</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/zzRoomList'">
+         <el-menu-item index="2-2">房间列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/zzStatic'">
+         <el-menu-item index="2-3">综治统计</el-menu-item>
+         </router-link>
+   </el-submenu> 
+
+   <el-submenu index="3">
+  <template slot="title">
+    <i class="el-icon-location"></i>
+    <span slot="title">面谈</span>
+  </template>  
+         <router-link :to="'/home/FaceRecords'">
+         <el-menu-item index="3-1">面谈记录</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/FaceRoomList'">
+         <el-menu-item index="3-2">房间列表</el-menu-item>
+         </router-link>
+         <router-link :to="'/home/FaceStatic'">
+         <el-menu-item index="3-3">面谈统计</el-menu-item>
+         </router-link>
+   </el-submenu> 
+
+   <el-submenu index="4">
+  <template slot="title">
+    <i class="el-icon-location"></i>
+    <span slot="title">统计</span>
+  </template>  
+         <router-link :to="'/home/LettersStatic'">
+         <el-menu-item index="3-1">统计</el-menu-item>
+         </router-link> 
+   </el-submenu> 
 <!-- <el-submenu index="2"> 
    <template slot="title">
      <i class="el-icon-location"></i>
