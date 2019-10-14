@@ -1,7 +1,7 @@
 <!-- 学宣视频列表上传视频 -->
 <template>
-  <el-dialog :title="videoName" :visible.sync="editVideo" :before-close="closeDialog">
-  <el-form ref="form" :model="videoForm" label-width="80px">
+  <el-dialog  :title="videoName" :visible.sync="editVideo" :before-close="closeDialog">
+  <el-form v-loading="loading" ref="form" :model="videoForm" label-width="80px">
   <el-form-item label="视频名称">
   <el-input v-model="videoForm.name"></el-input>
   </el-form-item>
@@ -18,7 +18,7 @@ accept="image/*"
 </el-upload> 
 <div style="position: relative;">
 	<img style="max-width: 100%" v-if="imgFlag" :src="imgUrl"/>
-	<img class="delete_icon" v-if="imgFlag" :src="deleteImg" @click="imgFlag=false"></img>
+	<img class="delete_icon" v-if="imgFlag" :src="deleteImg" @click="clearImg "></img>
 </div>
 
   </el-form-item>
@@ -35,7 +35,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 </el-upload> 
 <div style="position: relative;">
 <video style="width: 100%" v-if="videoFlag" :src="videoUrl" controls="controls"></video> 
-<img class="delete_icon" v-if="videoFlag" :src="deleteImg" @click="videoFlag=false"></img>
+<img class="delete_icon" v-if="videoFlag" :src="deleteImg" @click="clearVideo "></img>
 </div>
   </el-form-item>
   <el-form-item label="视频分类">
@@ -54,11 +54,13 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
     </el-dialog>
 </template>
 <script>
+	var that;
 	export default{
 		name:"uploadDialog",
 		props:{params:Object},
 		data(){
 			return{
+			 loading:false,
              editVideo:false,
              imgFlag:false,
              videoFlag:false,
@@ -96,7 +98,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 			} 
 		},
 		created(){
-
+            that = this;
 		},
 		methods:{
 		init(){
@@ -108,9 +110,28 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 		},
 		 onSubmit(){
            var that = this;
-           that.$http.post(that.$ports.studyVideoList.insert,that.videoForm)
+           that.loading = true;
+           that.videoForm.userId = window.localStorage.getItem('userId');
+           console.log(that.videoForm);
+           //json转formData
+            const formData = new FormData();
+			  Object.keys(that.videoForm).forEach((key) => {
+			    formData.append(key, that.videoForm[key]);
+			  });
+			//
+           that.$http.postFile(that.$ports.studyVideoList.insert,formData)
            .then(res=>{
-
+            console.log(res);
+            that.loading = false;
+            if(res.data.code==0){
+            	that.$message({
+		          message: "操作成功!",
+		          type: 'success'
+		        }); 
+		        that.$emit("refreshTab",true);
+            }else{
+               that.$message.error(res.data.msg);
+            }
            })
 			// var obj = {
 			// 	open:false
@@ -120,6 +141,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 			 
 		},
          closeDialog(){
+         	that.loading = false;
             var obj = {
 				open:false
 			}
@@ -128,7 +150,8 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
          },
          httpRequestImg(data){
          var _this = this;
-         this.videoForm.imageData = data.file;
+
+         this.videoForm.img = data.file;
 		 var reads = new FileReader(); //文件预览
 		 reads.readAsDataURL(data.file);
 		 reads.onload = function(e) {
@@ -139,20 +162,35 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
          httpRequestVideo(data){
          	var _this = this;
 			console.log(data)
-			this.videoForm.vedioData = data.file;
+			if(data.file.size/1024/1024>100){
+				that.$message.error("请勿上传大于100M的视频！");
+				return;
+			}
+			this.videoForm.video = data.file;
 			_this.videoFlag = true;
             //这一步是重点！
 			_this.videoUrl = URL.createObjectURL(data.file);
+         },
+         clearImg(){
+         	this.imgFlag=false
+			this.videoForm.images = null;
+         },
+         clearVideo(){
+         	this.videoFlag=false
+         	this.videoForm.video = null;
          }
 		}
 	}
 </script>
-<style>
+<style scoped>
 	.delete_icon{
 		position: absolute;
 		right: -15px;
 		max-width: 30px;
 		top: -15px;
 		cursor: pointer;
+	}
+	.el-loading-mask{
+		width: calc(100% + 20px);
 	}
 </style>

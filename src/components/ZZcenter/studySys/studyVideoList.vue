@@ -18,25 +18,26 @@
         <el-date-picker style="width: 20%" size="large" v-model="searchForm01.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-date-picker style="width: 20%" size="large" v-model="searchForm01.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-select v-model="searchForm01.type" placeholder="请选择视频类别">
-        <el-option  v-for="item in videoTypes" :label='item.text' :value="item.value"></el-option> 
+        <el-option  v-for="item in videoTypes" :label='item.name' :value="item.id"></el-option> 
         </el-select>
         <el-button @click="getVideoList()" type="primary" size="small">查询</el-button> 
+        <el-button @click="reset('searchForm01')" type="primary" size="small">重置</el-button>
   	</div>
-  	<div class="containerBox">
-  		<div class="videoItem" style="position: relative;" v-for="item in videoList" @click="showVideoDialog(item)">
+  	<div v-loading="tab1Loading" class="containerBox">
+  		<div v-if="videoList.length>0" class="videoItem" style="position: relative;" v-for="item in videoList" @click="showVideoDialog(item)">
   			<img style="max-width: 100%;cursor: pointer" :src="item.imgPath">
   			<div :style='styleList'  >{{item.type}}</div>
   			 
   			 
   			<div>
-  				<div><span class="sub_title">上传人:</span> 111</div>
-  				<div><span class="sub_title">视频时长:</span> 00:18:03</div> 
-  				<div><span class="sub_title">上传时间:</span> 2019-10-01 23:45:12</div> 
+  				<div><span class="sub_title">上传人:{{item.userName}}</span></div> 
+  				<div><span class="sub_title">上传时间:</span> {{item.createTime}}</div> 
   			</div>
   		</div>
-     
+       <div v-else>暂无视频</div>
   	</div>
      <el-pagination
+        v-if="videoList.length>0"
         style="text-align: center;"
         layout="prev, pager, next"
         background
@@ -52,13 +53,14 @@
         <el-date-picker style="width: 20%" size="large" v-model="searchForm02.startTime" type="datetime" placeholder="选择开始时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-date-picker style="width: 20%" size="large" v-model="searchForm02.endTime" type="datetime" placeholder="选择结束时间" value-format=" yyyy-MM-dd HH:mm:ss" format="yyyy-MM-dd HH:mm:ss"> </el-date-picker> 
         <el-select v-model="searchForm02.type" placeholder="请选择视频类别">
-        <el-option  v-for="item in videoTypes" :label='item.text' :value="item.value"></el-option> 
+        <el-option  v-for="item in videoTypes" :label='item.name' :value="item.id"></el-option> 
         </el-select>
-        <el-button @click="getVideoList()" type="primary" size="small">查询</el-button> 
+        <el-button @click="getMyVideo()" type="primary" size="small">查询</el-button>
+        <el-button @click="reset('searchForm02')" type="primary" size="small">重置</el-button>  
         <el-button @click="showEditDialog('add')" type="primary" size="small">上传视频</el-button> 
   	</div>
-  	<div class="containerBox">
-  		<div class="videoItem" style="position: relative;" v-for="(item,index) in videoList" >
+  	<div v-loading="tab2Loading" class="containerBox" > 
+  		<div v-if="myVideoList.length>0" class="videoItem" style="position: relative;" v-for="(item,index) in myVideoList" >
   			<div @mouseover="itemOver(index)" @mouseout="itemOut(index)" style="position: relative;"><img style="max-width: 100%;cursor: pointer" :src="item.imgPath">
             <div :id="'video'+index" class="operateBox" style="position: absolute;bottom: 5px;display: none">
             	<span @click="showEditDialog('edit',item)">编辑</span>
@@ -70,13 +72,14 @@
   			 
   			 
   			<div>
-  				<div><span class="sub_title">上传人:</span> 111</div>
-  				<div><span class="sub_title">视频时长:</span> 00:18:03</div> 
-  				<div><span class="sub_title">上传时间:</span> 2019-10-01 23:45:12</div> 
+  				<div><span class="sub_title">上传人:{{item.userName}}</span></div> 
+          <div><span class="sub_title">上传时间:</span> {{item.createTime}}</div> 
   			</div>
-  		</div>
-    </div>
-    <el-pagination
+  		</div> 
+      <div v-else>暂无视频</div>
+  </div>
+        <el-pagination
+        v-if="myVideoList.length>0"
         style="text-align: center;"
         layout="prev, pager, next"
         background
@@ -106,13 +109,14 @@
     </el-dialog>
   
     <!--新增/修改视频弹窗-->
-    <uploadDialog :params="params" v-on:closeDialog="closeEditDialog" 
+    <uploadDialog :params="params" v-on:refreshTab="refreshTab" v-on:closeDialog="closeEditDialog" 
     @uploadVideo="uploadVideo($event)"></uploadDialog>
 
 	</div>
 </template>
 
 <script>
+  var that;
   import uploadDialog from '../../childComponent/uploadDialog'
 	export default{
     components:{
@@ -138,26 +142,14 @@
       videoTotal01:0,
       currentPage01:1,
       //
-			videoList:[{
-				name:"测试视频",
-				type:"教学视频",
-				videoPath:'../../../static/video/123.mp4',
-				imgPath:'../../../static/images/70.jpg'
-              },{
-				name:"测试视频",
-				type:"教学视频",
-				videoPath:'../../../static/video/123.mp4',
-				imgPath:'../../../static/images/70.jpg'
-              },
-              ],
+      tab2Loading:false,
+      tab1Loading:false,
+      //
+			videoList:[],
+      //
+      myVideoList:[],
              currentVideo:{},
-             videoTypes:[{
-             	text:"教学视频",
-             	value:0
-             },{
-             	text:"录播视频",
-             	value:1
-             }],
+             videoTypes:[],
              showVideo:false,
              editVideo:false,
              styleList:{
@@ -177,9 +169,21 @@
             }
 		},
 		created(){
-        this.getVideoList(1,5,this.searchForm01);
+        that = this;
+        this.getVideoType();
+        this.getVideoList();
 		},
 		methods:{
+      getVideoType(){
+         console.log("获取视频类别");
+         that.$http.get(that.$ports.videoType).then(res=>{
+          if(res.data.code==0){
+            that.videoTypes = res.data.data;
+          }else{
+            that.$message.error("获取视频类别失败!");
+          }
+         })
+      },
 		httpRequest(data){
 			var _this = this;
 			console.log(data)
@@ -196,28 +200,46 @@
 		 handleClick(tab,event){
 		 	this.searchForm={};
             if(tab.index==0){
-              this.getVideoList(1,5,this.searchForm01);
+              this.getVideoList();
             }else{
-              this.getMyVideo(1,5,this.searchForm02);
+              this.getMyVideo();
             }
           },
-         getVideoList(num,size,obj){
-          var that = this;
+         getVideoList(){
+          that.tab1Loading = true; 
           console.log("获取所有视频列表");
-          obj = Object.assign(obj,{
+          that.searchForm01 = Object.assign(that.searchForm01,{
             'pageNum':that.currentPage,
             'size':8, 
           });
-          that.$http.get(that.$ports.studyVideoList.list,obj).then(res=>{
-            
+          that.$http.get(that.$ports.studyVideoList.list,that.searchForm01).then(res=>{
+            that.tab1Loading = false;
+            if(res.data.code==0){
+              that.videoList = res.data.data;
+            }else{
+              that.$message.error(res.data.msg);
+            } 
           })
          },
-         getMyVideo(num,size,obj){
-          obj = Object.assign(obj,{
+         getMyVideo(){ 
+          that.tab2Loading = true;
+		     console.log("获取我的视频列表");
+         that.searchForm02 = Object.assign(that.searchForm02,{
             'pageNum':that.currentPage01,
             'size':8, 
+            'userId':window.localStorage.getItem("userId")
           });
-		     onsole.log("获取我的视频列表");
+          that.$http.get(that.$ports.studyVideoList.list,that.searchForm02).then(res=>{
+             that.tab2Loading = false;
+            if(res.data.code==0){
+              that.myVideoList = res.data.data;
+            }else{
+              that.$message.error(res.data.msg);
+            } 
+          })
+         },
+         reset(name){
+          that[name]={}
          },
          showVideoDialog(obj){
           this.currentVideo = obj;
@@ -249,6 +271,12 @@
             message: '已取消删除'
           });          
          });
+         },
+         //新增或者修改成功后都要刷新tab
+         refreshTab(val){
+         if(val){
+          that.getMyVideo();
+         }
          },
          itemOver(index){
          	console.log("over"+index);

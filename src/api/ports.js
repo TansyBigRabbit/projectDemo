@@ -40,6 +40,8 @@ export default {
 		update: hosturl + '/academicAdvocacyTotalController/update',
 		findById: hosturl + '/academicAdvocacyTotalController/queryOne',
 	},
+	//视频类别
+	videoType:hosturl+"/academicAdvocacy/academic-type/queryListWithNoPage",
 	user: {
 		list: hosturl + '/userinfo/queryListWithPage',
 		insert: hosturl + '/userinfo/insert',

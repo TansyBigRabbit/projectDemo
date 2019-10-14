@@ -15,4 +15,7 @@ export default {
 body{
 	margin:0
 }
+.el-loading-mask{
+		width: calc(100% + 20px);
+	}
 </style>
