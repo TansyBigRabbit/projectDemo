@@ -16,8 +16,9 @@ export default{
 	},
 	watch:{
     "params.open":function open(){
+        //console.log("11")
     	if(!that.params.isFirst){
-    	if(that.params.open&&that.times==0){
+    	if(that.params.open&&that.params.times==0){
             if(this.params.modal=="zongzhi"){
         		console.log("综治中心触发");
          

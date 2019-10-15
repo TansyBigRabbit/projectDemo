@@ -8,8 +8,7 @@
 			  <el-breadcrumb-item>综治中心</el-breadcrumb-item> 
 			  <el-breadcrumb-item>综治记录</el-breadcrumb-item> 
 			  </el-breadcrumb>
-			</div>
-
+			</div> 
     <el-tabs class="tab_box" type="border-card" @tab-click="handleClick">
     <el-tab-pane label="所有记录">
     	 <allRecordsCom :params="params"></allRecordsCom>
@@ -46,7 +45,7 @@ export default{
 	},
 	created(){
     that = this; 
-	},
+	}, 
     methods:{
       handleClick(tab){
        if(tab.index==1){  
@@ -60,5 +59,7 @@ export default{
 }
 </script>
 <style>
-
+   .searchBox{
+      padding: 15px 0 ;
+    }
 </style>
