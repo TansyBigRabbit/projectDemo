@@ -40,6 +40,10 @@ export default {
 		update: hosturl + '/academicAdvocacyTotalController/update',
 		findById: hosturl + '/academicAdvocacyTotalController/queryOne',
 	},
+	//学宣直播房间创建
+	studyLiveCreate: hosturl+'/academicLiveBroadcastTotalController/insert',
+	//学宣直播房间列表
+	studyLiveRoomList: hosturl+'/academicLiveBroadcastTotalController/queryListWithPage',
 	//视频类别
 	videoType:hosturl+"/academicAdvocacy/academic-type/queryListWithNoPage",
 	user: {

@@ -19,14 +19,13 @@
 		<!-- <el-button type="primary" style="width: 150px" @click="createRoomModel=true">创建房间</el-button> -->
         <div>
 			<el-row style="padding-top: 15px;">
-				<el-col v-if="roomList.length>0" v-for="(item,index) in roomList" :data-roomnum="item.info.roomnum" :key="index" class="margin_r roomBox" :span="5">
+				<el-col v-if="roomList.length>0" v-for="(item,index) in roomList" :data-roomnum="item.academicName " :key="index" class="margin_r roomBox" :span="5">
 				 <el-card :body-style="{ padding: '5px' }">
 			      <img :src="imgUrl" class="image">
 			      <div style="padding: 14px;">
-			        <span>{{item.info.roomnum}}</span>
+			        <span>{{item.academicName}}</span>
 			        <div class="bottom clearfix">
-			          <el-button v-if='item.info.memsize<6' type="text" @click="joinRoom(item)">加入房间</el-button>
-			          <span v-else>房间满员，无法加入</span>
+			          <el-button  type="text" @click="joinRoom(item)">加入房间</el-button> 
 			        </div>
 			      </div>
 			    </el-card>	
@@ -36,7 +35,7 @@
 				</el-card>  
 			</el-row>
 		</div> 
-		</div>
+		</div> 
          <!--直播间-->
 		<div v-else>
 			<liveRoom :params01="params01"></liveRoom>
@@ -47,6 +46,9 @@
 		  :visible.sync="createRoomDialog"
 		  width="30%" >
 		   <el-input v-model="createRoomName" placeholder="请输入房间名称" maxlength="30"></el-input>
+		   <el-select style="margin-top: 20px" v-model="type" placeholder="请选择视频类别">
+        <el-option  v-for="item in videoTypes" :label='item.name' :value="item.id"></el-option> 
+        </el-select>
 		  <span slot="footer" class="dialog-footer">
 		    <el-button @click="createRoomDialog = false">取 消</el-button>
 		    <el-button type="primary" @click="createRoom">确 定</el-button>
@@ -57,6 +59,7 @@
 </template>
 
 <script>
+	var that;
 	import readIdCard from "../../childComponent/readIdCard"
 	import liveRoom from "../../childComponent/liveRoom"
 	export default{
@@ -64,34 +67,78 @@
 		data(){
 			return{
 				params:{show:true},
-				roomFlag:true,
+				roomFlag:false,
 				//传给直播间的参数
 				params01:{
-
+                open:false,
+                obj:null
 				},
 				imgUrl:require('../../../assets/images/room_bg.png'),
-				roomList:[{
-					info:{
-						roomnum:"测试数据01",
-						memsize:7,
-					}
-				}],
+				roomList:[ ],
 				hasRoom:true,
 				createRoomDialog:false,
 				createRoomName:"",//创建房间时输入的房间名称
 				roomTextInfo:"暂无房间",
+				//
+				type:'',
+				videoTypes:[]
 			}
 		},
 		created(){
-
+        that = this;
+        that.getTypes();
+        that.getRoomList();
 		},
 		methods:{
-		joinRoom(obj){
+		getRoomList(){
+        console.log("获取房间列表");
+        that.$http.get(that.$ports.studyLiveRoomList,{
+        	pageNum:1,
+        	size:10,
+        	isComplete:0
+        }).then(res=>{
+        	if(res.data.code==0){
+                that.roomList = res.data.data;
+        	}else{
+        		that.$message.error("房间列表获取失败");
+        	}
+        })
 
+		},	
+		getTypes(){
+      	 console.log("获取视频类别");
+         that.$http.get(that.$ports.videoType).then(res=>{
+          if(res.data.code==0){
+            that.videoTypes = res.data.data; 
+          }else{
+            that.$message.error("获取视频类别失败!");
+          }
+         })
+      },
+		joinRoom(obj){
+			this.createRoomDialog = false;
+			this.roomFlag = true; 
+        that.params01 = {
+			open:true,
+            type:'watch',
+            roomName:obj.academicName, 
+            roomName01:obj.roomName,
+            academicUserName:obj.academicUserName
+			}
 		},
 		createRoom(){
+			if(!that.createRoomName){
+				that.$message.error("请输入房间名称！");
+				return
+			} 
 			this.createRoomDialog = false;
-			this.roomFlag = false;
+			this.roomFlag = true; 
+			that.params01 = {
+			open:true,
+            type:'create',
+            roomName:that.createRoomName,
+            videoType:that.type
+			}
 		},
 		showCreateModal(){
 			this.createRoomDialog = true;

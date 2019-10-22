@@ -164,7 +164,7 @@
              //传给子组件的参数
              params:{
               open:false,
-              videoItem:null
+              videoItem:null, 
              }
             }
 		},
@@ -178,7 +178,7 @@
          console.log("获取视频类别");
          that.$http.get(that.$ports.videoType).then(res=>{
           if(res.data.code==0){
-            that.videoTypes = res.data.data;
+            that.videoTypes = res.data.data; 
           }else{
             that.$message.error("获取视频类别失败!");
           }

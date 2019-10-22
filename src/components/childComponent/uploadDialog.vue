@@ -40,7 +40,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
   </el-form-item>
   <el-form-item label="视频分类">
     <el-select v-model="videoForm.type" placeholder="请选择视频类别">
-      <el-option v-for="item in typeList" :label="item.name" :value="item.value"></el-option> 
+      <el-option v-for="item in videoTypes" :label='item.name' :value="item.id"></el-option> 
     </el-select>
   </el-form-item>
  <el-form-item label="视频介绍">
@@ -71,13 +71,7 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 
              },
              videoName:"新增视频",
-             typeList:[{
-             	name:"政法",
-             	value:"001"
-             },{
-             	name:"讲义",
-             	value:"002"
-             }]
+             videoTypes:[]
 			}
 		},
 		watch:{
@@ -99,10 +93,21 @@ accept=".mp4,.qlv,.qsv,.ogg,.flv,.avi,.wmv,.rmvb"
 		},
 		created(){
             that = this;
+            that.getTypes();
 		},
 		methods:{
+      getTypes(){
+      console.log("获取视频类别");
+         that.$http.get(that.$ports.videoType).then(res=>{
+          if(res.data.code==0){
+            that.videoTypes = res.data.data; 
+          }else{
+            that.$message.error("获取视频类别失败!");
+          }
+         })
+      },
 		init(){
-          this.videoForm={}
+      this.videoForm={}
 		  this.videoFlag=false;
 		  this.imgFlag=false;
 		  this.imgUrl="";

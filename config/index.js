@@ -18,7 +18,7 @@ module.exports = {
                 //target: "http://weipan.51vip.biz:48169/threeCentreProject",
                 //target: "http://weipan.51vip.biz/threeCentreProject",
                 //target: "http://10.10.100.199:8080/threeCentreProject",
-                target: "http://192.168.1.153:8081/threeCentreProject",
+                target: "http://192.168.1.151:8081/threeCentreProject",
                 secure: false,
                 changeOrigin: true,
                 pathRewrite: {
