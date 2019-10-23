@@ -32,6 +32,13 @@ export default {
 	letters: {
 		list: hosturl + '/petitionroominfo/queryListWithPage',
 	},
+	//信访统计接口
+	letterStatistics: {
+		topData: hosturl + '/peptionReport/fixedQuantityDisplay',
+		barData: hosturl + '/peptionReport/histogram',
+		terminalData: hosturl + '/peptionReport/petitionDepartProportion',
+		typeData: hosturl + '/peptionReport/petitionTypeProportion'
+	},
 	//学宣视频接口
 	studyVideoList: {
 		list: hosturl + '/academicAdvocacyTotalController/queryListWithPage',
@@ -41,11 +48,11 @@ export default {
 		findById: hosturl + '/academicAdvocacyTotalController/queryOne',
 	},
 	//学宣直播房间创建
-	studyLiveCreate: hosturl+'/academicLiveBroadcastTotalController/insert',
+	studyLiveCreate: hosturl + '/academicLiveBroadcastTotalController/insert',
 	//学宣直播房间列表
-	studyLiveRoomList: hosturl+'/academicLiveBroadcastTotalController/queryListWithPage',
+	studyLiveRoomList: hosturl + '/academicLiveBroadcastTotalController/queryListWithPage',
 	//视频类别
-	videoType:hosturl+"/academicAdvocacy/academic-type/queryListWithNoPage",
+	videoType: hosturl + "/academicAdvocacy/academic-type/queryListWithNoPage",
 	user: {
 		list: hosturl + '/userinfo/queryListWithPage',
 		insert: hosturl + '/userinfo/insert',

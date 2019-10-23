@@ -11,4 +11,6 @@
  require("echarts/lib/component/dataZoom");
  require("echarts/lib/component/markPoint");
  require("echarts/lib/component/markLine");
+ // 引入legend组件
+ require("echarts/lib/component/legend");
  export default echarts
