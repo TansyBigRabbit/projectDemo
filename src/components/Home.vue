@@ -259,9 +259,9 @@
       };
     },
     created(){
-      // this.userInfo=JSON.parse(window.localStorage.getItem('userInfo'));
-      // console.log(this.userInfo);
-      // this.getUserRights(this.userInfo);
+      this.userInfo=JSON.parse(window.localStorage.getItem('userInfo'));
+      console.log(this.userInfo);
+      this.getUserRights(this.userInfo);
     },
     methods: {  
       handleOpen(key, keyPath) {

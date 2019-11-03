@@ -50,6 +50,7 @@
 </div>
 </template>
 <script> 
+var that;
 import echarts from '../../echarts/echarts'
 export default{
 	data(){
@@ -75,12 +76,17 @@ export default{
 		}
 	},
 	mounted(){
-		this.getTabOneBar();
-		this.getTabOnePie_1();
-		//this.getTabOnePie_2();
-		this.getTabOnePie_3();
+        that = this;
+        that.getBarData();
+		// this.getTabOneBar();
+		// this.getTabOnePie_1();
+		// //this.getTabOnePie_2();
+		// this.getTabOnePie_3();
 	},
 	methods:{
+        getBarData(){
+
+        },
 		getTabOneBar(){
         let myChart01 = echarts.init(document.getElementById('tabOneBar'));
         // 绘制图表

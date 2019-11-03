@@ -32,6 +32,16 @@ export default {
 	letters: {
 		list: hosturl + '/petitionroominfo/queryListWithPage',
 	},
+	//信访统计
+	lettersStatic:{
+	  //顶部数据
+      topData: hosturl + '/peptionReport/fixedQuantityDisplay',
+      barData: hosturl + '/peptionReport/histogram',
+      //终端占比
+      departData: hosturl +'/peptionReport/petitionDepartProportion',
+      //分类占比
+      typeData: hosturl +'/peptionReport/petitionTypeProportion'
+	},
 	//学宣视频接口
 	studyVideoList: {
 		list: hosturl + '/academicAdvocacyTotalController/queryListWithPage',
