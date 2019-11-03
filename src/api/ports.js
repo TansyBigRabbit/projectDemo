@@ -32,6 +32,7 @@ export default {
 	letters: {
 		list: hosturl + '/petitionroominfo/queryListWithPage',
 	},
+<<<<<<< HEAD
 	//信访统计
 	lettersStatic:{
 	  //顶部数据
@@ -41,6 +42,14 @@ export default {
       departData: hosturl +'/peptionReport/petitionDepartProportion',
       //分类占比
       typeData: hosturl +'/peptionReport/petitionTypeProportion'
+=======
+	//信访统计接口
+	letterStatistics: {
+		topData: hosturl + '/peptionReport/fixedQuantityDisplay',
+		barData: hosturl + '/peptionReport/histogram',
+		terminalData: hosturl + '/peptionReport/petitionDepartProportion',
+		typeData: hosturl + '/peptionReport/petitionTypeProportion'
+>>>>>>> 0661159da8b340c044c6f1e602814f66a314352f
 	},
 	//学宣视频接口
 	studyVideoList: {
@@ -51,11 +60,11 @@ export default {
 		findById: hosturl + '/academicAdvocacyTotalController/queryOne',
 	},
 	//学宣直播房间创建
-	studyLiveCreate: hosturl+'/academicLiveBroadcastTotalController/insert',
+	studyLiveCreate: hosturl + '/academicLiveBroadcastTotalController/insert',
 	//学宣直播房间列表
-	studyLiveRoomList: hosturl+'/academicLiveBroadcastTotalController/queryListWithPage',
+	studyLiveRoomList: hosturl + '/academicLiveBroadcastTotalController/queryListWithPage',
 	//视频类别
-	videoType:hosturl+"/academicAdvocacy/academic-type/queryListWithNoPage",
+	videoType: hosturl + "/academicAdvocacy/academic-type/queryListWithNoPage",
 	user: {
 		list: hosturl + '/userinfo/queryListWithPage',
 		insert: hosturl + '/userinfo/insert',
